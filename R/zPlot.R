@@ -27,7 +27,9 @@
 #' @importFrom zenplots "groupData"
 #'
 #' @examples
+#' \dontrun{
 #' library(MASS)
+#' library(ranger)
 #' Boston1 <- Boston
 #' Boston1$chas<- factor(Boston1$chas)
 #' rf <- ranger(medv ~ ., data=Boston1)
@@ -38,7 +40,7 @@
 #' pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
 #' zpath<-calcZpath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
 #' pdpZen(Boston1, rf, response="medv", zpath=zpath, comboImage=T)
-#'
+#'}
 #' @export
 
 
