@@ -1,5 +1,9 @@
 Package: vividPackage
+<<<<<<< HEAD
 Title: Variable Importance and Variable Interaction Displays
+=======
+Title: What the Package Does (One Line, Title Case)
+>>>>>>> 42beefbaec2b522bcadeaed598759245ab57665e
 Version: 0.0.0.9000
 Author: Alan Inglis, Andrew Parnell, Catherine Hurley
 Maintainer: Alan Inglis <alan.inglis@mu.ie>
