@@ -44,6 +44,9 @@
 
 zPath <- function(viv, cutoff=NULL, method=c("greedy.weighted", "strictly.weighted"), connect=TRUE){
 
+  if (!(requireNamespace("zenplots", quietly=TRUE))){
+    stop("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+  }
 
   method <- match.arg(method)
 
@@ -53,17 +56,17 @@ zPath <- function(viv, cutoff=NULL, method=c("greedy.weighted", "strictly.weight
   if (!is.numeric(cutoff)) cutoff <- quantile(viv, .8, na.rm=TRUE)
   viv[is.na(viv)]<- 0
   w <- viv>cutoff
-if (sum(w) == 0) stop("No off diagonal entries in 'viv' exceed 'cutoff'.")
+  if (sum(w) == 0) stop("No off diagonal entries in 'viv' exceed 'cutoff'.")
   zinfo <- cbind(viv[w],  row(viv)[w],col(viv)[w])
 
   # form an eulerian path with these pairs of variables
   if (method=="greedy.weighted"){
-    zpath <- tryCatch(zpath <- zenpath(zinfo[,1], pairs=zinfo[,-1], method="greedy.weighted"),
+    zpath <- tryCatch(zpath <- zenplots::zenpath(zinfo[,1], pairs=zinfo[,-1], method="greedy.weighted"),
                       error = function(e) NULL,warning = function(w) {})
   }
   if (method=="strictly.weighted"| is.null(zpath)| length(zpath)==0){
-    zpath <- zenpath(zinfo[,1], pairs=zinfo[,-1], method="strictly.weighted")
-    zpath <-  connect_pairs(zpath)
+    zpath <- zenplots::zenpath(zinfo[,1], pairs=zinfo[,-1], method="strictly.weighted")
+    zpath <-  zenplots::connect_pairs(zpath)
     if (connect) zpath <- unlist(zpath)
   }
 

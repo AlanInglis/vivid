@@ -27,7 +27,11 @@
 #' @importFrom zenplots "groupData"
 #'
 #' @examples
+
 #' \dontrun{
+
+#' #' \dontrun{
+
 #' library(MASS)
 #' library(ranger)
 #' Boston1 <- Boston
@@ -50,6 +54,9 @@ pdpZen <- function(data, fit, response, zpath=NULL,
                        fitlims="pdp", gridSize = 10, nmax=500,class = 1,
                       comboImage =FALSE,rug=TRUE,predictFun=condvis2::CVpredict, parallel=FALSE,...){
 
+  if (!(requireNamespace("zenplots", quietly=TRUE))){
+    stop("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+  }
   if(parallel){
     plan(future::cluster)
   }
@@ -81,7 +88,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
   else if (is.character(zpath)){
     zpath <- match(zpath, names(data))
     if (any(is.na(zpath))) stop("'zpath' should contain predictor names.")
-    zdata <- indexData(data, zpath)
+    zdata <- zenplots::indexData(data, zpath)
     zpairs <- t(sapply(1:(length(zpath)-1), function(i){
       z <- zpath[i:(i+1)]
       if (i %% 2 == 0) rev(z) else z
@@ -99,7 +106,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
     fixind <- cumsum(sapply(zpath, length))
     fixind <- fixind[-length(fixind)]
     for (i in fixind) zpairs[i,]<- NA
-    zdata <- groupData(data, indices = zpath)
+    zdata <- zenplots::groupData(data, indices = zpath)
   }
 
   zpairs <- cbind(vars[zpairs[,1]], vars[zpairs[,2]])
@@ -203,7 +210,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
     plan("default")
   }
   suppressMessages({
-    zenplot(zdata, pkg="grid", labs=list(group=NULL),
+    zenplots::zenplot(zdata, pkg="grid", labs=list(group=NULL),
             plot2d = pdpnn, ...)
   })
 
