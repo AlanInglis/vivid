@@ -48,11 +48,13 @@
 
 
 vivi <- function(data, fit,  response, gridSize = 10, importanceType=NULL, nmax = 500,
-                          reorder = TRUE, class=1,predictFun = NULL, ...){
+                 reorder = TRUE, class=1, predictFun = NULL, ...){
 
 
 }
 
+
+# -------------------------------------------------------------------------
 
 #' vividReorder
 #' @description Reorders a square matrix so that values of high importance and
@@ -71,37 +73,110 @@ vivi <- function(data, fit,  response, gridSize = 10, importanceType=NULL, nmax 
 #' m <- vivi(iris[,-5], f, "Sepal.Length")
 #' corimp <- abs(cor(iris[,-5])[1,-1])
 #' viviUpdate(m, corimp) # use correlation as importance and reorder
-vividReorder <- function(d){
+
+vividReorder <- function(d) {
   vimp <- diag(d)
   rvimp <- range(vimp)
-  if (rvimp[2] != rvimp[1])
-    vimp <- (vimp - rvimp[1])/(rvimp[2] - rvimp[1])
+  if (rvimp[2] != rvimp[1]) {
+    vimp <- (vimp - rvimp[1]) / (rvimp[2] - rvimp[1])
+  }
   vint <- as.dist(d)
   rvint <- range(vint)
-  if (rvint[2] != rvint[1])
-    vint <-  (vint - rvint[1])/(rvint[2] - rvint[1])
-  score <- apply(as.matrix(vint), 1,max) + vimp
-  o <- dser( -vint , -score, cost=DendSer::costLS)
-  res<- d[o,o]
+  if (rvint[2] != rvint[1]) {
+    vint <- (vint - rvint[1]) / (rvint[2] - rvint[1])
+  }
+  score <- apply(as.matrix(vint), 1, max) + vimp
+  o <- dser(-vint, -score, cost = DendSer::costLS)
+  res <- d[o, o]
   res
 }
 
 
+# -------------------------------------------------------------------------
+
+# Create flashlight object
+flashRegr <- function(fit, data, response) {
+  fl <- flashlight(model = fit, data = data, y = response, label = "")
+  return(fl)
+}
+
+
+flashClassif <- function(fit, data, main) {
+  fl <- flashlight(
+    model = fit,
+    data = data,
+    label = "",
+    predict_function = function(m, X) predict(m, X) == main)
+}
+
+# -------------------------------------------------------------------------
+
 # could export these too
 
-vividImportance <-function (fit,data, response=NULL, importanceType=NULL,predictFun=NULL,...) {
-  UseMethod("vividImportance")
+#' @export
+vividImportance <-function (fit, data, response=NULL, importanceType=NULL, predictFun=NULL,...) {
+  UseMethod("vividImportance", fit)
 }
 
+#' @export
+# Default flashlight
+vividImportance.default <- function (fit,
+                                     data,
+                                     response = NULL,
+                                     importanceType = NULL,
+                                     predictFun=NULL) {
 
-vividImportance.default <- function (fit,data,response=NULL, importanceType=NULL, predictFun=NULL) {
+  data <- data.frame(data)
+  fl <- flashlight(model = fit, data = data, y = response, label = "")
+  imp <- light_importance(fl, m_repetitions = 4)
+  importance <- imp$data$value
+  return(importance)
+  message("Agnostic variable importance method used.")
+
 }
 
-vividImportance.ranger <- function (fit,data,response=NULL, importanceType=NULL, predictFun=NULL){
+#' @export
+# ranger
+vividImportance.ranger <- function (fit,
+                                    data,
+                                    response=NULL,
+                                    importanceType=NULL,
+                                    predictFun=NULL){
+  data <- data.frame(data)
+  if(fit$importance.mode == "none"){
+    print("No variable importance mode selected.")
+  }else{
+    importance <- fit$variable.importance
+    return(importance)
+    message("Agnostic variable importance method used.")
+  }
 }
 
+# mlr3 learner
+vividImportance.Learner <- function (fit,
+                                     data,
+                                     response = NULL,
+                                     importanceType = NULL,
+                                     predictFun = predictFun){
 
-vividImportance.Learner <- function (fit,data,response=NULL, importanceType=NULL,predictFun=predictFun){
+  lrnID <- fit$properties
+  testString <- "importance"
+
+  logID <- logical(length(lrnID))
+  for(i in seq_along(lrnID)){
+    logID[i] <- grepl(lrnID[i], testString, fixed = TRUE)
+  }
+
+    if(any(logID) == TRUE){
+      ovars <- fit$state$train_task$feature_names
+      Importance <- fit$importance()
+      impReorder <- Importance[order(factor(names(Importance), levels = ovars))]
+      suppressMessages({
+        Importance <- reshape2::melt(impReorder)
+      })
+      importance <-  Importance$value
+      message("Embedded variable importance method used.")
+    }
 }
 
 
@@ -109,8 +184,22 @@ vividInteraction <- function (fit,data, response=NULL, interactionType=NULL, ...
   UseMethod("vividInteraction")
 }
 
-vividInteraction.default <- function (fit,data,response=NULL, interactionType=NULL,
+vividInteraction.default <- function (fit, data, response=NULL, interactionType=NULL,
                                       nmax = 500, gridSize=10, predictFun=NULL) {
+  # Create flashlight object
+  flashRegr <- function(fit, data, response) {
+    fl <- flashlight(model = fit, data = data, y = response, label = "")
+    return(fl)
+  }
+
+
+  flashClassif <- function(fit, data, main) {
+    fl <- flashlight(
+      model = fit,
+      data = data,
+      label = "",
+      predict_function = function(m, X) predict(m, X) == main)
+  }
 
 }
 

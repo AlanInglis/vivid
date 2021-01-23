@@ -27,7 +27,9 @@
 #' @importFrom zenplots "groupData"
 #'
 #' @examples
+#' \dontrun{
 #' library(MASS)
+#' library(ranger)
 #' Boston1 <- Boston
 #' Boston1$chas<- factor(Boston1$chas)
 #' rf <- ranger(medv ~ ., data=Boston1)
@@ -38,7 +40,7 @@
 #' pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
 #' zpath<-calcZpath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
 #' pdpZen(Boston1, rf, response="medv", zpath=zpath, comboImage=T)
-#'
+#'}
 #' @export
 
 
@@ -46,7 +48,7 @@
 pdpZen <- function(data, fit, response, zpath=NULL,
                        pal=rev(RColorBrewer::brewer.pal(11,"RdYlBu")),
                        fitlims="pdp", gridSize = 10, nmax=500,class = 1,
-                      comboImage =FALSE,rug=TRUE,predictFun=NULL, parallel=FALSE,...){
+                      comboImage =FALSE,rug=TRUE,predictFun=condvis2::CVpredict, parallel=FALSE,...){
 
   if(parallel){
     plan(future::cluster)
@@ -59,8 +61,8 @@ pdpZen <- function(data, fit, response, zpath=NULL,
   }
   gridSize <- min(gridSize, nmax)
 
-  classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
-  if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
+   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
   predData <- predictFun(fit,data)
 

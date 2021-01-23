@@ -60,7 +60,9 @@ A zenplot of partial dependence values.
 Constructs a zigzag expanded navigation plot (zenplot) displaying partial dependence values.
 }
 \examples{
+\dontrun{
 library(MASS)
+library(ranger)
 Boston1 <- Boston
 Boston1$chas<- factor(Boston1$chas)
 rf <- ranger(medv ~ ., data=Boston1)
@@ -71,5 +73,5 @@ viv <- vivi(Boston1, rf, "medv", nmax=30) # use 30 rows, for speed
 pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
 zpath<-calcZpath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
 pdpZen(Boston1, rf, response="medv", zpath=zpath, comboImage=T)
-
+}
 }
