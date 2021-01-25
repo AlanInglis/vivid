@@ -60,6 +60,8 @@ vivi <- function(data, fit,  response, gridSize = 10, main = NULL, importanceTyp
   # as mlr3 xgboost removes some variables, the length of Vint and Vimp may not be equal
   # Here we remove feature(s) if necessary
   if(length(colnames(Vint)) == length(Vimp)){
+      col.order <- names(Vimp)
+      Vint <- Vint[,col.order] # make sure the order of Vimp & Vint match
       diag(Vint) <- Vimp   # set diagonal to equal Vimps
   }else{
       impColNames <- names(Vimp)    # get importance feature names
@@ -152,7 +154,8 @@ vividImportance.default <- function (fit,
   fl <- flashlight(model = fit, data = data, y = response, label = "")
   # extract importance
   imp <- light_importance(fl, m_repetitions = 4)
-  importance <- imp$data$value
+  importance <- imp$data[,3:4]
+  importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
   message("Agnostic variable importance method used.")
   return(importance)
 
