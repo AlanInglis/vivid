@@ -9,6 +9,7 @@ vivi(
   fit,
   response,
   gridSize = 10,
+  main = NULL,
   importanceType = NULL,
   nmax = 500,
   reorder = TRUE,
@@ -25,6 +26,8 @@ vivi(
 \item{response}{The name of the response for the fit}
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
+
+\item{main}{Define main category for classification.}
 
 \item{importanceType}{passed to vividImportance}
 

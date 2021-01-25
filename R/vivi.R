@@ -7,6 +7,7 @@
 #' @param fit A supervised machine learning model, which understands condvis2::CVpredict
 #' @param response The name of the response for the fit
 #' @param gridSize The size of the grid for evaluating the predictions.
+#' @param main Define main category for classification.
 #' @param importanceType passed to vividImportance
 #' @param nmax Maximum number of data rows to consider.
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
@@ -47,9 +48,38 @@
 #' @export
 
 
-vivi <- function(data, fit,  response, gridSize = 10, importanceType=NULL, nmax = 500,
-                 reorder = TRUE, class=1, predictFun = NULL, ...){
+vivi <- function(data, fit,  response, gridSize = 10, main = NULL, importanceType = NULL, nmax = 500,
+                 reorder = TRUE, class = 1, predictFun = NULL, ...){
 
+  # Call the importance function
+  Vimp <- vividImportance(data = data, fit = fit, response = response)
+
+  # Call the interaction function
+  Vint <- vividInteraction(data = data, fit = fit, response = response,  main = main)
+
+  # as mlr3 xgboost removes some variables, the length of Vint and Vimp may not be equal
+  # Here we remove feature(s) if necessary
+  if(length(colnames(Vint)) == length(Vimp)){
+      diag(Vint) <- Vimp   # set diagonal to equal Vimps
+  }else{
+      impColNames <- names(Vimp)    # get importance feature names
+      intColNames <- colnames(Vint) # get interaction feature names
+      difference <- setdiff(intColNames,impColNames) # get name of removed features
+      # remove feature(s) from matrix
+      Vint <- Vint[rownames(Vint) != difference, colnames(Vint) != difference]
+      diag(Vint) <- Vimp   # set diagonal to equal Vimps
+  }
+
+
+  # reorder
+  if(reorder == TRUE){
+   viviMatrix <-  vividReorder(Vint)
+  }else {viviMatrix <- Vint}
+
+  # Set class to vivid matrix and return
+  class(viviMatrix) <- c("vivid", class(viviMatrix))
+
+  return(viviMatrix)
 
 }
 
@@ -93,114 +123,254 @@ vividReorder <- function(d) {
 
 
 # -------------------------------------------------------------------------
-
-# Create flashlight object
-flashRegr <- function(fit, data, response) {
-  fl <- flashlight(model = fit, data = data, y = response, label = "")
-  return(fl)
-}
-
-
-flashClassif <- function(fit, data, main) {
-  fl <- flashlight(
-    model = fit,
-    data = data,
-    label = "",
-    predict_function = function(m, X) predict(m, X) == main)
-}
-
+# Variable Importance Measures
 # -------------------------------------------------------------------------
 
-# could export these too
 
 #' @export
-vividImportance <-function (fit, data, response=NULL, importanceType=NULL, predictFun=NULL,...) {
+# Main Vimp function:
+vividImportance <-function (fit, data, response = NULL, importanceType = NULL, predictFun = NULL,...) {
   UseMethod("vividImportance", fit)
 }
 
-#' @export
+
+
+# -------------------------------------------------------------------------
 # Default flashlight
+
+#' @export
 vividImportance.default <- function (fit,
                                      data,
                                      response = NULL,
                                      importanceType = NULL,
-                                     predictFun=NULL) {
+                                     predictFun = NULL) {
 
-  data <- data.frame(data)
+
+  print("DEFAULT IMP")
+
+  # create flashlight
   fl <- flashlight(model = fit, data = data, y = response, label = "")
+  # extract importance
   imp <- light_importance(fl, m_repetitions = 4)
   importance <- imp$data$value
-  return(importance)
   message("Agnostic variable importance method used.")
+  return(importance)
 
 }
 
-#' @export
+
+# -------------------------------------------------------------------------
 # ranger
+
+#' @export
 vividImportance.ranger <- function (fit,
                                     data,
-                                    response=NULL,
-                                    importanceType=NULL,
-                                    predictFun=NULL){
-  data <- data.frame(data)
+                                    response = NULL,
+                                    importanceType = NULL,
+                                    predictFun = NULL){
+
+  print("ranger imp")
+
+  # If no importance mode selected, then stop! Else, extract importance
   if(fit$importance.mode == "none"){
     print("No variable importance mode selected.")
-  }else{
+    stop()
+    }else{
     importance <- fit$variable.importance
+    names(importance) <- NULL
+    message("Embedded variable importance method used.")
     return(importance)
-    message("Agnostic variable importance method used.")
   }
 }
 
+
+# -------------------------------------------------------------------------
 # mlr3 learner
+
+#' @export
 vividImportance.Learner <- function (fit,
                                      data,
                                      response = NULL,
                                      importanceType = NULL,
                                      predictFun = predictFun){
+  print("learner Imp")
 
+  # check object properties
   lrnID <- fit$properties
+
+  # if learner doesnt have an embedded Vimp method then use default
+   if(length(lrnID) == 0){
+     print("No variable importance mode available. Using agnostic method.")
+     vividImportance.default(fit, data, response)
+   }else{
+
+  # create a string called importance
   testString <- "importance"
 
+  # Check if any of the properties equals string
   logID <- logical(length(lrnID))
   for(i in seq_along(lrnID)){
     logID[i] <- grepl(lrnID[i], testString, fixed = TRUE)
   }
 
+  # if above is true, then extract importance
     if(any(logID) == TRUE){
-      ovars <- fit$state$train_task$feature_names
-      Importance <- fit$importance()
-      impReorder <- Importance[order(factor(names(Importance), levels = ovars))]
-      suppressMessages({
-        Importance <- reshape2::melt(impReorder)
-      })
-      importance <-  Importance$value
+      ovars <- colnames(data)
+      importance <- fit$importance()
+      importance <- importance[order(factor(names(importance), levels = ovars))] # reorder to match data
+      #names(importance) <- NULL
       message("Embedded variable importance method used.")
+      return(importance)
+
     }
+   }
 }
 
 
-vividInteraction <- function (fit,data, response=NULL, interactionType=NULL, ...) {
+# -------------------------------------------------------------------------
+# randomForest
+
+
+#' @export
+vividImportance.randomForest <- function (fit,
+                                    data,
+                                    response = NULL,
+                                    importanceType = NULL,
+                                    predictFun = NULL){
+
+  print("randomForest Imp")
+  importance <- fit$importance
+  return(importance)
+}
+
+
+
+
+
+# -------------------------------------------------------------------------
+# space for more ML models here
+
+
+
+# -------------------------------------------------------------------------
+# Interaction Calculation:
+# -------------------------------------------------------------------------
+
+# Main interaction function
+#' @export
+vividInteraction <- function (fit,data, response = NULL, main = NULL, interactionType = NULL, ...) {
   UseMethod("vividInteraction")
 }
 
-vividInteraction.default <- function (fit, data, response=NULL, interactionType=NULL,
-                                      nmax = 500, gridSize=10, predictFun=NULL) {
-  # Create flashlight object
-  flashRegr <- function(fit, data, response) {
-    fl <- flashlight(model = fit, data = data, y = response, label = "")
-    return(fl)
+
+# -------------------------------------------------------------------------
+# default flashlight
+
+#' @export
+vividInteraction.default <- function (fit,
+                                      data,
+                                      response = NULL,
+                                      main = NULL,
+                                      interactionType = NULL,
+                                      nmax = 500,
+                                      gridSize = 10,
+                                      predictFun = NULL) {
+
+  # Check if regr or classif. If classif use different method
+  if(!is.null(main)){
+    vividInteraction.classif(fit, data, response, main)
+  }else{
+  message("Calculating interactions...")
+  print("default Int")
+
+
+  # remove response column
+  drops <- response
+  ovars  <- data[ , !(names(data) %in% drops)]
+  ovars <- colnames(ovars)
+
+  # Interaction Matrix:
+  res  <- NULL
+
+  # create flashlight
+  fl <- flashlight(model = fit, data = data, y = response, label = "",
+                   predict_function = function(fit, data) CVpredict(fit, data))
+
+  # calculate interactions
+  res <- light_interaction(fl, pairwise = TRUE, type = "H", grid_size = gridSize,
+                           normalize = F, n_max = nmax)$data
+
+  # reorder
+  res[["variable"]]<- reorder(res[["variable"]], res[["value"]])
+
+  # create matrix of values
+  vars2 <- t(simplify2array(strsplit(as.character(res[["variable"]]),":"))) # split/get feature names
+  dinteraction <- matrix(0, length(ovars), length(ovars))                   # create matrix
+  rownames(dinteraction) <- colnames(dinteraction) <- ovars                 # set names
+  dinteraction[vars2] <- res[["value"]]                                     # set values
+  dinteraction[lower.tri(dinteraction)] = t(dinteraction)[lower.tri(dinteraction)]
+  return(dinteraction)
   }
-
-
-  flashClassif <- function(fit, data, main) {
-    fl <- flashlight(
-      model = fit,
-      data = data,
-      label = "",
-      predict_function = function(m, X) predict(m, X) == main)
-  }
-
 }
 
 
+# -------------------------------------------------------------------------
+# classification flashlight
+
+#' @export
+vividInteraction.classif <- function (fit,
+                                      data,
+                                      response = NULL,
+                                      main = NULL,
+                                      interactionType = NULL,
+                                      nmax = 500,
+                                      gridSize = 10,
+                                      predictFun = NULL) {
+
+  message("Calculating interactions...")
+  print("classif Int")
+
+
+  # remove response column
+  drops <- response
+  ovars  <- data[ , !(names(data) %in% drops)]
+  ovars <- colnames(ovars)
+
+  # Interaction Matrix:
+  res  <- NULL
+
+  # create flashlight
+  fl <- flashlight(
+    model = fit,
+    data = data,
+    y = response,
+    label = "",
+    predict_function = function(m, X) predict(m, X) == main)
+
+
+
+  # calculate interactions
+  res <- light_interaction(fl, pairwise = TRUE, type = "H", grid_size = gridSize,
+                           normalize = F, n_max = nmax)$data
+
+  ## Removing rows containing target and adding df back to FL object
+   # get data
+  res_edit <- res
+  # remove target
+  res_edit <- res_edit[!grepl(response, res_edit$variable),]
+  # add back into FL object
+  res <- res_edit
+  # reorder
+  res[["variable"]]<- reorder(res[["variable"]], res[["value"]])
+
+  # create matrix of values
+  vars2 <- t(simplify2array(strsplit(as.character(res[["variable"]]),":"))) # split/get feature names
+  dinteraction <- matrix(0, length(ovars), length(ovars))                   # create matrix
+  rownames(dinteraction) <- colnames(dinteraction) <- ovars                 # set names
+  dinteraction[vars2] <- res[["value"]]                                     # set values
+  dinteraction[lower.tri(dinteraction)] = t(dinteraction)[lower.tri(dinteraction)]
+  return(dinteraction)
+}
+
+
+# -------------------------------------------------------------------------
