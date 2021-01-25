@@ -16,7 +16,7 @@ pdpZen(
   class = 1,
   comboImage = FALSE,
   rug = TRUE,
-  predictFun = NULL,
+  predictFun = condvis2::CVpredict,
   parallel = FALSE,
   ...
 )
@@ -48,8 +48,6 @@ Predictions outside fitlims are squished on the color scale.}
 \item{rug}{If TRUE adds rugs for the data to the pdp plots}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
-
-\item{parallel}{If TRUE then the method is executed in parallel.}
 
 \item{...}{passed on to zenplot}
 }

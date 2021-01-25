@@ -17,8 +17,6 @@
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param rug If TRUE adds rugs for the data to the pdp plots
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
-
-#' @param parallel If TRUE then the method is executed in parallel.
 #' @param ... passed on to zenplot
 #' @return A zenplot of partial dependence values.
 #'
@@ -27,11 +25,7 @@
 #' @importFrom zenplots "groupData"
 #'
 #' @examples
-
 #' \dontrun{
-
-#' #' \dontrun{
-
 #' library(MASS)
 #' library(ranger)
 #' Boston1 <- Boston
@@ -57,9 +51,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
   if (!(requireNamespace("zenplots", quietly=TRUE))){
     stop("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
   }
-  if(parallel){
-    plan(future::cluster)
-  }
+
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5,nmax)
@@ -205,10 +197,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
 
     ggplot_gtable(ggplot_build(p))
   }
-  if(parallel){
-    # Closing works by setting them to default
-    plan("default")
-  }
+
   suppressMessages({
     zenplots::zenplot(zdata, pkg="grid", labs=list(group=NULL),
             plot2d = pdpnn, ...)

@@ -16,9 +16,6 @@
 #' @param nIce Number of ice curves to be plotted, defaults to 30
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
-
-#' @param parallel If TRUE then the method is executed in parallel.
-
 #' @return A matrix of values
 #'
 #' @importFrom condvis2 "CVpredict"
@@ -69,11 +66,8 @@
 pdpPairs <- function(data, fit,response,
                      vars = NULL, pal=rev(RColorBrewer::brewer.pal(11,"RdYlBu")),
                      fitlims = "pdp", gridSize = 10, nmax=500,class = 1,
-                     nIce=30, comboImage =FALSE,predictFun=NULL, parallel=FALSE) {
-  # Set up registered cluster for parallel
-  if(parallel){
-    plan(future::cluster)
-  }
+                     nIce=30, comboImage =FALSE,predictFun=NULL) {
+
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5,nmax)
@@ -235,10 +229,7 @@ pdpPairs <- function(data, fit,response,
           axis.text.y = element_text(size = 0),
           strip.text = element_text(face ="bold", colour ="red", size = 5))
 
-  if(parallel){
-    # Closing works by setting them to default
-    plan("default")
-  }
+
   suppressMessages(print(p))
   invisible(p)
 
