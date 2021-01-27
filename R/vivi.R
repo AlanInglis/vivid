@@ -50,11 +50,18 @@
 vivi <- function(data, fit,  response, gridSize = 10, importanceType = NULL, nmax = 500,
                  reorder = TRUE, class = 1, predictFun = NULL, ...){
 
+  # check for predict function
+  classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+  if (is.null(predictFun)){
+    predictFun <- CVpredictfun(classif, class)
+  }
+
   # Call the importance function
   vImp <- vividImportance(data = data,
                           fit  = fit,
                           response = response,
-                          importanceType = importanceType)
+                          importanceType = importanceType,
+                          predictFun = predictFun)
 
   # Call the interaction function
   vInt <- vividInteraction(data = data,
@@ -62,13 +69,13 @@ vivi <- function(data, fit,  response, gridSize = 10, importanceType = NULL, nma
                            response = response,
                            class = class,
                            interactionType = NULL,
-                           nmax = 500,
-                           gridSize = 10,
-                           predictFun = NULL)
+                           nmax = nmax,
+                           gridSize = gridSize,
+                           predictFun = predictFun)
 
 
-  col.order <- names(vImp)
-  vInt <- vInt[,col.order] # make sure the order of vImp & vInt match
+  orderNames <- names(vImp)
+  vInt <- vInt[orderNames, orderNames] # make sure the order of vImp & vInt match
   diag(vInt) <- vImp   # set diagonal to equal vImps
 
 
@@ -149,9 +156,16 @@ vividImportance.default <- function (fit,
 
   print("DEFAULT IMP")
 
+  # check for predict function
+  classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+  if (is.null(predictFun)){
+    predictFun <- CVpredictfun(classif, class)
+  }
+
   # create flashlight
   fl <- flashlight(model = fit, data = data, y = response, label = "",
-                   predict_function = function(fit, data) CVpredict(fit, data))
+                   predict_function = function(fit, data) predictFun(fit, data))
+
   # extract importance
   imp <- light_importance(fl, m_repetitions = 4)
   importance <- imp$data[,3:4]
@@ -271,7 +285,13 @@ vividImportance.randomForest <- function (fit,
 
 # Main interaction function
 #' @export
-vividInteraction <- function (fit,data, response = NULL, main = NULL, interactionType = NULL, ...) {
+vividInteraction <- function (fit,data,
+                              response = NULL,
+                              class = 1,
+                              interactionType = NULL,
+                              nmax = 500,
+                              gridSize = 10,
+                              predictFun = NULL, ...) {
   UseMethod("vividInteraction")
 }
 
