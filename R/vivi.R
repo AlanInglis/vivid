@@ -60,6 +60,7 @@ vivi <- function(data, fit,  response, gridSize = 10, importanceType = NULL, nma
   vImp <- vividImportance(data = data,
                           fit  = fit,
                           response = response,
+                          class = class,
                           importanceType = importanceType,
                           predictFun = predictFun)
 
@@ -137,7 +138,7 @@ vividReorder <- function(d) {
 
 #' @export
 # Main vImp function:
-vividImportance <-function (fit, data, response = NULL, importanceType = NULL, predictFun = NULL,...) {
+vividImportance <-function (fit, data, response = NULL, class = 1, importanceType = NULL, predictFun = NULL,...) {
   UseMethod("vividImportance", fit)
 }
 
@@ -150,11 +151,9 @@ vividImportance <-function (fit, data, response = NULL, importanceType = NULL, p
 vividImportance.default <- function (fit,
                                      data,
                                      response = NULL,
+                                     class = 1,
                                      importanceType = NULL,
                                      predictFun = NULL) {
-
-
-  print("DEFAULT IMP")
 
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
@@ -183,14 +182,14 @@ vividImportance.default <- function (fit,
 vividImportance.ranger <- function (fit,
                                     data,
                                     response = NULL,
+                                    class = 1,
                                     importanceType = NULL,
                                     predictFun = NULL){
 
-  print("ranger imp")
 
   # If no importance mode selected, then default! Else, extract importance type
   if (fit$importance.mode == "none") {
-    print("No variable importance mode selected. Using agnostic method.")
+    message("No variable importance mode selected. Using agnostic method.")
     vividImportance.default(fit, data, response)
   } else if (fit$importance.mode == "permutation") {
     importance <- fit$variable.importance
@@ -216,16 +215,16 @@ vividImportance.ranger <- function (fit,
 vividImportance.Learner <- function (fit,
                                      data,
                                      response = NULL,
+                                     class = 1,
                                      importanceType = NULL,
                                      predictFun = predictFun){
-  print("learner Imp")
 
   # check object properties
   lrnID <- fit$properties
 
   # if learner doesnt have an embedded vImp method then use default
    if(length(lrnID) == 0){
-     print("No variable importance mode available. Using agnostic method.")
+     message("No variable importance mode available. Using agnostic method.")
      vividImportance.default(fit, data, response)
    }else{
       ovars <- colnames(data)
@@ -244,10 +243,10 @@ vividImportance.Learner <- function (fit,
 vividImportance.randomForest <- function (fit,
                                     data,
                                     response = NULL,
+                                    class = 1,
                                     importanceType = NULL,
                                     predictFun = NULL){
 
-  print("randomForest Imp")
 
   # check to see if if randomForest importance is TRUE
   fitCall <- as.character(fit$call)
@@ -309,15 +308,10 @@ vividInteraction.default <- function (fit,
                                       gridSize = 10,
                                       predictFun = NULL) {
 
-    message("Calculating interactions...")
+  message("Calculating interactions...")
 
   # Check if regr or classif.
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
-  if(classif){
-    print("classif Int")
-  }else{
-    print("default Int")
-  }
 
   # check for predict function
   if (is.null(predictFun)){
