@@ -9,7 +9,6 @@ vivi(
   fit,
   response,
   gridSize = 10,
-  main = NULL,
   importanceType = NULL,
   nmax = 500,
   reorder = TRUE,
@@ -26,8 +25,6 @@ vivi(
 \item{response}{The name of the response for the fit}
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
-
-\item{main}{Define main category for classification.}
 
 \item{importanceType}{passed to vividImportance}
 
@@ -49,8 +46,8 @@ and variable interaction on the off-diagonal.
 \examples{
 aq <- data.frame(airquality)
 aq <- na.omit(airquality)
-f <- lm(Ozone ~ ., data=aq)
-plot(vivi(aq,f, "Ozone")) # as expected all interactions are zero
+f <- lm(Ozone ~ ., data = aq)
+plot(vivi(aq, f, "Ozone")) # as expected all interactions are zero
 \dontrun{
 # Run an mlr ranger model:
 library(mlr3)
@@ -66,9 +63,9 @@ plot(m, type = "heatMap")
 }
 \dontrun{
 library(ranger)
-rf <- ranger(Species ~ ., data= iris)
-plot(vivi(iris,rf, "Species"))
-rf <- ranger(Species ~ ., data= iris, importance="impurity")
-plot(vivi(iris,rf, "Species"))
+rf <- ranger(Species ~ ., data = iris)
+plot(vivi(iris, rf, "Species"))
+rf <- ranger(Species ~ ., data = iris, importance = "impurity")
+plot(vivi(iris, rf, "Species"))
 }
 }

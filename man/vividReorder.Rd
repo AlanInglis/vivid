@@ -21,8 +21,8 @@ Reorders a square matrix so that values of high importance and
 interaction strength are pushed to the top left of the matrix.
 }
 \examples{
-f <- lm(Sepal.Length ~ ., data=iris[,-5])
-m <- vivi(iris[,-5], f, "Sepal.Length")
-corimp <- abs(cor(iris[,-5])[1,-1])
+f <- lm(Sepal.Length ~ ., data = iris[, -5])
+m <- vivi(iris[, -5], f, "Sepal.Length")
+corimp <- abs(cor(iris[, -5])[1, -1])
 viviUpdate(m, corimp) # use correlation as importance and reorder
 }
