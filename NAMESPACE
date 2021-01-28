@@ -2,6 +2,7 @@
 
 S3method(vividImportance,Learner)
 S3method(vividImportance,default)
+S3method(vividImportance,lda)
 S3method(vividImportance,randomForest)
 S3method(vividImportance,ranger)
 S3method(vividInteraction,default)
