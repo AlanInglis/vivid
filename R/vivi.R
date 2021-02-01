@@ -46,6 +46,8 @@
 #' @export
 
 
+# Main vivi function ------------------------------------------------------
+
 vivi <- function(data, fit, response, gridSize = 10, importanceType = NULL, nmax = 500,
                  reorder = TRUE, class = 1, predictFun = NULL, ...) {
 
@@ -87,7 +89,7 @@ vivi <- function(data, fit, response, gridSize = 10, importanceType = NULL, nmax
     viviMatrix <- vividReorder(vInt)
   } else {
     viviMatrix <- vInt
-  } # NO NEED
+  }
 
   # Set class to vivid matrix and return
   class(viviMatrix) <- c("vivid", class(viviMatrix))
@@ -96,7 +98,8 @@ vivi <- function(data, fit, response, gridSize = 10, importanceType = NULL, nmax
 }
 
 
-# -------------------------------------------------------------------------
+
+# vividReorder ------------------------------------------------------------
 
 #' vividReorder
 #' @description Reorders a square matrix so that values of high importance and
@@ -133,9 +136,11 @@ vividReorder <- function(d) {
 }
 
 
-# -------------------------------------------------------------------------
-# Variable Importance Measures
-# -------------------------------------------------------------------------
+
+
+# Variable Importance Measures: -------------------------------------------
+
+# vividImportance ---------------------------------------------------------
 
 #' vividImportance
 #' @description Measures variable importance for a model fit. If the model supplied does not have
@@ -155,9 +160,10 @@ vividReorder <- function(d) {
 #' @examples
 #' # Measuring variable importance using an agnostoc method
 #' aq <- na.omit(airquality)
-#' lmf <- lm(Ozone ~ ., data=aq)
+#' lmf <- lm(Ozone ~ ., data = aq)
 #' vividImportance(fit = lmf, data = aq, response = "Ozone")
 #' @export
+
 # Main vImp function:
 vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, ...) {
   UseMethod("vividImportance", fit)
@@ -165,8 +171,8 @@ vividImportance <- function(fit, data, response = NULL, importanceType = NULL, p
 
 
 
-# -------------------------------------------------------------------------
-# Default flashlight
+
+# Default flashlight ------------------------------------------------------
 
 #' @describeIn vividImportance  vividImportance method
 #' @export
@@ -213,8 +219,8 @@ Returning a vector of 1's for importance values.
 }
 
 
-# -------------------------------------------------------------------------
-# ranger
+
+# ranger ----------------------------------------------------------------
 
 #' @describeIn vividImportance  vividImportance method
 #' @export
@@ -245,8 +251,8 @@ vividImportance.ranger <- function(fit,
 }
 
 
-# -------------------------------------------------------------------------
-# randomForest
+
+# randomForest ------------------------------------------------------------
 
 #' @describeIn vividImportance  vividImportance method
 #' @export
@@ -277,8 +283,8 @@ vividImportance.randomForest <- function(fit,
   return(importance)
 }
 
-# -------------------------------------------------------------------------
-# mlr3 learner
+
+# mlr3 learner ------------------------------------------------------------
 
 #' @describeIn vividImportance  vividImportance method
 #' @export
@@ -317,8 +323,8 @@ vividImportance.Learner <- function(fit,
 }
 
 
-# -------------------------------------------------------------------------
-# LDA
+
+# LDA ---------------------------------------------------------------------
 
 #' @describeIn vividImportance  vividImportance method
 #' @export
@@ -357,14 +363,21 @@ Returning a vector of 1's for importance values.
 
 
 
-# -------------------------------------------------------------------------
-# space for more ML models here
+
+#  Space for more ML models here ------------------------------------------
 
 
 
-# -------------------------------------------------------------------------
-# Interaction Calculation:
-# -------------------------------------------------------------------------
+
+
+
+
+# Interaction Calculation: ------------------------------------------------
+
+# vividInteraction --------------------------------------------------------
+
+
+
 
 #' vividInteraction
 #'
@@ -388,10 +401,10 @@ Returning a vector of 1's for importance values.
 #' @examples
 #' library(ranger)
 #' aq <- na.omit(airquality)
-#' rF <- ranger(Ozone ~ ., data=aq, importance = "permutation")
+#' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' vividInteraction(fit = rF, data = aq, response = "Ozone")
-#'
 #' @export
+
 vividInteraction <- function(fit,
                              data,
                              response = NULL,
@@ -404,8 +417,8 @@ vividInteraction <- function(fit,
 }
 
 
-# -------------------------------------------------------------------------
-# default flashlight
+
+# default flashlight interactions -----------------------------------------
 
 #' @describeIn vividInteraction  vividInteraction method
 #' @export
