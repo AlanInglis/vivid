@@ -2,10 +2,10 @@
 #'
 #' @description Creates a pairs plot showing bivariate pdp on upper diagonal, ice/pdp on the diagonal and data on the lower diagonal
 #'
-#' @param data Data frame used for fit
+#' @param data Data frame used for fit.
 #' @param fit A supervised machine learning model, which understands condvis2::CVpredict
-#' @param response The name of the response for the fit
-#' @param vars The variables to plot (and their order), defaults to all variables other than response
+#' @param response The name of the response for the fit.
+#' @param vars The variables to plot (and their order), defaults to all variables other than response.
 #' @param pal A vector of colors to show predictions, for use with scale_fill_gradientn
 #' @param fitlims Specifies the fit range for the color map. Options are a numeric vector of length 2,
 #'  "pdp" (default), in which cases limits are calculated from the pdp, or "all", when limits are calculated from the observations and pdp.
@@ -13,10 +13,10 @@
 #' @param gridSize The size of the grid for evaluating the predictions.
 #' @param nmax Uses sample of nmax data rows for the pdp. Use all rows if NULL.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
-#' @param nIce Number of ice curves to be plotted, defaults to 30
+#' @param nIce Number of ice curves to be plotted, defaults to 30.
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
-#' @return A matrix of values
+#' @return A matrix of values.
 #'
 #' @importFrom condvis2 "CVpredict"
 #'

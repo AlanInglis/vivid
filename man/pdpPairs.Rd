@@ -20,13 +20,13 @@ pdpPairs(
 )
 }
 \arguments{
-\item{data}{Data frame used for fit}
+\item{data}{Data frame used for fit.}
 
 \item{fit}{A supervised machine learning model, which understands condvis2::CVpredict}
 
-\item{response}{The name of the response for the fit}
+\item{response}{The name of the response for the fit.}
 
-\item{vars}{The variables to plot (and their order), defaults to all variables other than response}
+\item{vars}{The variables to plot (and their order), defaults to all variables other than response.}
 
 \item{pal}{A vector of colors to show predictions, for use with scale_fill_gradientn}
 
@@ -40,14 +40,14 @@ Predictions outside fitlims are squished on the color scale.}
 
 \item{class}{Category for classification, a factor level, or a number indicating which factor level.}
 
-\item{nIce}{Number of ice curves to be plotted, defaults to 30}
+\item{nIce}{Number of ice curves to be plotted, defaults to 30.}
 
 \item{comboImage}{If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 }
 \value{
-A matrix of values
+A matrix of values.
 }
 \description{
 Creates a pairs plot showing bivariate pdp on upper diagonal, ice/pdp on the diagonal and data on the lower diagonal
@@ -55,33 +55,33 @@ Creates a pairs plot showing bivariate pdp on upper diagonal, ice/pdp on the dia
 \examples{
 # Load in the data:
 aq <- na.omit(airquality)
-f <- lm(Ozone ~ ., data=aq)
-pdpPairs(aq,f,"Ozone")
+f <- lm(Ozone ~ ., data = aq)
+pdpPairs(aq, f, "Ozone")
 \dontrun{
 # Run an mlr ranger model:
 library(mlr3)
 library(mlr3learners)
 library(ranger)
 library(MASS)
-Boston1 <- Boston[,c(4:6,8,13:14)]
+Boston1 <- Boston[, c(4:6, 8, 13:14)]
 Boston1$chas <- factor(Boston1$chas)
 task <- TaskRegr$new(id = "Boston1", backend = Boston1, target = "medv")
 learner <- lrn("regr.ranger", importance = "permutation")
 fit <- learner$train(task)
-pdpPairs(Boston1[1:30,], fit, "medv" )
-pdpPairs(Boston1[1:30], fit, "medv" , comboImage=TRUE)
+pdpPairs(Boston1[1:30, ], fit, "medv")
+pdpPairs(Boston1[1:30], fit, "medv", comboImage = TRUE)
 viv <- vivi(Boston1, fit, "medv")
 # show top variables only
-pdpPairs(Boston1[1:30,], fit, "medv" , comboImage=TRUE, vars=rownames(viv)[1:4])
+pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE, vars = rownames(viv)[1:4])
 }
 \dontrun{
 library(ranger)
-rf <- ranger(Species ~ ., data= iris, probability=TRUE)
-pdpPairs(iris, rf, "Species" )  # prediction probs for first class, setosa
-pdpPairs(iris, rf, "Species" , class="versicolor")  # prediction probs versicolor
+rf <- ranger(Species ~ ., data = iris, probability = TRUE)
+pdpPairs(iris, rf, "Species") # prediction probs for first class, setosa
+pdpPairs(iris, rf, "Species", class = "versicolor") # prediction probs versicolor
 # and with mlr3
 task <- TaskClassif$new(id = "iris", backend = iris, target = "Species")
-fitm  <- lrn("classif.ranger", importance = "permutation",predict_type = "prob" )$train(task)
-pdpPairs(iris, fitm, "Species" , class="versicolor")
+fitm <- lrn("classif.ranger", importance = "permutation", predict_type = "prob")$train(task)
+pdpPairs(iris, fitm, "Species", class = "versicolor")
 }
 }
