@@ -3,16 +3,16 @@
 #' @description Creates a matrix displaying variable importance on the diagonal
 #'  and variable interaction on the off-diagonal.
 #'
-#' @param data Data frame used for fit
 #' @param fit A supervised machine learning model, which understands condvis2::CVpredict
-#' @param response The name of the response for the fit
+#' @param data Data frame used for fit.
+#' @param response The name of the response for the fit.
 #' @param gridSize The size of the grid for evaluating the predictions.
-#' @param importanceType passed to vividImportance
+#' @param importanceType passed to vividImportance.
 #' @param nmax Maximum number of data rows to consider.
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
-#' @return A matrix of values, of class vivid
+#' @return A matrix of values, of class vivid.
 #'
 #' @importFrom flashlight "flashlight"
 #' @importFrom flashlight "light_importance"
@@ -39,7 +39,7 @@
 #' \dontrun{
 #' library(ranger)
 #' rf <- ranger(Species ~ ., data = iris)
-#' plot(vivi(fit = rf, data = iris, response =  "Species"))
+#' plot(vivi(fit = rf, data = iris, response = "Species"))
 #' rf <- ranger(Species ~ ., data = iris, importance = "impurity")
 #' plot(vivi(fit = rf, data = iris, response = "Species"))
 #' }
@@ -87,7 +87,7 @@ vivi <- function(data, fit, response, gridSize = 10, importanceType = NULL, nmax
     viviMatrix <- vividReorder(vInt)
   } else {
     viviMatrix <- vInt
-  }# NO NEED
+  } # NO NEED
 
   # Set class to vivid matrix and return
   class(viviMatrix) <- c("vivid", class(viviMatrix))
@@ -105,7 +105,7 @@ vivi <- function(data, fit, response, gridSize = 10, importanceType = NULL, nmax
 #' @param newImp A named vector of variable importances.
 #' @param reorder If TRUE, uses vividReorder on the matrix
 #' @name vividReorder
-#' @return A reordered version of d
+#' @return A reordered version of d.
 #' @importFrom DendSer "dser"
 #' @importFrom DendSer "costLS"
 #' @export
@@ -137,7 +137,26 @@ vividReorder <- function(d) {
 # Variable Importance Measures
 # -------------------------------------------------------------------------
 
-
+#' vividImportance
+#' @description Measures variable importance for a model fit. If the model supplied does not have
+#' and embedded variable importance measure, then an agnostic permutation method is used.
+#' @param fit A supervised machine learning model, which understands condvis2::CVpredict
+#' @param data Data frame used for fit
+#' @param response The name of the response for the fit.
+#' @param importanceType passed to vividImportance.
+#' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
+#' @return A named vector of variable importance.
+#' @name vividImportance
+#' @importFrom flashlight "flashlight"
+#' @importFrom flashlight "light_importance"
+#' @importFrom flashlight "light_interaction"
+#' @importFrom condvis2 "CVpredict"
+#'
+#' @examples
+#' # Measuring variable importance using an agnostoc method
+#' aq <- na.omit(airquality)
+#' lmf <- lm(Ozone ~ ., data=aq)
+#' vividImportance(fit = lmf, data = aq, response = "Ozone")
 #' @export
 # Main vImp function:
 vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, ...) {
@@ -149,6 +168,7 @@ vividImportance <- function(fit, data, response = NULL, importanceType = NULL, p
 # -------------------------------------------------------------------------
 # Default flashlight
 
+#' @describeIn vividImportance  vividImportance method
 #' @export
 vividImportance.default <- function(fit,
                                     data,
@@ -165,12 +185,12 @@ vividImportance.default <- function(fit,
   # create flashlight
   fl <- flashlight(
     model = fit, data = data, y = response, label = "",
-    predict_function =  predictFun
+    predict_function = predictFun
   )
 
   # extract importance
   suppressWarnings(
-  imp <- light_importance(fl, m_repetitions = 4)
+    imp <- light_importance(fl, m_repetitions = 4)
   )
   importance <- imp$data[, 3:4]
   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
@@ -178,13 +198,16 @@ vividImportance.default <- function(fit,
 
   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
   suppressWarnings(
-    if(is.nan(importance[1:length(importance)])){
+    if (is.nan(importance[1:length(importance)])) {
       message("
 Response type not supported.
 Models with numeric or binary response are currently supported.
-Returning a vector of 1's")
+Returning a vector of 1's for importance values.
+              ")
       importance <- replace(importance, is.nan(importance), 1)
-    }else{message("Agnostic variable importance method used.")}
+    } else {
+      message("Agnostic variable importance method used.")
+    }
   )
   return(importance)
 }
@@ -193,6 +216,7 @@ Returning a vector of 1's")
 # -------------------------------------------------------------------------
 # ranger
 
+#' @describeIn vividImportance  vividImportance method
 #' @export
 vividImportance.ranger <- function(fit,
                                    data,
@@ -224,6 +248,7 @@ vividImportance.ranger <- function(fit,
 # -------------------------------------------------------------------------
 # randomForest
 
+#' @describeIn vividImportance  vividImportance method
 #' @export
 vividImportance.randomForest <- function(fit,
                                          data,
@@ -236,7 +261,7 @@ vividImportance.randomForest <- function(fit,
   fitImp <- dim(fit$importance)
 
   # if importance = T, then choose between mse and nodePurity
-  if(fitImp[2] == 2){
+  if (fitImp[2] == 2) {
     if (is.null(importanceType)) {
       stop("importanceType must not be NULL. Choose either '%IncMSE' or 'IncNodePurity'.")
     }
@@ -246,7 +271,7 @@ vividImportance.randomForest <- function(fit,
       importance <- fit$importance[, 2]
     }
   } else {
-    importance <-fit$importance[,1]
+    importance <- fit$importance[, 1]
   }
 
   return(importance)
@@ -255,6 +280,7 @@ vividImportance.randomForest <- function(fit,
 # -------------------------------------------------------------------------
 # mlr3 learner
 
+#' @describeIn vividImportance  vividImportance method
 #' @export
 vividImportance.Learner <- function(fit,
                                     data,
@@ -274,7 +300,7 @@ vividImportance.Learner <- function(fit,
   if (length(lrnID) == 0) {
     message("No variable importance mode available. Using agnostic method.")
     vividImportance.default(fit, data, response, importanceType, predictFun)
-  } else if (fit$packages == "xgboost"){
+  } else if (fit$packages == "xgboost") {
     # mlr3 xgboost omits some features. Here we are adding the omitted feature back
     # with a value of 0
     importance <- fit$importance()
@@ -283,7 +309,7 @@ vividImportance.Learner <- function(fit,
     differernceNames <- setdiff(featureNames, impNames)
     importance <- c(importance, setNames(0, differernceNames))
     return(importance)
-    } else {
+  } else {
     importance <- fit$importance()
     message("Embedded variable importance method used.")
     return(importance)
@@ -294,15 +320,16 @@ vividImportance.Learner <- function(fit,
 # -------------------------------------------------------------------------
 # LDA
 
+#' @describeIn vividImportance  vividImportance method
 #' @export
 vividImportance.lda <- function(fit,
                                 data,
                                 response = NULL,
                                 importanceType = NULL,
                                 predictFun = NULL) {
-
-  fl <- flashlight(model = fit, data = data, y = response, label = "",
-                   predict_function =  CVpredictfun(TRUE, class = 1)
+  fl <- flashlight(
+    model = fit, data = data, y = response, label = "",
+    predict_function = CVpredictfun(TRUE, class = 1)
   )
 
   suppressWarnings(
@@ -313,13 +340,16 @@ vividImportance.lda <- function(fit,
 
   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
   suppressWarnings(
-    if(is.nan(importance[1:length(importance)])){
+    if (is.nan(importance[1:length(importance)])) {
       message("
 Response type not supported.
 Models with numeric or binary response are currently supported.
-Returning a vector of 1's for importance values.")
+Returning a vector of 1's for importance values.
+              ")
       importance <- replace(importance, is.nan(importance), 1)
-    }else{message("Agnostic variable importance method used.")}
+    } else {
+      message("Agnostic variable importance method used.")
+    }
   )
   return(importance)
 }
@@ -336,9 +366,34 @@ Returning a vector of 1's for importance values.")
 # Interaction Calculation:
 # -------------------------------------------------------------------------
 
-# Main interaction function
+#' vividInteraction
+#'
+#' @description Creates a matrix displaying variable interaction on the off-diagonal.
+#'
+#' @param fit A supervised machine learning model, which understands condvis2::CVpredict
+#' @param data Data frame used for fit.
+#' @param response The name of the response for the fit.
+#' @param gridSize The size of the grid for evaluating the predictions.
+#' @param interactionType passed to vividInteraction.
+#' @param nmax Maximum number of data rows to consider.
+#' @param class Category for classification, a factor level, or a number indicating which factor level.
+#' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
+#' @return A matrix of values, of class vivid.
+#'
+#' @importFrom flashlight "flashlight"
+#' @importFrom flashlight "light_importance"
+#' @importFrom flashlight "light_interaction"
+#' @importFrom condvis2 "CVpredict"
+#'
+#' @examples
+#' library(ranger)
+#' aq <- na.omit(airquality)
+#' rF <- ranger(Ozone ~ ., data=aq, importance = "permutation")
+#' vividInteraction(fit = rF, data = aq, response = "Ozone")
+#'
 #' @export
-vividInteraction <- function(fit, data,
+vividInteraction <- function(fit,
+                             data,
                              response = NULL,
                              class = 1,
                              interactionType = NULL,
@@ -352,6 +407,7 @@ vividInteraction <- function(fit, data,
 # -------------------------------------------------------------------------
 # default flashlight
 
+#' @describeIn vividInteraction  vividInteraction method
 #' @export
 vividInteraction.default <- function(fit,
                                      data,
