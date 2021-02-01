@@ -10,6 +10,7 @@ vivi(
   response,
   gridSize = 10,
   importanceType = NULL,
+  importanceMeasure = NULL,
   nmax = 500,
   reorder = TRUE,
   class = 1,
@@ -26,7 +27,9 @@ vivi(
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{importanceType}{passed to vividImportance.}
+\item{importanceType}{Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.}
+
+\item{importanceMeasure}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
 
 \item{nmax}{Maximum number of data rows to consider.}
 
@@ -37,7 +40,7 @@ vivi(
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 }
 \value{
-A matrix of values, of class vivid.
+A matrix of values of class \code{vivid}.
 }
 \description{
 Creates a matrix displaying variable importance on the diagonal

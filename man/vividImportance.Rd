@@ -14,6 +14,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
+  importanceMeasure = NULL,
   predictFun = NULL,
   ...
 )
@@ -39,6 +40,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
+  importanceMeasure = NULL,
   predictFun = NULL
 )
 
@@ -65,7 +67,9 @@ vividImportance(
 
 \item{response}{The name of the response for the fit.}
 
-\item{importanceType}{passed to vividImportance.}
+\item{importanceType}{Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.}
+
+\item{importanceMeasure}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 }
@@ -92,6 +96,6 @@ and embedded variable importance measure, then an agnostic permutation method is
 \examples{
 # Measuring variable importance using an agnostoc method
 aq <- na.omit(airquality)
-lmf <- lm(Ozone ~ ., data=aq)
+lmf <- lm(Ozone ~ ., data = aq)
 vividImportance(fit = lmf, data = aq, response = "Ozone")
 }

@@ -4,10 +4,10 @@
 \alias{viviUpdate}
 \title{viviUpdate}
 \usage{
-viviUpdate(m, newImp)
+viviUpdate(mat, newImp)
 }
 \arguments{
-\item{m}{A matrix, such as that returned by vivi.}
+\item{mat}{A matrix, such as that returned by vivi.}
 
 \item{newImp}{A named vector of variable importances.}
 }

@@ -59,7 +59,6 @@ Creates a matrix displaying variable interaction on the off-diagonal.
 \examples{
 library(ranger)
 aq <- na.omit(airquality)
-rF <- ranger(Ozone ~ ., data=aq, importance = "permutation")
+rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 vividInteraction(fit = rF, data = aq, response = "Ozone")
-
 }
