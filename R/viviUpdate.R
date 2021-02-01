@@ -3,7 +3,7 @@
 #' @description Creates a matrix displaying updated variable importance on the diagonal
 #' and variable interaction on the off-diagonal.
 #'
-#' @param m A matrix, such as that returned by vivi.
+#' @param mat A matrix, such as that returned by vivi.
 #' @param newImp A named vector of variable importances.
 #' @return A matrix of values, of class vivid, with updated variable importances.
 #'
@@ -15,8 +15,8 @@
 #'
 #' @export
 
-viviUpdate <- function(m, newImp){
-  diag(m) <- newImp
-  return(m)
+viviUpdate <- function(mat, newImp){
+  diag(mat) <- newImp
+  return(mat)
 }
 

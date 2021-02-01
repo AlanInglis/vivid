@@ -466,9 +466,9 @@ vividInteraction.default <- function(fit,
 
   # create matrix of values
   vars2 <- t(simplify2array(strsplit(as.character(res[["variable"]]), ":"))) # split/get feature names
-  dinteraction <- matrix(0, length(ovars), length(ovars)) # create matrix
-  rownames(dinteraction) <- colnames(dinteraction) <- ovars # set names
-  dinteraction[vars2] <- res[["value"]] # set values
-  dinteraction[lower.tri(dinteraction)] <- t(dinteraction)[lower.tri(dinteraction)]
-  return(dinteraction)
+  mat <- matrix(0, length(ovars), length(ovars)) # create matrix
+  rownames(mat) <- colnames(mat) <- ovars # set names
+  mat[vars2] <- res[["value"]] # set values
+  mat[lower.tri(mat)] <- t(mat)[lower.tri(mat)]
+  return(mat)
 }
