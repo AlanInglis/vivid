@@ -1,0 +1,22 @@
+#' viviUpdate
+#'
+#' @description Creates a matrix displaying updated variable importance on the diagonal
+#' and variable interaction on the off-diagonal.
+#'
+#' @param m A matrix, such as that returned by vivi.
+#' @param newImp A named vector of variable importances.
+#' @return A matrix of values, of class vivid, with updated variable importances.
+#'
+#' @examples
+#' f <- lm(Sepal.Length ~ ., data = iris[, -5])
+#' m <- vivi(iris[, -5], f, "Sepal.Length")
+#' corimp <- abs(cor(iris[, -5])[1, -1])
+#' viviUpdate(m, corimp) # use correlation as updated importance
+#'
+#' @export
+
+viviUpdate <- function(m, newImp){
+  diag(m) <- newImp
+  return(m)
+}
+
