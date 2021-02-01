@@ -18,15 +18,15 @@ vivi(
 )
 }
 \arguments{
-\item{data}{Data frame used for fit}
+\item{data}{Data frame used for fit.}
 
 \item{fit}{A supervised machine learning model, which understands condvis2::CVpredict}
 
-\item{response}{The name of the response for the fit}
+\item{response}{The name of the response for the fit.}
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{importanceType}{passed to vividImportance}
+\item{importanceType}{passed to vividImportance.}
 
 \item{nmax}{Maximum number of data rows to consider.}
 
@@ -37,7 +37,7 @@ vivi(
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 }
 \value{
-A matrix of values, of class vivid
+A matrix of values, of class vivid.
 }
 \description{
 Creates a matrix displaying variable importance on the diagonal
@@ -47,7 +47,7 @@ and variable interaction on the off-diagonal.
 aq <- data.frame(airquality)
 aq <- na.omit(airquality)
 f <- lm(Ozone ~ ., data = aq)
-plot(vivi(aq, f, "Ozone")) # as expected all interactions are zero
+plot(vivi(fit = f, data = aq, response = "Ozone")) # as expected all interactions are zero
 \dontrun{
 # Run an mlr ranger model:
 library(mlr3)
@@ -58,14 +58,14 @@ aq_Task <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
 aq_lrn <- lrn("regr.ranger", importance = "permutation")
 aq_fit <- aq_lrn$train(aq_Task)
 
-m <- vivi(aq, aq_fit, "Ozone")
+m <- vivi(fit = aq_fit, data = aq, response = "Ozone")
 plot(m, type = "heatMap")
 }
 \dontrun{
 library(ranger)
 rf <- ranger(Species ~ ., data = iris)
-plot(vivi(iris, rf, "Species"))
+plot(vivi(fit = rf, data = iris, response = "Species"))
 rf <- ranger(Species ~ ., data = iris, importance = "impurity")
-plot(vivi(iris, rf, "Species"))
+plot(vivi(fit = rf, data = iris, response = "Species"))
 }
 }
