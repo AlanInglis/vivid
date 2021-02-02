@@ -24,6 +24,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
+  importanceMeasure = NULL,
   predictFun = NULL
 )
 
@@ -32,6 +33,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
+  importanceMeasure = NULL,
   predictFun = NULL
 )
 
@@ -49,6 +51,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
+  importanceMeasure = NULL,
   predictFun = NULL
 )
 
@@ -57,6 +60,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
+  importanceMeasure = NULL,
   predictFun = NULL
 )
 }
