@@ -52,11 +52,14 @@
 #' fitm <- lrn("classif.ranger", importance = "permutation", predict_type = "prob")$train(task)
 #' pdpPairs(iris, fitm, "Species", class = "versicolor")
 #' }
-#' @export
 #' @importFrom GGally ggpairs
 #' @import ggplot2
-#' @import dplyr
+#' @importFrom dplyr "summarise"
+#' @importFrom dplyr "group_by"
+#' @importFrom dplyr "%>%"
 #' @importFrom GGally eval_data_col
+#'
+#' @export
 
 
 
