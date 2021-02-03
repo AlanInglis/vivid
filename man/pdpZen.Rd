@@ -69,7 +69,7 @@ Find the top variables in rf
 set.seed(123)
 viv <- vivi(Boston1, rf, "medv", nmax=30) # use 30 rows, for speed
 pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
-zpath<-calcZpath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
+zpath<-zPath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
 pdpZen(Boston1, rf, response="medv", zpath=zpath, comboImage=T)
 }
 }
