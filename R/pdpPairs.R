@@ -19,6 +19,7 @@
 #' @return A matrix of values.
 #'
 #' @importFrom condvis2 "CVpredict"
+#' @importFrom dplyr "bind_rows"
 #'
 #' @examples
 #' # Load in the data:
