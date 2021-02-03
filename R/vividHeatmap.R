@@ -33,24 +33,23 @@
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 #' viviHeatMap(myMat)
-#'
 #' @export
 # Main plot function -----------------------------------------------------------
 viviHeatMap <- function(mat,
-                         title = "",
-                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
-                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
-                         intLims = NULL,
-                         impLims = NULL,
-                         angle = NULL,
-                         ...) {
+                        title = "",
+                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
+                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
+                        intLims = NULL,
+                        impLims = NULL,
+                        angle = NULL,
+                        ...) {
 
 
 
 
   # Small set-up ------------------------------------------------------------
 
-  mat <- mat[,]
+  mat <- mat[, ] # remove vivid class
   # get label names
   labelNames <- colnames(mat)
 
@@ -62,8 +61,6 @@ viviHeatMap <- function(mat,
   if (is.null(angle)) {
     angle <- 0
   }
-
-
 
   # Limits ------------------------------------------------------------------
 
@@ -79,15 +76,15 @@ viviHeatMap <- function(mat,
 
 
   # set the limits for importance
-  if (is.null(impLims)){
-  impLims <- range(diag(mat))
-  limitsImp <- range(labeling::rpretty(impLims[1], impLims[2]))
+  if (is.null(impLims)) {
+    impLims <- range(diag(mat))
+    limitsImp <- range(labeling::rpretty(impLims[1], impLims[2]))
   } else {
     limitsImp <- impLims
   }
 
   # set the limits for interactions
-  if (is.null(intLims)){
+  if (is.null(intLims)) {
     intLims <- range(as.dist(mat))
     limitsInt <- range(labeling::rpretty(intLims[1], intLims[2]))
   } else {
