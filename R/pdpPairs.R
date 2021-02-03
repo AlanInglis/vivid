@@ -58,7 +58,7 @@
 #' @importFrom dplyr "group_by"
 #' @importFrom dplyr "%>%"
 #' @importFrom GGally eval_data_col
-#'
+#' @importFrom dplyr bind_rows
 #' @export
 
 
