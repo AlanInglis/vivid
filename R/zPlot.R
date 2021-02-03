@@ -36,7 +36,7 @@
 #' set.seed(123)
 #' viv <- vivi(Boston1, rf, "medv", nmax=30) # use 30 rows, for speed
 #' pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
-#' zpath<-calcZpath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
+#' zpath<-zPath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
 #' pdpZen(Boston1, rf, response="medv", zpath=zpath, comboImage=T)
 #'}
 #' @export
@@ -49,7 +49,8 @@ pdpZen <- function(data, fit, response, zpath=NULL,
                       comboImage =FALSE,rug=TRUE,predictFun=condvis2::CVpredict, parallel=FALSE,...){
 
   if (!(requireNamespace("zenplots", quietly=TRUE))){
-    stop("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+    return (NULL)
   }
 
   data <- na.omit(data)
