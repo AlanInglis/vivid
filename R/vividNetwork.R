@@ -31,25 +31,11 @@
 #' @importFrom colorspace "sequential_hcl"
 #'
 #' @examples
-#' # Load in the data:
-#' aq <- data.frame(airquality)
-#' aq <- na.omit(aq)
-#'
-#' # Run an mlr ranger model:
-#' library(mlr3)
-#' library(mlr3learners)
 #' library(ranger)
-#' aq_Task <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
-#' aq_lrn <- lrn("regr.ranger", importance = "permutation")
-#' aq_Mod <- aq_lrn$train(aq_Task)
-#'
-#' # Create matrix
-#' myMat <- vividMatrix(task = aq_Task, model = aq_Mod)
-#'
-#' # Create plot:
+#' aq <- na.omit(airquality)
+#' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
+#' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 #' plot(myMat, type = "network")
-#'
-#'
 #'
 #' # Plotting Function -------------------------------------------------------
 plotNetwork <- function(mat,
