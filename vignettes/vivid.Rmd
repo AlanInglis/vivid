@@ -1,0 +1,148 @@
+---
+title: "vivid"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vivid}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
+library(vividPackage)
+```
+
+## Introduction
+Variable importance, interaction measures and partial dependence plots are important summaries in the interpretation of statistical and machine learning models. In this vignette we describe new visualisation techniques for exploring these model summaries. We construct heatmap and graph-based displays showing variable importance and interaction jointly, which are carefully designed to highlight important aspects of the fit. We describe a new matrix-type layout showing all single and bivariate partial dependence plots, and an alternative layout based on graph Eulerians focusing on key subsets. Our new visualisations are model-agnostic and are applicable to regression and classification supervised learning settings. They enhance interpretation even in situations where the number of variables is large and the interaction structure complex. Our R package `vivid` (variable importance and variable interaction displays) provides an implementation.
+\
+\
+
+## Install instructions
+Some of the plots used by `vividPackage` are built upon the `zenplots` package which requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
+
+`if (!requireNamespace("graph", quietly = TRUE)){` \
+  `install.packages("BiocManager")` \
+  `BiocManager::install("graph")`   \
+`}` \
+`install.packages("zenplots")`
+\
+\
+Now we can install `vividPackage` by using:
+
+`install.packages("vividPackage")`
+\
+\
+Alternatively you can install the latest development version of the package in R with the commands:
+
+`if(!require(remotes)) install.packages('remotes')` \
+`remotes::install_github('AlanInglis/vividPackage')`
+\
+\
+
+We then load the required packages. `vividPackage` to create the vusualisations and some other packages to create various model fits. 
+
+```{r, warning=FALSE, message=FALSE}
+library(vividPackage) # for visualisations 
+library(randomForest) # for model fit
+library(mlr3)         # for model fit
+library(mlr3learners) # for model fit
+```
+\
+\
+
+## Data used in this vignette:
+
+The data used in the following examples is simulated from the Friedman benchmark problem 1^[Friedman, Jerome H. (1991) Multivariate adaptive regression splines. The Annals of Statistics 19 (1), pages 1-67.] using the `genFriedman()` function. This benchmark problem is commonly used for testing purposes. The output is created according to the equation:
+
+
+<center>
+$$y = 10 sin(π x1 x2) + 20 (x3 - 0.5)^2 + 10 x4 + 5 x5 + e$$
+</center>
+
+For the following examples we set the number of features to equal 10 and the number of samples is set to 250 and fit an `mlr3`-`kNN` and a `randomForest` random forest model with $y$ as the response. As the features $x_1$ to $x_5$ are the only variables in the model, therefore $x_6$ to $x_{10}$ are noise variables. As can be seen by the above equation, the only interaction is between $x_1$ and $x_2$
+  
+
+Create the data:
+```{r, messages = FALSE}
+set.seed(1701)
+myData <- genFriedman(noFeatures = 9, noSamples = 250, sigma = 1, bins = NULL, seed = NULL)
+```
+
+
+## Model fits 
+
+Here we create two model fits. First we fit a kNN model from the `mlr3` package and second, we create a random forest fot from the `randomForest` package. 
+
+
+Create an `mlr3` `kNN` model:
+
+```{r}
+set.seed(1701)
+kNN_task  <- TaskRegr$new(id = "Friedman", backend = myData, target = "y")
+set.seed(1701)
+kNN_lrn <- lrn("regr.kknn")
+set.seed(1701)
+kNN_mod <- kNN_lrn$train(kNN_task)
+```
+
+
+Create a `randomForest` model:
+```{r}
+rf <- randomForest(y ~ ., data = myData, importance = TRUE)
+```
+Note that for a `randomForest` model, if `importance = TRUE`, then when running the `vivi` function below an 
+
+## vivi function 
+
+To begin, we use the `vivi` function to create a symmetrical matrix filled with pair-wise interaction strengths on the off-diagonals and variable importance on the diagonal. 
+The `vivi` uses Friedman's unnormalized H-Statistic to calculate the pair-wise interaction strength and uses embedded feature selection methods to determine the variable importance. If the supplied model does not support an embedded variable importance measure (e.g., the kNN fit has no embedded variable importance measure), an agnostic approach will be applied automatically to generate the importance values. The unnormalized version of the H-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of H are onthe scale of the response.
+
+This function works with multiple model fits and results in a matrix of class `vivid` which can be supplied to the plotting functions. The predict function argument uses `condvis2::CVpredict` by default, which works for many fit classes.
+
+Create a matrix from the kNN fit to be supplied to the plotting functions.
+
+```{r, message = F, warning = F}
+set.seed(1701)
+kNN_fit <- vivi(fit = kNN_mod, 
+                data = myData, 
+                response = "y",
+                gridSize = 10,
+                importanceType = NULL,
+                importanceMode = NULL,
+                nmax = 500,
+                reorder = TRUE,
+                class = 1,
+                predictFun = NULL,)
+```
+
+ 
+
+Create a matrix from the random forest fit to be supplied to the plotting functions.
+
+```{r, message = F, warning = F}
+set.seed(1701)
+rf_fit  <- vivi(fit = rf, 
+                data = myData, 
+                response = "y",
+                gridSize = 10,
+                importanceType = NULL,
+                importanceMode = "%IncMSE",
+                nmax = 500,
+                reorder = TRUE,
+                class = 1,
+                predictFun = NULL,)
+```
+
+## Visualizing the results
+
+### Heatmap style plot
+
+The first visualization option supplied by `vivid` creates a heat-map style plot displaying variable importance on the diagonal and variable interaction on the off-diagonal
+
+**Example**
