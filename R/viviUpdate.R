@@ -16,7 +16,10 @@
 #' @export
 
 viviUpdate <- function(mat, newImp){
-  diag(mat) <- newImp
+
+  orderNames <- names(newImp)
+  mat <- mat[orderNames, orderNames] # make sure the order of vImp & vInt match
+  diag(mat) <- newImp # set diagonal to equal vImps
   return(mat)
 }
 
