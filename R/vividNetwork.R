@@ -107,6 +107,31 @@ plotNetwork <- function(mat,
     limitsImp <- fitlimsImp
   }
 
+  # Warning messages --------------------------------------------------------
+
+  if(!is.null(fitlimsInt) && fitlimsInt[1] > minimumInt){
+    stop("Error: Minimum chosen limit for interaction is larger
+  than the minimum measured interaction value.
+  Please chose a minimum limit value less than or equal to the minimum measured value.")
+  }
+
+  if(!is.null(fitlimsInt) && fitlimsInt[2] < maximumInt){
+    stop("Error: Maximum chosen limit for interaction is smaller
+  than the maximum measured interaction value.
+  Please chose a maximum limit value greater than or equal to the maximum measured value.")
+  }
+
+  if(!is.null(fitlimsImp) && fitlimsImp[1] > minImportance){
+    stop("Error: Minimum chosen limit for importance is larger
+  than the minimum measured importance value.
+  Please chose a minimum limit value less than or equal to the minimum measured value.")
+  }
+
+  if(!is.null(fitlimsImp) && fitlimsImp[2] < maxImportance){
+    stop("Error: Maximum chosen limit for importance is smaller
+  than the maximum measured importance value.
+  Please chose a maximum limit value greater than or equal to the maximum measured value.")
+  }
 
   # Setting up graph properties ---------------------------------------------
 
@@ -130,9 +155,8 @@ plotNetwork <- function(mat,
   if (is.null(fitlimsInt)) {
     colfunction <- intPal # col palette
     edgeColour <- (E(net.bg)$weight) # edge weights
-    cut_int <- cut(edgeColour, 10) # cutt
-    npal <- colfunction[1:length(edgeColour)]
-    edgeCols <- npal[cut_int]
+    cut_int <- cut(edgeColour, 10) # cut
+    edgeCols <- colfunction[cut_int]
   } else {
     edgeColour <- (E(net.bg)$weight) # edge weights
     ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
