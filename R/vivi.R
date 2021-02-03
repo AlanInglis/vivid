@@ -8,7 +8,7 @@
 #' @param response The name of the response for the fit.
 #' @param gridSize The size of the grid for evaluating the predictions.
 #' @param importanceType Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.
-#' @param importanceMeasure Variable importance mode. One of either "%IncMSE" or "IncNodePurity". For use with randomForest.
+#' @param importanceMode Variable importance mode. One of either "%IncMSE" or "IncNodePurity". For use with randomForest.
 #' @param nmax Maximum number of data rows to consider.
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
@@ -54,7 +54,7 @@ vivi <- function(data,
                  response,
                  gridSize = 10,
                  importanceType = NULL,
-                 importanceMeasure = NULL,
+                 importanceMode = NULL,
                  nmax = 500,
                  reorder = TRUE,
                  class = 1,
@@ -84,7 +84,7 @@ vivi <- function(data,
       fit = fit,
       response = response,
       importanceType = importanceType,
-      importanceMeasure = importanceMeasure,
+      importanceMode = importanceMode,
       predictFun = predictFun
     )
   }
@@ -174,7 +174,7 @@ vividReorder <- function(d) {
 #' @param data Data frame used for fit
 #' @param response The name of the response for the fit.
 #' @param importanceType Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.
-#' @param importanceMeasure Variable importance mode. One of either "%IncMSE" or "IncNodePurity". For use with randomForest.
+#' @param importanceMode Variable importance mode. One of either "%IncMSE" or "IncNodePurity". For use with randomForest.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @return A named vector of variable importance.
 #' @name vividImportance
@@ -191,7 +191,7 @@ vividReorder <- function(d) {
 #' @export
 
 # Main vImp function:
-vividImportance <- function(fit, data, response = NULL, importanceType = NULL, importanceMeasure = NULL, predictFun = NULL, ...) {
+vividImportance <- function(fit, data, response = NULL, importanceType = NULL, importanceMode = NULL, predictFun = NULL, ...) {
   UseMethod("vividImportance", fit)
 }
 
@@ -206,7 +206,7 @@ vividImportance.default <- function(fit,
                                     data,
                                     response = NULL,
                                     importanceType = NULL,
-                                    importanceMeasure = NULL,
+                                    importanceMode = NULL,
                                     predictFun = NULL) {
 
   # check for predict function
@@ -255,7 +255,7 @@ vividImportance.ranger <- function(fit,
                                    data,
                                    response = NULL,
                                    importanceType = NULL,
-                                   importanceMeasure = NULL,
+                                   importanceMode = NULL,
                                    predictFun = NULL) {
 
 
@@ -288,7 +288,7 @@ vividImportance.randomForest <- function(fit,
                                          data,
                                          response = NULL,
                                          importanceType = NULL,
-                                         importanceMeasure = NULL,
+                                         importanceMode = NULL,
                                          predictFun = NULL) {
 
 
@@ -297,12 +297,12 @@ vividImportance.randomForest <- function(fit,
 
   # if importance = T, then choose between mse and nodePurity
   if (fitImp[2] == 2) {
-    if (is.null(importanceMeasure)) {
-      stop("importanceMeasure must not be NULL. Choose either '%IncMSE' or 'IncNodePurity'.")
+    if (is.null(importanceMode)) {
+      stop("importanceMode must not be NULL. Choose either '%IncMSE' or 'IncNodePurity'.")
     }
-    if (importanceMeasure == "%IncMSE") {
+    if (importanceMode == "%IncMSE") {
       importance <- fit$importance[, 1]
-    } else if (importanceMeasure == "IncNodePurity") {
+    } else if (importanceMode == "IncNodePurity") {
       importance <- fit$importance[, 2]
     }
   } else {
@@ -321,7 +321,7 @@ vividImportance.Learner <- function(fit,
                                     data,
                                     response = NULL,
                                     importanceType = NULL,
-                                    importanceMeasure = NULL,
+                                    importanceMode = NULL,
                                     predictFun = NULL) {
 
 
@@ -362,7 +362,7 @@ vividImportance.lda <- function(fit,
                                 data,
                                 response = NULL,
                                 importanceType = NULL,
-                                importanceMeasure = NULL,
+                                importanceMode = NULL,
                                 predictFun = NULL) {
   fl <- flashlight(
     model = fit, data = data, y = response, label = "",

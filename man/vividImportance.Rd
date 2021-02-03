@@ -14,7 +14,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   predictFun = NULL,
   ...
 )
@@ -24,7 +24,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   predictFun = NULL
 )
 
@@ -33,7 +33,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   predictFun = NULL
 )
 
@@ -42,7 +42,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   predictFun = NULL
 )
 
@@ -51,7 +51,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   predictFun = NULL
 )
 
@@ -60,7 +60,7 @@ vividImportance(
   data,
   response = NULL,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   predictFun = NULL
 )
 }
@@ -73,7 +73,7 @@ vividImportance(
 
 \item{importanceType}{Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.}
 
-\item{importanceMeasure}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
+\item{importanceMode}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 }

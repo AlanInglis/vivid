@@ -10,7 +10,7 @@ vivi(
   response,
   gridSize = 10,
   importanceType = NULL,
-  importanceMeasure = NULL,
+  importanceMode = NULL,
   nmax = 500,
   reorder = TRUE,
   class = 1,
@@ -29,7 +29,7 @@ vivi(
 
 \item{importanceType}{Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.}
 
-\item{importanceMeasure}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
+\item{importanceMode}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
 
 \item{nmax}{Maximum number of data rows to consider.}
 
