@@ -1,21 +1,20 @@
-#' vividNetwork
+#' viviNetwork
 #'
-#'   @description Create a Network style plot displaying Variable
+#'  @description Create a Network  plot displaying Variable
 #'  and Variable Interaction.
 #'
-#' @param mat A matrix of values to be plotted. Either added by the user or created using the prepFunc() function.
-#' @param thresholdValue A value chosen by the user which will show all the edges with weights (i.e., the interacions) above that value. For example, if thresholdValue = 0.2, then only the the interacions greater than 0.2 will be displayed.
-#' @param label If label = TRUE the numerical value for the interaction strength will be displayed.
-#' @param intPal A colorspace colour palette to display the interaction values.
-#' @param impPal A colorspace colour palette to display the importance values.
-#' @param labelNudge A value, set by the user, to determine the y_postioning of the variables names. A higher value will postion the label farther above the nodes.
-#' @param layout Determines the shape, or layout, of the plotted graph.
-#' @param cluster If cluster = TRUE, then the data is clustered in groups.
-#' @param clusterType = Network-based clustering. Any of the appropriate cluster types from the igraph package are allowed.
-#' @param clusterLayout = Determines the shape, or layout, of the clustered plotted graph.
-#' @param ... Not currently implemented.
+#' @param mat A matrix, such as that returned by vivi, of values to be plotted.
+#' @param thresholdValue Remove edges with weight below this value if provided.
+#' @param intPal A vector of colours to show interactions, for use with scale_fill_gradientn.
+#' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
+#' @param intLims Specifies the fit range for the color map for interaction strength.
+#' @param impLims Specifies the fit range for the color map for importance.
+#' @param labelNudge A value to determine the y_postioning of the variables names. A higher value will postion the label farther above the nodes.
+#' @param layout Layout of the plotted graph.
+#' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
+#' @param ...
 #'
-#' @return A newtwork style plot displaying interaction strength between variables on the edges and variable importance on the nodes.
+#' @return A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 #'
 #' @import igraph
 #' @importFrom igraph "sample_pa"
@@ -35,22 +34,18 @@
 #' aq <- na.omit(airquality)
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
-#' plot(myMat, type = "network")
-#'
-#' # Plotting Function -------------------------------------------------------
-plotNetwork <- function(mat,
-                        model,
+#' viviNetwork(myMat)
+#' @export
+# Plotting Function -------------------------------------------------------
+viviNetwork <- function(mat,
                         thresholdValue = 0,
-                        label,
-                        fitlimsInt = NULL,
-                        fitlimsImp = NULL,
+                        intLims = NULL,
+                        impLims = NULL,
                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
                         labelNudge = 0.05,
                         layout = "circle",
-                        cluster = F,
-                        clusterType = cluster_optimal,
-                        clusterLayout = layout_with_fr,
+                        cluster = NULL,
                         ...) {
 
 
@@ -65,58 +60,53 @@ plotNetwork <- function(mat,
   # Sort interaction values
   sortInt <- t(mat)[lower.tri(t(mat), diag = FALSE)] # get upper triangle of the matrix by row order
   sorted_Int <- sort(sortInt, index.return = TRUE) # Sort values whilst preserving the index
-  int <- sorted_Int$x
+  int <- sorted_Int$x # used to set edge weight
   nam <- colnames(mat) # Get feature names
 
 
 
   # Limits ------------------------------------------------------------------
 
-  # max min int vals
-  minimumInt <- min(as.dist(mat))
-  maximumInt <- max(as.dist(mat))
-
-  # max min imp vals
-  vImportance <- diag(mat)
-  maxImportance <- max(vImportance)
-  minImportance <- min(vImportance)
-
-  if (is.null(fitlimsInt)) {
-    limitsInt <- c(minimumInt, maximumInt)
+  # set the limits for importance
+  if (is.null(impLims)) {
+    impLims <- range(diag(mat))
+    limitsImp <- range(labeling::rpretty(impLims[1], impLims[2]))
   } else {
-    limitsInt <- fitlimsInt
+    limitsImp <- impLims
   }
 
-  if (is.null(fitlimsImp)) {
-    limitsImp <- c(minImportance, maxImportance)
+  # set the limits for interactions
+  if (is.null(intLims)) {
+    intLims <- range(as.dist(mat))
+    limitsInt <- range(labeling::rpretty(intLims[1], intLims[2]))
   } else {
-    limitsImp <- fitlimsImp
+    limitsInt <- intLims
   }
 
   # Warning messages --------------------------------------------------------
 
-  if(!is.null(fitlimsInt) && fitlimsInt[1] > minimumInt){
+  if (!is.null(intLims) && intLims[1] > min(as.dist(mat))) {
     stop("Error: Minimum chosen limit for interaction is larger
   than the minimum measured interaction value.
-  Please chose a minimum limit value less than or equal to the minimum measured value.")
+  Please choose a minimum limit value less than or equal to the minimum measured value.")
   }
 
-  if(!is.null(fitlimsInt) && fitlimsInt[2] < maximumInt){
+  if (!is.null(intLims) && intLims[2] < max(as.dist(mat))) {
     stop("Error: Maximum chosen limit for interaction is smaller
   than the maximum measured interaction value.
-  Please chose a maximum limit value greater than or equal to the maximum measured value.")
+  Please choose a maximum limit value greater than or equal to the maximum measured value.")
   }
 
-  if(!is.null(fitlimsImp) && fitlimsImp[1] > minImportance){
+  if (!is.null(impLims) && impLims[1] > min(diag(mat))) {
     stop("Error: Minimum chosen limit for importance is larger
   than the minimum measured importance value.
-  Please chose a minimum limit value less than or equal to the minimum measured value.")
+  Please choose a minimum limit value less than or equal to the minimum measured value.")
   }
 
-  if(!is.null(fitlimsImp) && fitlimsImp[2] < maxImportance){
+  if (!is.null(impLims) && impLims[2] < max(diag(mat))) {
     stop("Error: Maximum chosen limit for importance is smaller
   than the maximum measured importance value.
-  Please chose a maximum limit value greater than or equal to the maximum measured value.")
+  Please choose a maximum limit value greater than or equal to the maximum measured value.")
   }
 
   # Setting up graph properties ---------------------------------------------
@@ -138,7 +128,7 @@ plotNetwork <- function(mat,
 
 
   # Set the edge colours
-  if (is.null(fitlimsInt)) {
+  if (is.null(intLims)) {
     colfunction <- intPal # col palette
     edgeColour <- (E(net.bg)$weight) # edge weights
     cut_int <- cut(edgeColour, 10) # cut
@@ -147,7 +137,7 @@ plotNetwork <- function(mat,
     edgeColour <- (E(net.bg)$weight) # edge weights
     ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
     ii <- cut(edgeColour,
-      breaks = seq(min(fitlimsInt), max(fitlimsInt), len = 10),
+      breaks = seq(min(intLims), max(intLims), len = 10),
       include.lowest = TRUE
     )
     colfunction <- intPal[ii]
@@ -185,8 +175,6 @@ plotNetwork <- function(mat,
     edgeW <- rev(edgeW)
     # Thresholded edge labels
     indexLabel <- rev(edgeWidth1)
-    edgeL <- indexLabel[idx]
-    edgeL <- rev(edgeL)
     # Thresholded network
     `%notin%` <- Negate(`%in%`)
     net.sp <- delete_edges(net.bg, E(net.bg)[E(net.bg)$weight %notin% cut.off])
@@ -204,36 +192,30 @@ plotNetwork <- function(mat,
   } else {
     net.sp <- net.bg
     weightDF <- get.data.frame(net.sp) # get df of graph attributes
-    edgeL <- weightDF$weight # select edge weight
     edgeW <- (5 - 1) * ((edgeWidth1 - min(edgeWidth1)) / (max(edgeWidth1) - min(edgeWidth1))) + 1 # scale between 1-5
   }
 
 
 
 
-  # Set plot properties -----------------------------------------------------
+
+  # Plot graph ----------------------------------------------------
 
   # set layout
   l <- layout
 
-  # Whether to show edge label
-  if (label == T) {
-    edgeL <- edgeL
-    edgeL <- round(edgeL, 3)
-  } else {
-    edgeL <- NULL
-  }
+  if (!is.null(cluster)) {
+    l_1 <- l
 
-
-  # Plot graph ----------------------------------------------------
-
-  if (cluster) {
-    l_1 <- clusterLayout(net.sp)
-    # l_1 <- layout_in_circle(net.sp)
-    com <- clusterType(net.sp)
-    V(net.sp)$color <- com$membership
-    group <- V(net.sp)$color
-    group <- factor(group)
+    # add numeric vector to cluster by, else use igraph clustering
+    if (is.numeric(cluster)) {
+      group <- factor(cluster)
+    } else {
+      com <- cluster(net.sp)
+      V(net.sp)$color <- com$membership
+      group <- V(net.sp)$color
+      group <- factor(group)
+    }
 
 
     # g <- set_graph_attr(net.sp, "layout", layout_in_circle(net.sp))
@@ -245,42 +227,20 @@ plotNetwork <- function(mat,
     ))
     colorC <- colrs[group]
 
-
+    # plot clustered graph
     pcl <- ggnet2(net.sp,
       mode = l_1,
       size = 0,
       edge.size = edgeW,
-      edge.label = edgeL,
       edge.color = edgeCols
     ) +
       theme(legend.text = element_text(size = 10)) +
       geom_label(aes(label = nam), nudge_y = labelNudge) +
       geom_point(aes(fill = impFill), size = impScaled * 2, col = "transparent", shape = 21) +
       scale_fill_gradientn(name = "Variable\nImportance", colors = impPal, limits = limitsImp) +
-      theme(legend.position = "none")
-
-
-    ppcl <- ggnet2(net.sp,
-      mode = l_1,
-      size = 0,
-      edge.size = edgeW,
-      edge.label = edgeL,
-      edge.color = edgeCols,
-      palette = intPal
-    ) +
-      theme(legend.text = element_text(size = 10)) +
-      geom_label(aes(label = nam), nudge_y = labelNudge) +
-      geom_point(aes(fill = impFill), size = impScaled * 2, col = "transparent", shape = 21) +
-      scale_fill_gradientn(name = "Variable\nImportance", colors = impPal, limits = limitsImp) +
-      guides(fill = guide_colorbar(frame.colour = "gray", frame.linewidth = 1.5))
-
-
-    intDFcl <- as.data.frame(int)
-    pppcl <- ggplot(intDFcl) +
-      geom_tile(aes(x = 0, y = 0, fill = int), size = -1) +
-      scale_fill_gradientn(name = "Interaction\nStrength", colors = intPal, limits = limitsInt) +
-      guides(fill = guide_colorbar(frame.colour = "gray", frame.linewidth = 1.5))
-
+      new_scale_fill() +
+      geom_point(aes(x = 0, y = 0, fill = impFill), size = -1) +
+      scale_fill_gradientn(name = "Interaction\nStrength", colors = intPal, limits = limitsInt)
 
     # Group clusters
     groupV <- as.vector(group)
@@ -290,6 +250,8 @@ plotNetwork <- function(mat,
       "yellow", "red", "blue", "black", "purple",
       "orange", "pink", "green"
     )
+
+    # encircle groups
     colCluster <- fillCols[group]
     colCluster <- as.vector(colCluster)
     pcl <- pcl + geom_encircle(aes(group = groupV),
@@ -298,74 +260,22 @@ plotNetwork <- function(mat,
       expand = 0.03,
       fill = colCluster
     )
-
-
-    # Grab the legends using cowplot::get_legend()
-    pcl2_legend <- get_legend(ppcl)
-    pcl3_legend <- get_legend(pppcl)
-
-    # Combine the legends one on top of the other
-    legendsCl <- plot_grid(pcl2_legend, pcl3_legend, ncol = 1, nrow = 2)
-
-    # Combine the heatmap with the legends
-    endPlotCl <- plot_grid(pcl, legendsCl,
-      ncol = 2, align = "h",
-      scale = c(1, 0.8), rel_widths = c(0.9, 0.1)
-    )
-
-
-    return(endPlotCl)
+    return(pcl)
   } else {
     p <- ggnet2(net.sp,
       mode = l,
       size = 0,
       edge.size = edgeW,
-      edge.label = edgeL,
       edge.color = edgeCols
     ) +
       theme(legend.text = element_text(size = 10)) +
       geom_label(aes(label = nam), nudge_y = labelNudge) +
       geom_point(aes(fill = impFill), size = impScaled * 2, colour = "transparent", shape = 21) +
       scale_fill_gradientn(name = "Variable\nImportance", colors = impPal, limits = limitsImp) +
-      theme(legend.position = "none")
+      new_scale_fill() +
+      geom_point(aes(x = 0, y = 0, fill = impFill), size = -1) +
+      scale_fill_gradientn(name = "Interaction\nStrength", colors = intPal, limits = limitsInt)
 
-
-
-
-    pp <- ggnet2(net.sp,
-      mode = l,
-      size = 0,
-      edge.size = edgeW,
-      edge.label = edgeL,
-      edge.color = edgeCols
-    ) +
-      theme(legend.text = element_text(size = 10)) +
-      geom_label(aes(label = nam), nudge_y = labelNudge) +
-      geom_point(aes(fill = impFill), size = impScaled * 2, colour = "transparent", shape = 21) +
-      scale_fill_gradientn(name = "Variable\nImportance", colors = impPal, limits = limitsImp) +
-      guides(fill = guide_colorbar(frame.colour = "gray", frame.linewidth = 1.5))
-
-    intDF <- as.data.frame(int)
-
-    ppp <- ggplot(intDF) +
-      geom_tile(aes(x = 0, y = 0, fill = int), size = -1) +
-      scale_fill_gradientn(name = "Interaction\nStrength", colors = intPal, limits = limitsInt) +
-      guides(fill = guide_colorbar(frame.colour = "gray", frame.linewidth = 1.5))
-
-
-    # Grab the legends using cowplot::get_legend()
-    p2_legend <- get_legend(pp)
-    p3_legend <- get_legend(ppp)
-
-    # Combine the legends one on top of the other
-    legends <- plot_grid(p2_legend, p3_legend, ncol = 1, nrow = 2)
-
-    # Combine the network with the legends
-    endPlot <- plot_grid(p, legends,
-      ncol = 2, align = "h",
-      scale = c(1, 0.8), rel_widths = c(0.9, 0.1)
-    )
-
-    return(endPlot)
+    return(p)
   }
 }
