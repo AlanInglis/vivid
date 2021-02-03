@@ -69,7 +69,7 @@ task <- TaskRegr$new(id = "Boston1", backend = Boston1, target = "medv")
 learner <- lrn("regr.ranger", importance = "permutation")
 fit <- learner$train(task)
 pdpPairs(Boston1[1:30, ], fit, "medv")
-pdpPairs(Boston1[1:30], fit, "medv", comboImage = TRUE)
+pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE)
 viv <- vivi(Boston1, fit, "medv")
 # show top variables only
 pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE, vars = rownames(viv)[1:4])
