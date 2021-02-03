@@ -12,42 +12,38 @@
 #' @importFrom stats "rnorm"
 #' @importFrom stats "runif"
 #'
-#'@examples
+#' @examples
 #' genFriedman(noFeatures = 10, noSamples = 100, sigma = 1, seed = NULL)
-#'
-#'
 #' @export
 
-genFriedman <- function(noFeatures = 10, noSamples = 100, sigma = 1, bins = NULL, seed = NULL){
-
+genFriedman <- function(noFeatures = 10, noSamples = 100, sigma = 1, bins = NULL, seed = NULL) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
 
   # Set Values
-  n <- noSamples  # no of rows
-  p <- noFeatures  # no of variables
+  n <- noSamples # no of rows
+  p <- noFeatures # no of variables
   e <- rnorm(n, sd = sigma)
 
 
   # Create matrix of values
-  xValues <- matrix(runif(n*p, 0, 1), nrow=n)               # Create matrix
-  colnames(xValues) <- paste0("x", 1:p)                     # Name columns
-  df <- data.frame(xValues)                                 # Create dataframe
+  xValues <- matrix(runif(n * p, 0, 1), nrow = n) # Create matrix
+  colnames(xValues) <- paste0("x", 1:p) # Name columns
+  df <- data.frame(xValues) # Create dataframe
 
 
   # Equation:
-  #y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε
+  # y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε
 
-  y = (10*sin(pi*df$x1*df$x2) + 20 * (df$x3-0.5)^2 + 10 * df$x4 + 5 * df$x5 + e)
+  y <- (10 * sin(pi * df$x1 * df$x2) + 20 * (df$x3 - 0.5)^2 + 10 * df$x4 + 5 * df$x5 + e)
 
 
   # Adding y to df
   df$y <- y
 
   # Function to bin a numberic vector
-  bin <- function (x, bins)
-  {
+  bin <- function(x, bins) {
     x <- df$y
     quantiles <- quantile(x, probs = seq(from = 0, to = 1, length = bins + 1))
     bins <- cut(x, breaks = quantiles, label = FALSE, include.lowest = TRUE)
