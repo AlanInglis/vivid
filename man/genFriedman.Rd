@@ -28,6 +28,4 @@ Simulate data from the Friedman benchmark problem 1. Mainly used for testing.
 }
 \examples{
 genFriedman(noFeatures = 10, noSamples = 100, sigma = 1, seed = NULL)
-
-
 }
