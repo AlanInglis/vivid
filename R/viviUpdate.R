@@ -3,7 +3,7 @@
 #' @description Creates a matrix displaying updated variable importance on the diagonal
 #' and variable interaction on the off-diagonal.
 #'
-#' @param mat A matrix, such as that returned by vivi.
+#' @param mat A matrix, such as that returned by \code{vivi}.
 #' @param newImp A named vector of variable importances.
 #' @return A matrix of values, of class vivid, with updated variable importances.
 #'
@@ -12,14 +12,11 @@
 #' m <- vivi(iris[, -5], f, "Sepal.Length")
 #' corimp <- abs(cor(iris[, -5])[1, -1])
 #' viviUpdate(m, corimp) # use correlation as updated importance
-#'
 #' @export
 
-viviUpdate <- function(mat, newImp){
-
+viviUpdate <- function(mat, newImp) {
   orderNames <- names(newImp)
   mat <- mat[orderNames, orderNames] # make sure the order of vImp & vInt match
   diag(mat) <- newImp # set diagonal to equal vImps
   return(mat)
 }
-
