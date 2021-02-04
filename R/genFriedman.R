@@ -16,7 +16,12 @@
 #' genFriedman(noFeatures = 10, noSamples = 100, sigma = 1, seed = NULL)
 #' @export
 
-genFriedman <- function(noFeatures = 10, noSamples = 100, sigma = 1, bins = NULL, seed = NULL) {
+genFriedman <- function(noFeatures = 10,
+                        noSamples = 100,
+                        sigma = 1,
+                        bins = NULL,
+                        seed = NULL) {
+
   if (!is.null(seed)) {
     set.seed(seed)
   }
