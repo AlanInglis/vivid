@@ -16,9 +16,6 @@
 #'
 #' @return Returns a zpath from viv showing pairs with viv entry over the cutoff
 #'
-#' @importFrom zenplots "zenpath"
-#' @importFrom zenplots "connect_pairs"
-#'
 #'
 #' @examples
 #' \dontrun{
@@ -45,7 +42,8 @@
 zPath <- function(viv, cutoff=NULL, method=c("greedy.weighted", "strictly.weighted"), connect=TRUE){
 
   if (!(requireNamespace("zenplots", quietly=TRUE))){
-    stop("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+    return (invisible(NULL))
   }
 
   method <- match.arg(method)

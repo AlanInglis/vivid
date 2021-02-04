@@ -50,5 +50,5 @@ viv <- vivi(aq, ozonef, "Ozone")
 # Calculate Zpath:
 zpath<-zPath(viv,.8)
 zpath
-}N
+}
 }
