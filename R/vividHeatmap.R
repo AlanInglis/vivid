@@ -49,7 +49,6 @@ viviHeatMap <- function(mat,
 
   # Small set-up ------------------------------------------------------------
 
-  mat <- mat[, ] # remove vivid class
   # get label names
   labelNames <- colnames(mat)
 
@@ -92,18 +91,32 @@ viviHeatMap <- function(mat,
   }
 
 
-  ## Warning messages:
-  # if(minInt > minimumInt){
-  #   message(" Warning: Minimum chosen interaction value is larger than
-  #           some of the interaction values. These values may not be displayed correctly.
-  #           Adjust minInt to rectify.")
-  # }
-  # if(minImp > minimumImp){
-  #   message(" Warning: Minimum chosen importance value is larger than
-  #           some of the importance values. These values may not be displayed correctly.
-  #           Adjust minImp to rectify.")
-  # }
 
+  #   Warning messages for limits -------------------------------------------
+
+  if (!is.null(intLims) && intLims[1] > min(as.dist(mat))) {
+    message("Error: Minimum chosen limit for interaction is larger
+  than the minimum measured interaction value. Graphic may not display correctly.
+  Please choose a minimum limit value less than or equal to the minimum measured value.")
+  }
+
+  if (!is.null(intLims) && intLims[2] < max(as.dist(mat))) {
+    message("Error: Maximum chosen limit for interaction is smaller
+  than the maximum measured interaction value. Graphic may not display correctly.
+  Please choose a maximum limit value greater than or equal to the maximum measured value.")
+  }
+
+  if (!is.null(impLims) && impLims[1] > min(diag(mat))) {
+    message("Error: Minimum chosen limit for importance is larger
+  than the minimum measured importance value. Graphic may not display correctly.
+  Please choose a minimum limit value less than or equal to the minimum measured value.")
+  }
+
+  if (!is.null(impLims) && impLims[2] < max(diag(mat))) {
+    message("Error: Maximum chosen limit for importance is smaller
+  than the maximum measured importance value. Graphic may not display correctly.
+  Please choose a maximum limit value greater than or equal to the maximum measured value.")
+  }
 
   # Set up plot -------------------------------------------------------
 
