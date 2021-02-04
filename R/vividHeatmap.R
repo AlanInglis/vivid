@@ -63,17 +63,6 @@ viviHeatMap <- function(mat,
 
   # Limits ------------------------------------------------------------------
 
-  # max & min interaction values
-  minimumInt <- min(as.dist(mat))
-  maximumInt <- max(as.dist(mat))
-
-
-  # max & min importance values
-  vImportance <- diag(mat)
-  maximumImp <- max(vImportance)
-  minimumImp <- min(vImportance)
-
-
   # set the limits for importance
   if (is.null(impLims)) {
     impLims <- range(diag(mat))
