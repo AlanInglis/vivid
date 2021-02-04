@@ -19,20 +19,22 @@
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param ... passed on to zenplot
 #' @return A zenplot of partial dependence values.
-#'
-#' @importFrom zenplots "zenplot"
-#' @importFrom zenplots "indexData"
-#' @importFrom zenplots "groupData"
-#'
 #' @examples
 #' \dontrun{
+#' # To use this function, install zenplots and graph from Bioconductor.
+#' if (!requireNamespace("graph", quietly = TRUE)){
+#'  install.packages("BiocManager")
+#'  BiocManager::install("graph")
+#'}
+#' install.packages("zenplots")
+
 #' library(MASS)
 #' library(ranger)
 #' Boston1 <- Boston
 #' Boston1$chas<- factor(Boston1$chas)
 #' rf <- ranger(medv ~ ., data=Boston1)
 #' pdpZen(Boston1[1:30,], rf, response="medv", zpath=names(Boston1)[1:4], comboImage=T)
-#' Find the top variables in rf
+#' #Find the top variables in rf
 #' set.seed(123)
 #' viv <- vivi(Boston1, rf, "medv", nmax=30) # use 30 rows, for speed
 #' pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
@@ -49,8 +51,8 @@ pdpZen <- function(data, fit, response, zpath=NULL,
                       comboImage =FALSE,rug=TRUE,predictFun=condvis2::CVpredict, parallel=FALSE,...){
 
   if (!(requireNamespace("zenplots", quietly=TRUE))){
-    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
-    return (NULL)
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
+    return (invisible(NULL))
   }
 
   data <- na.omit(data)
