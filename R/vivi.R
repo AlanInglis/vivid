@@ -285,8 +285,7 @@ vividImportance.Learner <- function(fit,
 
 
   # get data names without response
-  drops <- response
-  featureNames <- names(data[, !(names(data) %in% drops)])
+  featureNames <- names(data[, !(names(data) %in% response)])
 
   # check object properties
   lrnID <- fit$properties
@@ -388,8 +387,7 @@ vividInteraction.default <- function(fit,
   message("Calculating interactions...")
 
   # remove response column
-  drops <- response
-  ovars <- data[, !(names(data) %in% drops)]
+  ovars <- data[, !(names(data) %in% response)]
   ovars <- colnames(ovars)
 
   ### Interaction Matrix:
