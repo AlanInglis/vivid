@@ -4,7 +4,7 @@
 #'  and Variable Interaction.
 #'
 #' @param mat A matrix, such as that returned by vivi, of values to be plotted.
-#' @param thresholdValue Remove edges with weight below this value if provided.
+#' @param threshold Remove edges with weight below this value if provided.
 #' @param intPal A vector of colours to show interactions, for use with scale_fill_gradientn.
 #' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
 #' @param intLims Specifies the fit range for the color map for interaction strength.
@@ -38,7 +38,7 @@
 #' @export
 # Plotting Function -------------------------------------------------------
 viviNetwork <- function(mat,
-                        thresholdValue = 0,
+                        threshold = 0,
                         intLims = NULL,
                         impLims = NULL,
                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
@@ -114,7 +114,7 @@ viviNetwork <- function(mat,
   # Set path direction of graph:
   to <- NULL
   g <- sample_pa(length(nam), m = length(nam)) # generate scale free graph
-  df <- igraph::as_data_frame(g) # create graph from data frame
+  df <- igraph::as_data_frame(g) # create data frame from graph
   gDF <- dplyr::arrange(df, to) # arrange rows by column name
   gDFL <- rbind(gDF$from, gDF$to) # combine
   matched_gDFL <- gDFL[, sorted_Int$ix]
@@ -129,10 +129,9 @@ viviNetwork <- function(mat,
 
   # Set the edge colours
   if (is.null(intLims)) {
-    colfunction <- intPal # col palette
     edgeColour <- (E(net.bg)$weight) # edge weights
     cut_int <- cut(edgeColour, 10) # cut
-    edgeCols <- colfunction[cut_int]
+    edgeCols <- intPal[cut_int]
   } else {
     edgeColour <- (E(net.bg)$weight) # edge weights
     ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
@@ -140,8 +139,7 @@ viviNetwork <- function(mat,
       breaks = seq(min(intLims), max(intLims), len = 10),
       include.lowest = TRUE
     )
-    colfunction <- intPal[ii]
-    edgeCols <- colfunction
+    edgeCols <- intPal[ii]
   }
 
   # Get edge weights
@@ -155,15 +153,15 @@ viviNetwork <- function(mat,
 
 
 
-  if (thresholdValue > 0) {
+  if (threshold > 0) {
     a <- sort(int, decreasing = TRUE)
     # Warning message if threshold value is set too high or too low
-    if (thresholdValue > max(a)) {
+    if (threshold > max(a)) {
       stop("Selected threshold value is larger than maximum interaction strength")
-    } else if (thresholdValue < 0) {
+    } else if (threshold < 0) {
       stop("Selected threshold value is less than minimum interaction strength")
     }
-    idx <- which(a > thresholdValue)
+    idx <- which(a > threshold)
     cut.off <- a[1:max(idx)]
     # Thresholded colours
     indexCol <- rev(edgeCols)
@@ -173,8 +171,6 @@ viviNetwork <- function(mat,
     indexWeight <- rev(edgeWidthScaled)
     edgeW <- indexWeight[idx]
     edgeW <- rev(edgeW)
-    # Thresholded edge labels
-    indexLabel <- rev(edgeWidth1)
     # Thresholded network
     `%notin%` <- Negate(`%in%`)
     net.sp <- delete_edges(net.bg, E(net.bg)[E(net.bg)$weight %notin% cut.off])
