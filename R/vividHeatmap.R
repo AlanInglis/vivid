@@ -10,7 +10,6 @@
 #' @param impLims Specifies the fit range for the color map for importance.
 #' @param title Adds title to the plot.
 #' @param angle The angle to display the x-axis labels.
-#' @param ...
 #'
 #' @importFrom ggplot2 "ggplot"
 #' @importFrom ggnewscale "new_scale_fill"
@@ -20,8 +19,6 @@
 #' @importFrom reshape "melt"
 #' @importFrom stats "reorder"
 #' @importFrom stats "as.dist"
-#' @importFrom cowplot "get_legend"
-#' @importFrom cowplot "plot_grid"
 #' @importFrom colorspace "sequential_hcl"
 #'
 #' @return A heatmap plot showing variable importance on the diagonal
@@ -41,8 +38,8 @@ viviHeatMap <- function(mat,
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
                         intLims = NULL,
                         impLims = NULL,
-                        angle = NULL,
-                        ...) {
+                        angle = NULL
+                        ) {
 
 
 

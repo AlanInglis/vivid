@@ -12,7 +12,6 @@
 #' @param labelNudge A value to determine the y_postioning of the variables names. A higher value will postion the label farther above the nodes.
 #' @param layout Layout of the plotted graph.
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
-#' @param ...
 #'
 #' @return A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 #'
@@ -25,8 +24,6 @@
 #' @importFrom ggnewscale "new_scale_fill"
 #' @importFrom reshape "melt"
 #' @importFrom ggalt "geom_encircle"
-#' @importFrom cowplot "get_legend"
-#' @importFrom cowplot "plot_grid"
 #' @importFrom colorspace "sequential_hcl"
 #'
 #' @examples
@@ -45,8 +42,8 @@ viviNetwork <- function(mat,
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
                         labelNudge = 0.05,
                         layout = "circle",
-                        cluster = NULL,
-                        ...) {
+                        cluster = NULL
+                        ) {
 
 
   # setting up of variables -------------------------------------------
