@@ -21,6 +21,13 @@
 #' @return A zenplot of partial dependence values.
 #' @examples
 #' \dontrun{
+#' # To use this function, install zenplots and graph from Bioconductor.
+#' if (!requireNamespace("graph", quietly = TRUE)){
+#'  install.packages("BiocManager")
+#'  BiocManager::install("graph")
+#'}
+#' install.packages("zenplots")
+
 #' library(MASS)
 #' library(ranger)
 #' Boston1 <- Boston
@@ -44,7 +51,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
                       comboImage =FALSE,rug=TRUE,predictFun=condvis2::CVpredict, parallel=FALSE,...){
 
   if (!(requireNamespace("zenplots", quietly=TRUE))){
-    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
     return (invisible(NULL))
   }
 

@@ -35,6 +35,13 @@ Constructs a zenpath for connecting and displaying pairs.
 }
 \examples{
 \dontrun{
+# To use this function, install zenplots and graph from Bioconductor.
+if (!requireNamespace("graph", quietly = TRUE)){
+ install.packages("BiocManager")
+ BiocManager::install("graph")
+}
+install.packages("zenplots")
+
 aq <- na.omit(airquality)*1.0
 
 # Run an mlr3 ranger model:

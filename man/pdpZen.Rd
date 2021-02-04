@@ -59,13 +59,19 @@ Constructs a zigzag expanded navigation plot (zenplot) displaying partial depend
 }
 \examples{
 \dontrun{
+# To use this function, install zenplots and graph from Bioconductor.
+if (!requireNamespace("graph", quietly = TRUE)){
+ install.packages("BiocManager")
+ BiocManager::install("graph")
+}
+install.packages("zenplots")
 library(MASS)
 library(ranger)
 Boston1 <- Boston
 Boston1$chas<- factor(Boston1$chas)
 rf <- ranger(medv ~ ., data=Boston1)
 pdpZen(Boston1[1:30,], rf, response="medv", zpath=names(Boston1)[1:4], comboImage=T)
-Find the top variables in rf
+#Find the top variables in rf
 set.seed(123)
 viv <- vivi(Boston1, rf, "medv", nmax=30) # use 30 rows, for speed
 pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)

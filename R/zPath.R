@@ -1,6 +1,6 @@
 #' zPath
 #'
-#' #' Construct a path of indices to visit to order variables
+#' Construct a path of indices to visit to order variables
 #'
 #' @description Constructs a zenpath for connecting and displaying pairs.
 #'
@@ -19,6 +19,13 @@
 #'
 #' @examples
 #' \dontrun{
+#' # To use this function, install zenplots and graph from Bioconductor.
+#' if (!requireNamespace("graph", quietly = TRUE)){
+#'  install.packages("BiocManager")
+#'  BiocManager::install("graph")
+#'}
+#' install.packages("zenplots")
+#'
 #' aq <- na.omit(airquality)*1.0
 #'
 #' # Run an mlr3 ranger model:
@@ -42,7 +49,7 @@
 zPath <- function(viv, cutoff=NULL, method=c("greedy.weighted", "strictly.weighted"), connect=TRUE){
 
   if (!(requireNamespace("zenplots", quietly=TRUE))){
-    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see vivid README")
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
     return (invisible(NULL))
   }
 
