@@ -4,7 +4,7 @@
 #'
 #' @description Constructs a zenpath for connecting and displaying pairs.
 #'
-#' @param viv A matrix of class 'vivid' to be used to calculate the path.
+#' @param viv A matrix, created by \code{vivi} to be used to calculate the path.
 #' @param cutoff Do not include any variables that are below the cutoff interaction value.
 #' @param method String indicating the method to use. The available methods are:
 #' "greedy.weighted": Sort all pairs according to a greedy (heuristic) Euler path with x as weights visiting each edge precisely once.
