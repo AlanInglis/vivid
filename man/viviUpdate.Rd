@@ -7,7 +7,7 @@
 viviUpdate(mat, newImp)
 }
 \arguments{
-\item{mat}{A matrix, such as that returned by vivi.}
+\item{mat}{A matrix, such as that returned by \code{vivi}.}
 
 \item{newImp}{A named vector of variable importances.}
 }
@@ -23,5 +23,4 @@ f <- lm(Sepal.Length ~ ., data = iris[, -5])
 m <- vivi(iris[, -5], f, "Sepal.Length")
 corimp <- abs(cor(iris[, -5])[1, -1])
 viviUpdate(m, corimp) # use correlation as updated importance
-
 }

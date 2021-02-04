@@ -12,7 +12,7 @@ zPath(
 )
 }
 \arguments{
-\item{viv}{A matrix of class 'vivid' to be used to calculate the path.}
+\item{viv}{A matrix, created by \code{vivi} to be used to calculate the path.}
 
 \item{cutoff}{Do not include any variables that are below the cutoff interaction value.}
 
@@ -50,5 +50,5 @@ viv <- vivi(aq, ozonef, "Ozone")
 # Calculate Zpath:
 zpath<-zPath(viv,.8)
 zpath
-}
+}N
 }
