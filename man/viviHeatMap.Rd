@@ -11,8 +11,7 @@ viviHeatMap(
   impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
   intLims = NULL,
   impLims = NULL,
-  angle = NULL,
-  ...
+  angle = NULL
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ viviHeatMap(
 \item{impLims}{Specifies the fit range for the color map for importance.}
 
 \item{angle}{The angle to display the x-axis labels.}
-
-\item{...}{}
 }
 \value{
 A heatmap plot showing variable importance on the diagonal

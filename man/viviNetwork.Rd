@@ -13,8 +13,7 @@ viviNetwork(
   impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
   labelNudge = 0.05,
   layout = "circle",
-  cluster = NULL,
-  ...
+  cluster = NULL
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ viviNetwork(
 \item{layout}{Layout of the plotted graph.}
 
 \item{cluster}{Either a vector of cluster memberships for nodes or an igraph clustering function.}
-
-\item{...}{}
 }
 \value{
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
