@@ -20,6 +20,7 @@
 #'
 #' @importFrom condvis2 "CVpredict"
 #' @importFrom dplyr "bind_rows"
+#' @importFrom dplyr "filter"
 #'
 #' @examples
 #' # Load in the data:
