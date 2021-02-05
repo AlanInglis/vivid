@@ -16,7 +16,13 @@ imports:
     colorspace,
     stats,
     DendSer,
-    ggalt
+    ggalt,
+    dplyr,
+    igraph,
+    flashlight,
+    ggnewscale,
+    reshape,
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,
