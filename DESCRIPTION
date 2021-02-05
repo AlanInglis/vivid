@@ -15,7 +15,7 @@ imports:
     RColorBrewer,
     colorspace,
     stats,
-    Dendser,
+    DendSer,
     ggalt
 Suggests: 
     knitr,
