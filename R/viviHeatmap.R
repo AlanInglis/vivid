@@ -75,11 +75,6 @@ viviHeatmap <- function(mat,
   alphaImp <- as.integer(df$X1 == df$X2)
   alphaInt <- 1 - alphaImp
 
-  # used to set up breaks in plot
-  nvar <- nrow(mat)
-  index <- 1:nvar
-
-
 
   # Create Plot ------------------------------------------------------------
 
