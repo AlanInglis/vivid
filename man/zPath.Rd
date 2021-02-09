@@ -31,7 +31,7 @@ Returns a zpath from viv showing pairs with viv entry over the cutoff
 Constructs a zenpath for connecting and displaying pairs.
 }
 \details{
-#' Construct a path of indices to visit to order variables
+Construct a path of indices to visit to order variables
 }
 \examples{
 \dontrun{
