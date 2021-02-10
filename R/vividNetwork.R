@@ -56,7 +56,7 @@ viviNetwork <- function(mat,
   # get int values and scale
   intV <- as.dist(mat)
   df <- melt(as.matrix(intV), varnames = c("row", "col")) # turn into df
-  df <- df[-seq(1, NROW(df), by = 6), ] # remove imp vals
+  df <- df[-seq(1, NROW(df), by = (length(nam)+1)), ] # remove imp vals
   df <- df[!duplicated(t(apply(df, 1, sort))), ] # remove duplicates
   int <- df$value # extract interaction values
   edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
@@ -71,7 +71,7 @@ viviNetwork <- function(mat,
 
 
   # create graph
-  g <- make_empty_graph(n = ncol(myMat))
+  g <- make_empty_graph(n = ncol(mat))
   g <- add_edges(graph = g, edges = ed)
 
   # add edge weight
