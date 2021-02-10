@@ -44,7 +44,6 @@ viviNetwork <- function(mat,
 
   # Set up ------------------------------------------------------------------
 
-
   # get names
   nam <- colnames(mat)
 
@@ -60,14 +59,14 @@ viviNetwork <- function(mat,
   df <- df[!duplicated(t(apply(df, 1, sort))), ] # remove duplicates
   int <- df$value # extract interaction values
   edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
-
+  edgeWidthScaled <- rev(edgeWidthScaled)
   # Set up & create graph ---------------------------------------------------
 
   # create all pairs and turn into vector for graph edges
   pairs <- expand.grid(1:length(nam), 1:length(nam)) # create all pairs
   pairs <- pairs[!pairs$Var1 == pairs$Var2, ] # remove matching rows
   pairs <- pairs[!duplicated(t(apply(pairs, 1, sort))), ] # remove duplicates
-  ed <- as.vector(t(pairs)) # turn into vecotr
+  ed <- rev(as.vector(t(pairs))) # turn into vector
 
 
   # create graph
@@ -75,7 +74,7 @@ viviNetwork <- function(mat,
   g <- add_edges(graph = g, edges = ed)
 
   # add edge weight
-  E(g)$weight <- int
+  E(g)$weight <- rev(int)
 
 
   # Edge colour set up -------------------------------------------------------------
@@ -127,11 +126,11 @@ viviNetwork <- function(mat,
     idx <- which(a > threshold)
     cut.off <- a[1:max(idx)]
     # Thresholded colours
-    indexCol <- edgeCols
-    edgeCols <- indexCol[idx]
+    indexCol <- rev(edgeCols)
+    edgeCols <- rev(indexCol[idx])
     # Thresholded edge weights
-    indexWeight <- edgeWidthScaled
-    edgeWidthScaled <- indexWeight[idx]
+    indexWeight <- rev(edgeWidthScaled)
+    edgeWidthScaled <- rev(indexWeight[idx])
     # Thresholded network
     `%notin%` <- Negate(`%in%`)
     g <- delete_edges(g, E(g)[E(g)$weight %notin% cut.off])
