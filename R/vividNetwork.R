@@ -233,8 +233,7 @@ viviNetwork <- function(mat,
 
     colCluster <- colrs[group]
     colCluster <- as.vector(colCluster)
-    print("2")
-    print(colCluster)
+
     pcl <- pcl + geom_encircle(aes(group = groupV),
       spread = 0.01,
       alpha = 0.2,
