@@ -44,6 +44,7 @@ viviNetwork <- function(mat,
 
   # Set up ------------------------------------------------------------------
 
+  mat <- myMat1
   # get names
   nam <- colnames(mat)
 
@@ -126,12 +127,17 @@ viviNetwork <- function(mat,
     }
     idx <- which(a > threshold)
     cut.off <- a[1:max(idx)]
+    indexOfInt <- which(int %in% cut.off) # get index on interaction
+
     # Thresholded colours
-    indexCol <- rev(edgeCols)
-    edgeCols <- rev(indexCol[idx])
+    edgeCols <- rev(edgeCols)[indexOfInt]
+    edgeCols <- rev(edgeCols)
+
     # Thresholded edge weights
-    indexWeight <- rev(edgeWidthScaled)
-    edgeWidthScaled <- rev(indexWeight[idx])
+    indexWeight <- rev(edgeWidthScaled)[indexOfInt]
+    edgeWidthScaled <- rev(indexWeight)
+
+
     # Thresholded network
     `%notin%` <- Negate(`%in%`)
     g <- delete_edges(g, E(g)[E(g)$weight %notin% cut.off])
