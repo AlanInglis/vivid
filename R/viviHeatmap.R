@@ -78,10 +78,18 @@ viviHeatmap <- function(mat,
 
   # Create Plot ------------------------------------------------------------
 
+  # set vector of levels
+  mylevels <- labelNames
+
+  # reorder factors
+  df$X1 <- factor(df$X1, levels = mylevels)
+  df$X2 <- factor(df$X2, levels = mylevels)
+
 
   p <- ggplot(df, aes(X1, X2)) +
     geom_tile(aes(fill = value), alpha = alphaInt) +
-    scale_x_discrete(limits = rev(levels(df$X1)), position = "top") +
+    scale_x_discrete(position = "top") +
+    scale_y_discrete(limits = rev(levels(df$X2))) +
     scale_fill_gradientn(
       colors = intPal, limits = limitsInt, name = "Vint",
       guide = guide_colorbar(
