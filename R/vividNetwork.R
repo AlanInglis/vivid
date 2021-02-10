@@ -16,9 +16,6 @@
 #' @return A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 #'
 #' @import igraph
-#' @importFrom igraph "sample_pa"
-#' @importFrom igraph "as_data_frame"
-#' @importFrom igraph "make_graph"
 #' @import ggplot2
 #' @importFrom GGally "ggnet2"
 #' @importFrom ggnewscale "new_scale_fill"
@@ -42,25 +39,61 @@ viviNetwork <- function(mat,
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
                         labelNudge = 0.05,
                         layout = "circle",
-                        cluster = NULL
-                        ) {
+                        cluster = NULL) {
 
 
-  # setting up of variables -------------------------------------------
+  # Set up ------------------------------------------------------------------
 
 
-  # Get importance values
-  imp <- diag(mat) # used to scale the size of points
-  impFill <- imp # used in plotting for geom_point
+  # get names
+  nam <- colnames(mat)
+
+  # get imp values and scale
+  imp <- diag(mat)
+  impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
 
 
-  # Sort interaction values
-  sortInt <- t(mat)[lower.tri(t(mat), diag = FALSE)] # get upper triangle of the matrix by row order
-  sorted_Int <- sort(sortInt, index.return = TRUE) # Sort values whilst preserving the index
-  int <- sorted_Int$x # used to set edge weight
-  nam <- colnames(mat) # Get feature names
+  # get int values and scale
+  intV <- as.dist(mat)
+  df <- melt(as.matrix(intV), varnames = c("row", "col")) # turn into df
+  df <- df[-seq(1, NROW(df), by = 6), ] # remove imp vals
+  df <- df[!duplicated(t(apply(df, 1, sort))), ] # remove duplicates
+  int <- df$value # extract interaction values
+  edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
+
+  # Set up & create graph ---------------------------------------------------
+
+  # create all pairs and turn into vector for graph edges
+  pairs <- expand.grid(1:length(nam), 1:length(nam)) # create all pairs
+  pairs <- pairs[!pairs$Var1 == pairs$Var2, ] # remove matching rows
+  pairs <- pairs[!duplicated(t(apply(pairs, 1, sort))), ] # remove duplicates
+  ed <- as.vector(t(pairs)) # turn into vecotr
 
 
+  # create graph
+  g <- make_empty_graph(n = ncol(myMat))
+  g <- add_edges(graph = g, edges = ed)
+
+  # add edge weight
+  E(g)$weight <- int
+
+
+  # Edge colour set up -------------------------------------------------------------
+
+  # Set the edge colours
+  if (is.null(intLims)) {
+    edgeColour <- (E(g)$weight) # edge weights
+    cut_int <- cut(edgeColour, 10) # cut
+    edgeCols <- intPal[cut_int]
+  } else {
+    edgeColour <- (E(g)$weight) # edge weights
+    ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
+    ii <- cut(edgeColour,
+      breaks = seq(min(intLims), max(intLims), len = 10),
+      include.lowest = TRUE
+    )
+    edgeCols <- intPal[ii]
+  }
 
   # Limits ------------------------------------------------------------------
 
@@ -80,78 +113,11 @@ viviNetwork <- function(mat,
     limitsInt <- intLims
   }
 
-  # Warning messages --------------------------------------------------------
-
-  if (!is.null(intLims) && intLims[1] > min(as.dist(mat))) {
-    stop("Error: Minimum chosen limit for interaction is larger
-  than the minimum measured interaction value.
-  Please choose a minimum limit value less than or equal to the minimum measured value.")
-  }
-
-  if (!is.null(intLims) && intLims[2] < max(as.dist(mat))) {
-    stop("Error: Maximum chosen limit for interaction is smaller
-  than the maximum measured interaction value.
-  Please choose a maximum limit value greater than or equal to the maximum measured value.")
-  }
-
-  if (!is.null(impLims) && impLims[1] > min(diag(mat))) {
-    stop("Error: Minimum chosen limit for importance is larger
-  than the minimum measured importance value.
-  Please choose a minimum limit value less than or equal to the minimum measured value.")
-  }
-
-  if (!is.null(impLims) && impLims[2] < max(diag(mat))) {
-    stop("Error: Maximum chosen limit for importance is smaller
-  than the maximum measured importance value.
-  Please choose a maximum limit value greater than or equal to the maximum measured value.")
-  }
-
-  # Setting up graph properties ---------------------------------------------
-
-  # Set path direction of graph:
-  to <- NULL
-  g <- sample_pa(length(nam), m = length(nam)) # generate scale free graph
-  df <- igraph::as_data_frame(g) # create data frame from graph
-  gDF <- dplyr::arrange(df, to) # arrange rows by column name
-  gDFL <- rbind(gDF$from, gDF$to) # combine
-  matched_gDFL <- gDFL[, sorted_Int$ix]
-
-  # Create network graph:
-  net.bg <- make_graph(matched_gDFL, length(nam))
-
-  # Scale and round values:
-  E(net.bg)$weight <- int # set edge weight to equal interaction values
-  impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5
-
-
-  # Set the edge colours
-  if (is.null(intLims)) {
-    edgeColour <- (E(net.bg)$weight) # edge weights
-    cut_int <- cut(edgeColour, 10) # cut
-    edgeCols <- intPal[cut_int]
-  } else {
-    edgeColour <- (E(net.bg)$weight) # edge weights
-    ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
-    ii <- cut(edgeColour,
-      breaks = seq(min(intLims), max(intLims), len = 10),
-      include.lowest = TRUE
-    )
-    edgeCols <- intPal[ii]
-  }
-
-  # Get edge weights
-  weightDF <- get.data.frame(net.bg) # get df of graph attributes
-  edgeWidth1 <- weightDF$weight # select edge weight
-  edgeWidthScaled <- (5 - 1) * ((edgeWidth1 - min(edgeWidth1)) / (max(edgeWidth1) - min(edgeWidth1))) + 1 # scale between 1-5 for graphic
-
-
 
   # THRESHOLDING ------------------------------------------------------------
 
-
-
   if (threshold > 0) {
-    a <- sort(int, decreasing = TRUE)
+    a <- sort(unique(int), decreasing = TRUE)
     # Warning message if threshold value is set too high or too low
     if (threshold > max(a)) {
       stop("Selected threshold value is larger than maximum interaction strength")
@@ -161,57 +127,72 @@ viviNetwork <- function(mat,
     idx <- which(a > threshold)
     cut.off <- a[1:max(idx)]
     # Thresholded colours
-    indexCol <- rev(edgeCols)
+    indexCol <- edgeCols
     edgeCols <- indexCol[idx]
-    edgeCols <- rev(edgeCols)
     # Thresholded edge weights
-    indexWeight <- rev(edgeWidthScaled)
-    edgeW <- indexWeight[idx]
-    edgeW <- rev(edgeW)
+    indexWeight <- edgeWidthScaled
+    edgeWidthScaled <- indexWeight[idx]
     # Thresholded network
     `%notin%` <- Negate(`%in%`)
-    net.sp <- delete_edges(net.bg, E(net.bg)[E(net.bg)$weight %notin% cut.off])
+    g <- delete_edges(g, E(g)[E(g)$weight %notin% cut.off])
 
     # Delete vertex that have no edges (if thresholding)
-    Isolated <- which(igraph::degree(net.sp) == 0)
+    Isolated <- which(igraph::degree(g) == 0)
     if (length(Isolated) == 0) {
-      net.sp <- net.sp
+      g <- g
     } else {
-      net.sp <- igraph::delete.vertices(net.sp, Isolated)
-      impFill <- impFill[-c(Isolated)]
+      g <- igraph::delete.vertices(g, Isolated)
+      imp <- imp[-c(Isolated)]
       impScaled <- impScaled[-c(Isolated)]
       nam <- nam[-c(Isolated)]
     }
-  } else {
-    net.sp <- net.bg
-    weightDF <- get.data.frame(net.sp) # get df of graph attributes
-    edgeW <- (5 - 1) * ((edgeWidth1 - min(edgeWidth1)) / (max(edgeWidth1) - min(edgeWidth1))) + 1 # scale between 1-5
   }
-
-
-
-
 
   # Plot graph ----------------------------------------------------
 
-  # set layout
-  l <- layout
-
-  if (!is.null(cluster)) {
-    l_1 <- l
-
+  if (is.null(cluster)) {
+    # plotting
+    p <- ggnet2(g,
+      mode = layout,
+      size = 0,
+      edge.size = edgeWidthScaled,
+      edge.color = edgeCols
+    ) +
+      theme(legend.text = element_text(size = 10)) +
+      geom_label(aes(label = nam), nudge_y = labelNudge) +
+      geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
+      scale_fill_gradientn(
+        name = "Vimp", colors = impPal, limits = limitsImp,
+        guide = guide_colorbar(
+          frame.colour = "black",
+          ticks.colour = "black"
+        ), oob = scales::squish
+      ) +
+      new_scale_fill() +
+      geom_point(aes(x = 0, y = 0, fill = imp), size = -1) +
+      scale_fill_gradientn(
+        name = "Vint", colors = intPal, limits = limitsInt,
+        guide = guide_colorbar(
+          frame.colour = "black",
+          ticks.colour = "black"
+        ), oob = scales::squish
+      ) +
+      theme(aspect.ratio = 1)
+    return(p)
+  } else {
+    ## Clustering plot
     # add numeric vector to cluster by, else use igraph clustering
     if (is.numeric(cluster)) {
       group <- factor(cluster)
     } else {
-      com <- cluster(net.sp)
-      V(net.sp)$color <- com$membership
-      group <- V(net.sp)$color
+      com <- cluster(g)
+      V(g)$color <- com$membership
+      group <- V(g)$color
       group <- factor(group)
     }
 
 
-    # g <- set_graph_attr(net.sp, "layout", layout_in_circle(net.sp))
+    # g <- set_graph_attr(g, "layout", layout_in_circle(g))
     colrs <- adjustcolor(c(
       "yellow", "red", "blue", "black", "purple",
       "orange", "pink", "green",
@@ -221,19 +202,31 @@ viviNetwork <- function(mat,
     colorC <- colrs[group]
 
     # plot clustered graph
-    pcl <- ggnet2(net.sp,
-      mode = l_1,
+    pcl <- ggnet2(g,
+      mode = layout,
       size = 0,
-      edge.size = edgeW,
+      edge.size = edgeWidthScaled,
       edge.color = edgeCols
-    ) +
-      theme(legend.text = element_text(size = 10)) +
+    ) + theme(legend.text = element_text(size = 10)) +
       geom_label(aes(label = nam), nudge_y = labelNudge) +
-      geom_point(aes(fill = impFill), size = impScaled * 2, col = "transparent", shape = 21) +
-      scale_fill_gradientn(name = "Variable\nImportance", colors = impPal, limits = limitsImp) +
+      geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
+      scale_fill_gradientn(
+        name = "Vimp", colors = impPal, limits = limitsImp,
+        guide = guide_colorbar(
+          frame.colour = "black",
+          ticks.colour = "black"
+        ), oob = scales::squish
+      ) +
       new_scale_fill() +
-      geom_point(aes(x = 0, y = 0, fill = impFill), size = -1) +
-      scale_fill_gradientn(name = "Interaction\nStrength", colors = intPal, limits = limitsInt)
+      geom_point(aes(x = 0, y = 0, fill = imp), size = -1) +
+      scale_fill_gradientn(
+        name = "Vint", colors = intPal, limits = limitsInt,
+        guide = guide_colorbar(
+          frame.colour = "black",
+          ticks.colour = "black"
+        ), oob = scales::squish
+      ) +
+      theme(aspect.ratio = 1)
 
     # Group clusters
     groupV <- as.vector(group)
@@ -254,21 +247,5 @@ viviNetwork <- function(mat,
       fill = colCluster
     )
     return(pcl)
-  } else {
-    p <- ggnet2(net.sp,
-      mode = l,
-      size = 0,
-      edge.size = edgeW,
-      edge.color = edgeCols
-    ) +
-      theme(legend.text = element_text(size = 10)) +
-      geom_label(aes(label = nam), nudge_y = labelNudge) +
-      geom_point(aes(fill = impFill), size = impScaled * 2, colour = "transparent", shape = 21) +
-      scale_fill_gradientn(name = "Variable\nImportance", colors = impPal, limits = limitsImp) +
-      new_scale_fill() +
-      geom_point(aes(x = 0, y = 0, fill = impFill), size = -1) +
-      scale_fill_gradientn(name = "Interaction\nStrength", colors = intPal, limits = limitsInt)
-
-    return(p)
   }
 }
