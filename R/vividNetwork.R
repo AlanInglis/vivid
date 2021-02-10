@@ -55,11 +55,12 @@ viviNetwork <- function(mat,
   # get int values and scale
   intV <- as.dist(mat)
   df <- melt(as.matrix(intV), varnames = c("row", "col")) # turn into df
-  df <- df[-seq(1, NROW(df), by = (length(nam)+1)), ] # remove imp vals
+  df <- df[-seq(1, NROW(df), by = (length(nam) + 1)), ] # remove imp vals
   df <- df[!duplicated(t(apply(df, 1, sort))), ] # remove duplicates
   int <- df$value # extract interaction values
   edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
-  edgeWidthScaled <- rev(edgeWidthScaled)
+  edgeWidthScaled <- rev(edgeWidthScaled) # reversing for drawing graphic
+
   # Set up & create graph ---------------------------------------------------
 
   # create all pairs and turn into vector for graph edges
@@ -180,6 +181,7 @@ viviNetwork <- function(mat,
     return(p)
   } else {
     ## Clustering plot
+
     # add numeric vector to cluster by, else use igraph clustering
     if (is.numeric(cluster)) {
       group <- factor(cluster)
@@ -189,16 +191,6 @@ viviNetwork <- function(mat,
       group <- V(g)$color
       group <- factor(group)
     }
-
-
-    # g <- set_graph_attr(g, "layout", layout_in_circle(g))
-    colrs <- adjustcolor(c(
-      "yellow", "red", "blue", "black", "purple",
-      "orange", "pink", "green",
-      "yellow", "red", "blue", "black", "purple",
-      "orange", "pink", "green"
-    ))
-    colorC <- colrs[group]
 
     # plot clustered graph
     pcl <- ggnet2(g,
@@ -229,16 +221,20 @@ viviNetwork <- function(mat,
 
     # Group clusters
     groupV <- as.vector(group)
-    fillCols <- c(
-      "yellow", "red", "blue", "black", "purple",
-      "orange", "pink", "green",
-      "yellow", "red", "blue", "black", "purple",
-      "orange", "pink", "green"
-    )
 
     # encircle groups
-    colCluster <- fillCols[group]
+    colPal <- palette(rainbow(6)) # set colours
+    colrs <- sample(colPal, length(nam), TRUE) # get colours
+
+    # if there are 2 clusters, avoid having same colour
+    if (colrs[1] == colrs[2]) {
+      colrs[2] <- sample(subset(colPal, !(colPal %in% colrs[2])), 1)
+    }
+
+    colCluster <- colrs[group]
     colCluster <- as.vector(colCluster)
+    print("2")
+    print(colCluster)
     pcl <- pcl + geom_encircle(aes(group = groupV),
       spread = 0.01,
       alpha = 0.2,
