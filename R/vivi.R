@@ -13,7 +13,7 @@
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
-#' @return A matrix of values.
+#' @return A matrix of interaction values, with importance on the diagonal.
 #'
 #' @importFrom flashlight "flashlight"
 #' @importFrom flashlight "light_importance"
