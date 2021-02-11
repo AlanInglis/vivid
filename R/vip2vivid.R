@@ -21,31 +21,30 @@
 #' vInt <- vint(rF, feature_names = nameAq) # vip interaction
 #'
 #' vip2vivid(vImp, vInt)
-#'
 #' @export
 
-vip2vivid <- function(importance, interaction, reorder = TRUE){
+vip2vivid <- function(importance, interaction, reorder = TRUE) {
 
   # Importance --------------------------------------------------------------
 
 
   # get importance and make named vector
-  importanceTibble <- importance[,1:2]
+  importanceTibble <- importance[, 1:2]
 
-  vImp <-importanceTibble$Importance
-  names(vImp) <-  importanceTibble$Variable
+  vImp <- importanceTibble$Importance
+  names(vImp) <- importanceTibble$Variable
 
   varNames <- importanceTibble$Variable
   # interactions ------------------------------------------------------------
 
   # get interaction and make named vector
-  interactionTibble <- interaction[,1:2]
+  interactionTibble <- interaction[, 1:2]
 
   vars <- t(simplify2array(strsplit(as.character(interactionTibble[["Variables"]]), "*", fixed = T)))
   mat <- matrix(0, length(varNames), length(varNames)) # create matrix
   rownames(mat) <- colnames(mat) <- varNames # set names
   mat[vars] <- interactionTibble[["Interaction"]]
-  mat[vars[,2:1, drop=FALSE]] <- interactionTibble[["Interaction"]]
+  mat[vars[, 2:1, drop = FALSE]] <- interactionTibble[["Interaction"]]
 
 
   mat <- mat[varNames, varNames] # make sure the order of vImp & vInt match
@@ -57,5 +56,3 @@ vip2vivid <- function(importance, interaction, reorder = TRUE){
 
   return(mat)
 }
-
-
