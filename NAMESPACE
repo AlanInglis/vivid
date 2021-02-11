@@ -3,6 +3,7 @@
 export(genFriedman)
 export(pdpPairs)
 export(pdpZen)
+export(vip2vivid)
 export(vivi)
 export(viviHeatmap)
 export(viviNetwork)

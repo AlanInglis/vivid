@@ -40,7 +40,7 @@ vivi(
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 }
 \value{
-A matrix of values.
+A matrix of interaction values, with importance on the diagonal.
 }
 \description{
 Creates a matrix displaying variable importance on the diagonal
