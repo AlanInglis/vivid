@@ -44,7 +44,6 @@ viviNetwork <- function(mat,
 
   # Set up ------------------------------------------------------------------
 
-  mat <- myMat1
   # get names
   nam <- colnames(mat)
 
