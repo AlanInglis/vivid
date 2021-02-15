@@ -70,26 +70,24 @@ viviHeatmap <- function(mat,
 
   # Set up plot -------------------------------------------------------
 
-  df <- melt(mat)
+  df <- matrix2df(mat)
+
   # used in plot
-  alphaImp <- as.integer(df$X1 == df$X2)
+  alphaImp <- as.integer(df$Variable_1 == df$Variable_2)
   alphaInt <- 1 - alphaImp
 
 
   # Create Plot ------------------------------------------------------------
 
-  # set vector of levels
-  mylevels <- labelNames
-
-  # reorder factors
-  df$X1 <- factor(df$X1, levels = mylevels)
-  df$X2 <- factor(df$X2, levels = mylevels)
+  # order factors
+  df$Variable_1 <- factor(df$Variable_1, levels = labelNames)
+  df$Variable_2 <- factor(df$Variable_2, levels = labelNames)
 
 
-  p <- ggplot(df, aes(X1, X2)) +
-    geom_tile(aes(fill = value), alpha = alphaInt) +
+  p <- ggplot(df, aes(Variable_1, Variable_2)) +
+    geom_tile(aes(fill = Vint), alpha = alphaInt) +
     scale_x_discrete(position = "top") +
-    scale_y_discrete(limits = rev(levels(df$X2))) +
+    scale_y_discrete(limits = rev(levels(df$Variable_2))) +
     scale_fill_gradientn(
       colors = intPal, limits = limitsInt, name = "Vint",
       guide = guide_colorbar(
@@ -98,7 +96,7 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_tile(aes(fill = value), alpha = alphaImp) +
+    geom_tile(aes(fill = Vimp), alpha = alphaImp) +
     scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
