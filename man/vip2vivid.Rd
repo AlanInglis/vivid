@@ -31,5 +31,4 @@ vImp <- vi(rF) # vip importance
 vInt <- vint(rF, feature_names = nameAq) # vip interaction
 
 vip2vivid(vImp, vInt)
-
 }
