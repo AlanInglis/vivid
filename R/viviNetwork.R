@@ -9,7 +9,6 @@
 #' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
-#' @param labelNudge A value to determine the y_postioning of the variables names. A higher value will postion the label farther above the nodes.
 #' @param layout Layout of the plotted graph.
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
 #'
@@ -37,7 +36,6 @@ viviNetwork <- function(mat,
                         impLims = NULL,
                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
-                        labelNudge = 0.05,
                         layout = "circle",
                         cluster = NULL) {
 
@@ -177,7 +175,7 @@ viviNetwork <- function(mat,
     edge.color = edgeCols
   ) +
     theme(legend.text = element_text(size = 10)) +
-    geom_label(aes(label = nam), nudge_y = labelNudge) +
+    geom_label(aes(label = nam)) +
     geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
     scale_fill_gradientn(
       name = "Vimp", colors = impPal, limits = limitsImp,
@@ -228,5 +226,28 @@ viviNetwork <- function(mat,
       fill = colCluster
     )
   }
+
+
+# Move labels to outside --------------------------------------------------
+
+  geoms <- sapply(p$layers, function(x) class(x$geom)[1]) # get geoms
+  segments <-  p$layers[[which(geoms == "NewGeomSegment")]] # select segment
+  labels <-  p$layers[[which(geoms == "NewGeomLabel")]]  # select layers
+
+  # set some values
+  segments$data <- segments$data - 0.5
+  p$data$x <- p$data$x - 0.5
+  p$data$y <- p$data$y - 0.5
+
+  labels$position$y <- 0
+
+
+  labels$data <- p$data
+  labels$data$x <- labels$data$x * 1.1
+  labels$data$y <- labels$data$y * 1.1
+
+  p$scales$scales <- lapply(p$scales$scales, function(x) {
+    if(class(x)[1] == "ScaleContinuousPosition") ScaleContinuousPosition else x })
+  p <- p + theme(axis.text = element_blank())
   return(p)
 }
