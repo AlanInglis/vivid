@@ -43,39 +43,54 @@ viviNetwork <- function(mat,
 
 
   # Set up ------------------------------------------------------------------
+  mat <- myMat1
+
+  # convert to df
+  df <- matrix2df(mat)
 
   # get names
   nam <- colnames(mat)
 
   # get imp values and scale
   imp <- diag(mat)
+  # dfImp <- which(df$Variable_1 == df$Variable_2)
+  # imp <- df$Vimp[dfImp]
+  # imp <- setNames(imp, df$Variable_1[dfImp])
   impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
 
 
+
+
   # get int values and scale
-  intV <- as.dist(mat)
-  df <- melt(as.matrix(intV), varnames = c("row", "col")) # turn into df
-  df <- df[-seq(1, NROW(df), by = (length(nam) + 1)), ] # remove imp vals
-  df <- df[!duplicated(t(apply(df, 1, sort))), ] # remove duplicates
-  int <- df$value # extract interaction values
+  dfInt <- data.frame(
+    Variable_1 = df$Variable_1,
+    Variable_2 = df$Variable_2,
+    Vint = df$Vint,
+    row = df$row,
+    col = df$col
+  )
+
+  dfInt <- dfInt[-seq(1, NROW(dfInt), by = (length(nam) + 1)), ] # remove imp vals
+  dfInt <- dfInt[!duplicated(t(apply(dfInt, 1, sort))), ] # remove duplicates
+
+  dfInt <- dfInt[with(dfInt, order(-Vint)), ]
+  int <- dfInt$Vint # extract interaction values
   edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
   edgeWidthScaled <- rev(edgeWidthScaled) # reversing for drawing graphic
 
   # Set up & create graph ---------------------------------------------------
 
-  # create all pairs and turn into vector for graph edges
-  pairs <- expand.grid(1:length(nam), 1:length(nam)) # create all pairs
-  pairs <- pairs[!pairs$Var1 == pairs$Var2, ] # remove matching rows
-  pairs <- pairs[!duplicated(t(apply(pairs, 1, sort))), ] # remove duplicates
-  ed <- rev(as.vector(t(pairs))) # turn into vector
+  # create all pairs for graph edges
+  pairs <- data.frame(row = dfInt$row, col = dfInt$col)
+  pairs <- rev(as.vector(t(pairs)))
 
 
   # create graph
   g <- make_empty_graph(n = ncol(mat))
-  g <- add_edges(graph = g, edges = ed)
+  g <- add_edges(graph = g, edges = pairs)
 
   # add edge weight
-  E(g)$weight <- rev(int)
+  E(g)$weight <- int
 
 
   # Edge colour set up -------------------------------------------------------------
@@ -84,7 +99,7 @@ viviNetwork <- function(mat,
   if (is.null(intLims)) {
     edgeColour <- (E(g)$weight) # edge weights
     cut_int <- cut(edgeColour, 10) # cut
-    edgeCols <- intPal[cut_int]
+    edgeCols <- rev(intPal[cut_int])
   } else {
     edgeColour <- (E(g)$weight) # edge weights
     ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
@@ -117,29 +132,28 @@ viviNetwork <- function(mat,
   # THRESHOLDING ------------------------------------------------------------
 
   if (threshold > 0) {
-    a <- sort(unique(int), decreasing = TRUE)
+    a <- sort(int, decreasing = TRUE)
     # Warning message if threshold value is set too high or too low
     if (threshold > max(a)) {
       stop("Selected threshold value is larger than maximum interaction strength")
     } else if (threshold < 0) {
       stop("Selected threshold value is less than minimum interaction strength")
     }
+
     idx <- which(a > threshold)
-    cut.off <- a[1:max(idx)]
-    indexOfInt <- which(int %in% cut.off) # get index on interaction
+
+    # getting edge weight
+    revEdgeWeight <- rev(E(g)$weight)
+    g <- delete.edges(g, which(revEdgeWeight < threshold))
 
     # Thresholded colours
-    edgeCols <- rev(edgeCols)[indexOfInt]
+    edgeCols <- rev(edgeCols)[idx]
     edgeCols <- rev(edgeCols)
 
     # Thresholded edge weights
-    indexWeight <- rev(edgeWidthScaled)[indexOfInt]
+    indexWeight <- rev(edgeWidthScaled)[idx]
     edgeWidthScaled <- rev(indexWeight)
 
-
-    # Thresholded network
-    `%notin%` <- Negate(`%in%`)
-    g <- delete_edges(g, E(g)[E(g)$weight %notin% cut.off])
 
     # Delete vertex that have no edges (if thresholding)
     Isolated <- which(igraph::degree(g) == 0)
@@ -155,37 +169,38 @@ viviNetwork <- function(mat,
 
   # Plot graph ----------------------------------------------------
 
-  if (is.null(cluster)) {
-    # plotting
-    p <- ggnet2(g,
-      mode = layout,
-      size = 0,
-      edge.size = edgeWidthScaled,
-      edge.color = edgeCols
+
+  # plotting
+  p <- ggnet2(g,
+    mode = layout,
+    size = 0,
+    edge.size = edgeWidthScaled,
+    edge.color = edgeCols
+  ) +
+    theme(legend.text = element_text(size = 10)) +
+    geom_label(aes(label = nam), nudge_y = labelNudge) +
+    geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
+    scale_fill_gradientn(
+      name = "Vimp", colors = impPal, limits = limitsImp,
+      guide = guide_colorbar(
+        frame.colour = "black",
+        ticks.colour = "black"
+      ), oob = scales::squish
     ) +
-      theme(legend.text = element_text(size = 10)) +
-      geom_label(aes(label = nam), nudge_y = labelNudge) +
-      geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
-      scale_fill_gradientn(
-        name = "Vimp", colors = impPal, limits = limitsImp,
-        guide = guide_colorbar(
-          frame.colour = "black",
-          ticks.colour = "black"
-        ), oob = scales::squish
-      ) +
-      new_scale_fill() +
-      geom_point(aes(x = 0, y = 0, fill = imp), size = -1) +
-      scale_fill_gradientn(
-        name = "Vint", colors = intPal, limits = limitsInt,
-        guide = guide_colorbar(
-          frame.colour = "black",
-          ticks.colour = "black"
-        ), oob = scales::squish
-      ) +
-      theme(aspect.ratio = 1)
-    return(p)
-  } else {
-    ## Clustering plot
+    new_scale_fill() +
+    geom_point(aes(x = 0, y = 0, fill = imp), size = -1) +
+    scale_fill_gradientn(
+      name = "Vint", colors = intPal, limits = limitsInt,
+      guide = guide_colorbar(
+        frame.colour = "black",
+        ticks.colour = "black"
+      ), oob = scales::squish
+    ) +
+    theme(aspect.ratio = 1)
+
+
+  ## Clustering plot
+  if (!is.null(cluster)) {
 
     # add numeric vector to cluster by, else use igraph clustering
     if (is.numeric(cluster)) {
@@ -197,54 +212,22 @@ viviNetwork <- function(mat,
       group <- factor(group)
     }
 
-    # plot clustered graph
-    pcl <- ggnet2(g,
-      mode = layout,
-      size = 0,
-      edge.size = edgeWidthScaled,
-      edge.color = edgeCols
-    ) + theme(legend.text = element_text(size = 10)) +
-      geom_label(aes(label = nam), nudge_y = labelNudge) +
-      geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
-      scale_fill_gradientn(
-        name = "Vimp", colors = impPal, limits = limitsImp,
-        guide = guide_colorbar(
-          frame.colour = "black",
-          ticks.colour = "black"
-        ), oob = scales::squish
-      ) +
-      new_scale_fill() +
-      geom_point(aes(x = 0, y = 0, fill = imp), size = -1) +
-      scale_fill_gradientn(
-        name = "Vint", colors = intPal, limits = limitsInt,
-        guide = guide_colorbar(
-          frame.colour = "black",
-          ticks.colour = "black"
-        ), oob = scales::squish
-      ) +
-      theme(aspect.ratio = 1)
-
-    # Group clusters
-    groupV <- as.vector(group)
-
     # encircle groups
-    colPal <- palette(rainbow(6)) # set colours
-    colrs <- sample(colPal, length(nam), TRUE) # get colours
+    colPal <- c(
+      "yellow", "red", "blue", "black", "purple",
+      "orange", "pink", "green"
+    )
 
-    # if there are 2 clusters, avoid having same colour
-    if (colrs[1] == colrs[2]) {
-      colrs[2] <- sample(subset(colPal, !(colPal %in% colrs[2])), 1)
-    }
+    colPal <- rep(colPal, times = length(group)) # get correct amount of aesthetics
+    colCluster <- colPal[group] # select colours
 
-    colCluster <- colrs[group]
-    colCluster <- as.vector(colCluster)
-
-    pcl <- pcl + geom_encircle(aes(group = groupV),
+    # plot
+    p <- p + geom_encircle(aes(group = group),
       spread = 0.01,
       alpha = 0.2,
       expand = 0.03,
       fill = colCluster
     )
-    return(pcl)
   }
+  return(p)
 }
