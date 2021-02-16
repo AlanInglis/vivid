@@ -11,7 +11,6 @@ viviNetwork(
   impLims = NULL,
   intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
   impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
-  labelNudge = 0.05,
   layout = "circle",
   cluster = NULL
 )
@@ -28,8 +27,6 @@ viviNetwork(
 \item{intPal}{A vector of colours to show interactions, for use with scale_fill_gradientn.}
 
 \item{impPal}{A vector of colours to show importance, for use with scale_fill_gradientn.}
-
-\item{labelNudge}{A value to determine the y_postioning of the variables names. A higher value will postion the label farther above the nodes.}
 
 \item{layout}{Layout of the plotted graph.}
 
