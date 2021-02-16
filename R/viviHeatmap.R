@@ -13,7 +13,6 @@
 #'
 #' @importFrom ggplot2 "ggplot"
 #' @importFrom ggnewscale "new_scale_fill"
-#' @importFrom reshape "melt"
 #' @importFrom stats "as.dist"
 #' @importFrom colorspace "sequential_hcl"
 #'
