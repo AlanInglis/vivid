@@ -24,5 +24,4 @@ rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 myDf <- matrix2df(myMat)
 myDf
-
 }
