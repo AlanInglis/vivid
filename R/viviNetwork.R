@@ -1,7 +1,7 @@
 #' viviNetwork
 #'
-#'  @description Create a Network  plot displaying Variable
-#'  and Variable Interaction.
+#'  @description Create a Network plot displaying variable importance
+#'  and variable interaction.
 #'
 #' @param mat A matrix, such as that returned by vivi, of values to be plotted.
 #' @param threshold Remove edges with weight below this value if provided.
@@ -18,7 +18,6 @@
 #' @import ggplot2
 #' @importFrom GGally "ggnet2"
 #' @importFrom ggnewscale "new_scale_fill"
-#' @importFrom reshape "melt"
 #' @importFrom ggalt "geom_encircle"
 #' @importFrom colorspace "sequential_hcl"
 #'
@@ -192,8 +191,7 @@ viviNetwork <- function(mat,
         frame.colour = "black",
         ticks.colour = "black"
       ), oob = scales::squish
-    ) +
-    theme(aspect.ratio = 1)
+    )
 
 
   ## Clustering plot
@@ -248,6 +246,8 @@ viviNetwork <- function(mat,
 
   p$scales$scales <- lapply(p$scales$scales, function(x) {
     if(class(x)[1] == "ScaleContinuousPosition") ScaleContinuousPosition else x })
-  p <- p + theme(axis.text = element_blank())
+  p <- p + theme(axis.text = element_blank()) +
+    theme_void() +
+    theme(aspect.ratio = 1)
   return(p)
 }
