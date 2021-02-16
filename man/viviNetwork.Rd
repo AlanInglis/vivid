@@ -36,8 +36,8 @@ viviNetwork(
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 }
 \description{
-@description Create a Network  plot displaying Variable
-and Variable Interaction.
+@description Create a Network plot displaying variable importance
+and variable interaction.
 }
 \examples{
 library(ranger)
