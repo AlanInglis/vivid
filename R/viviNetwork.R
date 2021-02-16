@@ -43,7 +43,6 @@ viviNetwork <- function(mat,
 
 
   # Set up ------------------------------------------------------------------
-  mat <- myMat1
 
   # convert to df
   df <- matrix2df(mat)
