@@ -284,6 +284,12 @@ vividImportance.Learner <- function(fit,
                                     predictFun = NULL) {
 
 
+  # if no importance mode selected, use default
+  if (fit$model$importance.mode == "none") {
+    message("No variable importance mode selected. Using agnostic method.")
+    vividImportance.default(fit, data, response, importanceType, importanceMode, predictFun = predictFun)
+  } else {
+
   # get data names without response
   featureNames <- names(data[, !(names(data) %in% response)])
 
@@ -307,6 +313,7 @@ vividImportance.Learner <- function(fit,
     importance <- fit$importance()
     message("Embedded variable importance method used.")
     return(importance)
+  }
   }
 }
 
