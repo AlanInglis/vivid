@@ -58,13 +58,7 @@ viviNetwork <- function(mat,
 
 
   # get int values and scale
-  dfInt <- data.frame(
-    Variable_1 = df$Variable_1,
-    Variable_2 = df$Variable_2,
-    Vint = df$Vint,
-    row = df$row,
-    col = df$col
-  )
+  dfInt <- df[c("Variable_1", "Variable_2", "Vint", "row", "col")]
 
   dfInt <- dfInt[-seq(1, NROW(dfInt), by = (length(nam) + 1)), ] # remove imp vals
   dfInt <- dfInt[!duplicated(t(apply(dfInt, 1, sort))), ] # remove duplicates
