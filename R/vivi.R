@@ -285,7 +285,7 @@ vividImportance.Learner <- function(fit,
 
 
   # if no importance mode selected, use default
-  if (fit$model$importance.mode == "none") {
+  if (fit$packages == "ranger" && fit$model$importance.mode == "none") {
     message("No variable importance mode selected. Using agnostic method.")
     vividImportance.default(fit, data, response, importanceType, importanceMode, predictFun = predictFun)
   } else {
