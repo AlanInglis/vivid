@@ -52,10 +52,10 @@
 vivi <- function(data,
                  fit,
                  response,
-                 gridSize = 10,
+                 gridSize = 50,
                  importanceType = NULL,
                  importanceMode = NULL,
-                 nmax = 500,
+                 nmax = NULL,
                  reorder = TRUE,
                  class = 1,
                  predictFun = NULL,
@@ -388,8 +388,8 @@ vividInteraction.default <- function(fit,
                                      data,
                                      response = NULL,
                                      interactionType = NULL,
-                                     nmax = 500,
-                                     gridSize = 10,
+                                     nmax = NULL,
+                                     gridSize = 50,
                                      predictFun = NULL) {
   message("Calculating interactions...")
 
@@ -406,7 +406,9 @@ vividInteraction.default <- function(fit,
     predict_function = function(fit, data) predictFun(fit, data)
   )
 
-
+  if(is.null(nmax)){
+    nmax <- nrow(data)
+  }
   # calculate interactions
   res <- light_interaction(fl,
     pairwise = TRUE, type = "H", grid_size = gridSize,
