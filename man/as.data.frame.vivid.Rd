@@ -7,13 +7,15 @@
 \method{as.data.frame}{vivid}(matrix, class = "vivid")
 }
 \arguments{
-\item{matrix}{A matrix to be converted to a data frame.}
+\item{matrix}{A matrix of class 'vivid' to be converted to a data frame.}
+
+\item{class}{Set the class to that of 'vivid'.}
 }
 \value{
-A data frame of Vimp and Vint values and their index from the matrix.
+A data frame of Vimp and Vint values and their index from the vivid matrix.
 }
 \description{
-@description Takes a matrix, such as that created by \code{vivi}, and turn it into a data frame
+@description Takes a matrix of class \code{vivid} and turn it into a data frame
 containing variable names, Vimp and Vint values, and the row and column index from the original
 matrix.
 }
