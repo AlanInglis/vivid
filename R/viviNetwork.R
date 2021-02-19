@@ -49,9 +49,6 @@ viviNetwork <- function(mat,
 
   # get imp values and scale
   imp <- diag(mat)
-  # dfImp <- which(df$Variable_1 == df$Variable_2)
-  # imp <- df$Vimp[dfImp]
-  # imp <- setNames(imp, df$Variable_1[dfImp])
   impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
 
 
