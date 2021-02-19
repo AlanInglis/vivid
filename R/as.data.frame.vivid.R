@@ -1,14 +1,15 @@
 #' as.data.frame.vivid
 #'
-#'  @description Takes a matrix, such as that created by \code{vivi}, and turn it into a data frame
+#'  @description Takes a matrix of class \code{vivid} and turn it into a data frame
 #'  containing variable names, Vimp and Vint values, and the row and column index from the original
 #'  matrix.
 #'
-#' @param matrix A matrix to be converted to a data frame.
+#' @param matrix A matrix of class 'vivid' to be converted to a data frame.
+#' @param class Set the class to that of 'vivid'.
 #'
 #' @importFrom reshape "melt"
 #'
-#' @return A data frame of Vimp and Vint values and their index from the matrix.
+#' @return A data frame of Vimp and Vint values and their index from the vivid matrix.
 #'
 #'
 #' @examples
@@ -37,9 +38,9 @@ as.data.frame.vivid <- function(matrix, class = "vivid") {
   viviDataFrame <- cbind(df, Row, Col)
 
   # set names
-  colnames(viviDataFrame)[3] <- "Value"
   colnames(viviDataFrame)[1] <- "Variable_1"
   colnames(viviDataFrame)[2] <- "Variable_2"
+  colnames(viviDataFrame)[3] <- "Value"
 
   return(viviDataFrame)
 }
