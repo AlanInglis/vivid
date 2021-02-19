@@ -113,6 +113,7 @@ vivi <- function(data,
     viviMatrix <- vInt
   }
 
+  class(viviMatrix) <- c("vivid", class(viviMatrix))
   return(viviMatrix)
 }
 
