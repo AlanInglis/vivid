@@ -69,17 +69,21 @@ viviHeatmap <- function(mat,
 
   # Set up plot -------------------------------------------------------
 
-  df <- matrix2df(mat)
 
-  # used in plot
-  alphaImp <- df$Variable_1 == df$Variable_2
-  #alphaInt <- 1 - alphaImp
-  newScaleDf <- data.frame(
-    Vimp_1 = df$Vimp[alphaImp],
-    Variable_1 = df$Variable_1[alphaImp],
-    Variable_2 = df$Variable_2[alphaImp]
+  df <- as.data.frame(mat, class = "vivid")
+
+  # get index of imp and ints
+  indexImp <- df$Variable_1 == df$Variable_2
+  indexInt <- 1 - as.integer(indexImp)
+  Vimp <- as.integer(indexImp) * df$Value
+  Vint <- indexInt * df$Value
+
+
+  df_imp <- data.frame(
+    Vimp = Vimp[indexImp],
+    Variable_1 = df$Variable_1[indexImp],
+    Variable_2 = df$Variable_2[indexImp]
   )
-
 
   # Create Plot ------------------------------------------------------------
 
@@ -100,7 +104,7 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_tile(data = newScaleDf, aes(fill = Vimp_1)) +
+    geom_tile(data = df_imp, aes(fill = Vimp)) +
     scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
