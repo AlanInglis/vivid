@@ -6,7 +6,6 @@
 \usage{
 viviHeatmap(
   mat,
-  title = "",
   intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
   impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
   intLims = NULL,
@@ -16,8 +15,6 @@ viviHeatmap(
 }
 \arguments{
 \item{mat}{A matrix, such as that returned by vivi, of values to be plotted.}
-
-\item{title}{Adds title to the plot.}
 
 \item{intPal}{A vector of colours to show interactions, for use with scale_fill_gradientn.}
 
