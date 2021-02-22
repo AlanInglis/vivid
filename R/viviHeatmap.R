@@ -8,7 +8,6 @@
 #' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
-#' @param title Adds title to the plot.
 #' @param angle The angle to display the x-axis labels.
 #'
 #' @importFrom ggplot2 "ggplot"
@@ -28,7 +27,6 @@
 #' @export
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,
-                        title = "",
                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
                         intLims = NULL,
