@@ -9,8 +9,8 @@ viviNetwork(
   threshold = 0,
   intLims = NULL,
   impLims = NULL,
-  intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
-  impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
+  intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
+  impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
   removeNode = FALSE,
   layout = "circle",
   cluster = NULL
