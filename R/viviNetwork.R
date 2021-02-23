@@ -34,29 +34,13 @@ viviNetwork <- function(mat,
                         threshold = 0,
                         intLims = NULL,
                         impLims = NULL,
-                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
-                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
+                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
+                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
                         removeNode = FALSE,
                         layout = "circle",
                         cluster = NULL) {
 
-  # Limits ------------------------------------------------------------------
 
-  # set the limits for importance
-  if (is.null(impLims)) {
-    impLims <- range(diag(mat))
-    limitsImp <- range(labeling::rpretty(impLims[1], impLims[2]))
-  } else {
-    limitsImp <- impLims
-  }
-
-  # set the limits for interactions
-  if (is.null(intLims)) {
-    intLims <- range(as.dist(mat))
-    limitsInt <- range(labeling::rpretty(intLims[1], intLims[2]))
-  } else {
-    limitsInt <- intLims
-  }
   # Set up ------------------------------------------------------------------
 
   # convert to df
@@ -70,12 +54,12 @@ viviNetwork <- function(mat,
   impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
 
   # get int vals and scale
-  df$Variable_1 <- as.character(df$Variable_1)
-  df$Variable_2 <- as.character(df$Variable_2)
 
-  result <- transform(df, Variable_1 = pmin(Variable_1, Variable_2), Variable_2 = pmax(Variable_1, Variable_2))
-  dfInt <- subset(result, (!duplicated(result[1:2])) & Measure != "Vimp")
-
+  # remove duplicates
+  dfInt <- df[-which(df$Row < df$Col), ]
+  # remove imp vals
+  dfInt <- dfInt[-which(dfInt$Measure == "Vimp"), ]
+  # sort
   dfInt <- dfInt[with(dfInt, order(Value)), ]
   int <- dfInt$Value # extract interaction values
   edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
@@ -93,6 +77,23 @@ viviNetwork <- function(mat,
   # add edge weight
   E(g)$weight <- int
 
+  # Limits ------------------------------------------------------------------
+
+  # set the limits for importance
+  if (is.null(impLims)) {
+    impLimits <- range(diag(mat))
+    impLimits <- range(labeling::rpretty(impLimits[1], impLimits[2]))
+  } else {
+    impLimits <- impLims
+  }
+
+  # set the limits for interactions
+  if (is.null(intLims)) {
+    intLimits <- range(as.dist(mat))
+    intLimits <- range(labeling::rpretty(intLimits[1], intLimits[2]))
+  } else {
+    intLimits <- intLims
+  }
 
   # Edge colour set up -------------------------------------------------------------
 
@@ -101,14 +102,12 @@ viviNetwork <- function(mat,
     cut_int <- cut(int, length(intPal)) # cut
     edgeCols <- intPal[cut_int]
   } else {
-    ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
-    ii <- cut(int,
-      breaks = seq(min(intLims), max(intLims), len = length(intPal)),
+    cut_ii <- cut(int,
+      breaks = seq(intLims[1], intLims[2], len = (length(intPal))),
       include.lowest = TRUE
     )
-    edgeCols <- intPal[ii]
+    edgeCols <- intPal[cut_ii]
   }
-
 
 
   # THRESHOLDING ------------------------------------------------------------
@@ -118,18 +117,18 @@ viviNetwork <- function(mat,
     # Warning message if threshold value is set too high or too low
     if (threshold > max(int)) {
       warning("Selected threshold value is larger than maximum interaction strength")
-    } else if (threshold < 0) {
+    } else if (threshold < min(int)) {
       warning("Selected threshold value is less than minimum interaction strength")
     }
 
     idx <- which(int > threshold)
-
     dfRemove <- dfInt[dfInt$Value < threshold, ]
     pairsRemove <- dfRemove[c("Row", "Col")]
-    # g1 <- delete.edges(g, pairsRemove)
+    # pairsRemove_1 <- as.vector(t(pairsRemove))
+    # g1 <- delete.edges(g, pairsRemove_1)
 
     # delete edges
-    # g <- delete.edges(g, which(int < threshold)) OG
+    # g1 <- delete.edges(g, which(int < threshold)) #OG
 
     edgesRemove <- apply(pairsRemove, 1, paste, collapse = "|")
     edgesRemove <- edges(edgesRemove)
@@ -174,7 +173,7 @@ viviNetwork <- function(mat,
     geom_label(aes(label = nam)) +
     geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
     scale_fill_gradientn(
-      name = "Vimp", colors = impPal, limits = limitsImp,
+      name = "Vimp", colors = impPal, limits = impLimits,
       guide = guide_colorbar(
         frame.colour = "black",
         ticks.colour = "black"
@@ -183,7 +182,7 @@ viviNetwork <- function(mat,
     new_scale_fill() +
     geom_point(aes(x = 0, y = 0, fill = imp), size = -1) +
     scale_fill_gradientn(
-      name = "Vint", colors = intPal, limits = limitsInt,
+      name = "Vint", colors = intPal, limits = intLimits,
       guide = guide_colorbar(
         frame.colour = "black",
         ticks.colour = "black"
@@ -199,9 +198,9 @@ viviNetwork <- function(mat,
       group <- cluster
     } else {
       com <- cluster(g)
-      V(g)$color <- com$membership
-      group <- V(g)$color
-      group <- factor(group)
+      # V(g)$color <- com$membership
+      # group <- V(g)$color
+      group <- com$membership
     }
 
     # encircle groups
