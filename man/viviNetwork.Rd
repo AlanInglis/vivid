@@ -11,6 +11,7 @@ viviNetwork(
   impLims = NULL,
   intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
   impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
+  removeNode = FALSE,
   layout = "circle",
   cluster = NULL
 )
@@ -27,6 +28,8 @@ viviNetwork(
 \item{intPal}{A vector of colours to show interactions, for use with scale_fill_gradientn.}
 
 \item{impPal}{A vector of colours to show importance, for use with scale_fill_gradientn.}
+
+\item{removeNode}{If TRUE, then removes nodes with no connecting edges when thresholding interaction values.}
 
 \item{layout}{Layout of the plotted graph.}
 
