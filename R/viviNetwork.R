@@ -9,6 +9,7 @@
 #' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
+#' @param removeNode If TRUE, then removes nodes with no connecting edges when thresholding interaction values.
 #' @param layout Layout of the plotted graph.
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
 #'
@@ -35,67 +36,9 @@ viviNetwork <- function(mat,
                         impLims = NULL,
                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
+                        removeNode = FALSE,
                         layout = "circle",
                         cluster = NULL) {
-
-
-  # Set up ------------------------------------------------------------------
-
-  # convert to df
-  df <- matrix2df(mat)
-
-  # get names
-  nam <- colnames(mat)
-
-  # get imp values and scale
-  imp <- diag(mat)
-  impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
-
-
-
-
-  # get int values and scale
-  dfInt <- df[c("Variable_1", "Variable_2", "Vint", "row", "col")]
-
-  dfInt <- dfInt[-seq(1, NROW(dfInt), by = (length(nam) + 1)), ] # remove imp vals
-  dfInt <- dfInt[!duplicated(t(apply(dfInt, 1, sort))), ] # remove duplicates
-
-  dfInt <- dfInt[with(dfInt, order(-Vint)), ]
-  int <- dfInt$Vint # extract interaction values
-  edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
-  edgeWidthScaled <- rev(edgeWidthScaled) # reversing for drawing graphic
-
-  # Set up & create graph ---------------------------------------------------
-
-  # create all pairs for graph edges
-  pairs <- data.frame(row = dfInt$row, col = dfInt$col)
-  pairs <- rev(as.vector(t(pairs)))
-
-
-  # create graph
-  g <- make_empty_graph(n = ncol(mat))
-  g <- add_edges(graph = g, edges = pairs)
-
-  # add edge weight
-  E(g)$weight <- int
-
-
-  # Edge colour set up -------------------------------------------------------------
-
-  # Set the edge colours
-  if (is.null(intLims)) {
-    edgeColour <- (E(g)$weight) # edge weights
-    cut_int <- cut(edgeColour, 10) # cut
-    edgeCols <- rev(intPal[cut_int])
-  } else {
-    edgeColour <- (E(g)$weight) # edge weights
-    ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
-    ii <- cut(edgeColour,
-      breaks = seq(min(intLims), max(intLims), len = 10),
-      include.lowest = TRUE
-    )
-    edgeCols <- intPal[ii]
-  }
 
   # Limits ------------------------------------------------------------------
 
@@ -114,43 +57,106 @@ viviNetwork <- function(mat,
   } else {
     limitsInt <- intLims
   }
+  # Set up ------------------------------------------------------------------
+
+  # convert to df
+  df <- as.data.frame(mat, class = "vivid")
+
+  # get names
+  nam <- colnames(mat)
+
+  # get imp values and scale
+  imp <- diag(mat)
+  impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
+
+  # get int vals and scale
+  df$Variable_1 <- as.character(df$Variable_1)
+  df$Variable_2 <- as.character(df$Variable_2)
+
+  result <- transform(df, Variable_1 = pmin(Variable_1, Variable_2), Variable_2 = pmax(Variable_1, Variable_2))
+  dfInt <- subset(result, (!duplicated(result[1:2])) & Measure != "Vimp")
+
+  dfInt <- dfInt[with(dfInt, order(Value)), ]
+  int <- dfInt$Value # extract interaction values
+  edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
+
+  # Set up & create graph ---------------------------------------------------
+
+  # create all pairs for graph edges
+  pairs <- dfInt[c("Row", "Col")]
+  pairs <- as.vector(t(pairs))
+
+  # create graph
+  g <- make_empty_graph(n = ncol(mat))
+  g <- add_edges(graph = g, edges = pairs)
+
+  # add edge weight
+  E(g)$weight <- int
+
+
+  # Edge colour set up -------------------------------------------------------------
+
+  # Set the edge colours
+  if (is.null(intLims)) {
+    cut_int <- cut(int, length(intPal)) # cut
+    edgeCols <- intPal[cut_int]
+  } else {
+    ## Use n equally spaced breaks to assign each value to n-1 equal sized bins
+    ii <- cut(int,
+      breaks = seq(min(intLims), max(intLims), len = length(intPal)),
+      include.lowest = TRUE
+    )
+    edgeCols <- intPal[ii]
+  }
+
 
 
   # THRESHOLDING ------------------------------------------------------------
 
   if (threshold > 0) {
-    a <- sort(int, decreasing = TRUE)
+
     # Warning message if threshold value is set too high or too low
-    if (threshold > max(a)) {
-      stop("Selected threshold value is larger than maximum interaction strength")
+    if (threshold > max(int)) {
+      warning("Selected threshold value is larger than maximum interaction strength")
     } else if (threshold < 0) {
-      stop("Selected threshold value is less than minimum interaction strength")
+      warning("Selected threshold value is less than minimum interaction strength")
     }
 
-    idx <- which(a > threshold)
+    idx <- which(int > threshold)
 
-    # getting edge weight
-    revEdgeWeight <- rev(E(g)$weight)
-    g <- delete.edges(g, which(revEdgeWeight < threshold))
+    dfRemove <- dfInt[dfInt$Value < threshold, ]
+    pairsRemove <- dfRemove[c("Row", "Col")]
+    # g1 <- delete.edges(g, pairsRemove)
+
+    # delete edges
+    # g <- delete.edges(g, which(int < threshold)) OG
+
+    edgesRemove <- apply(pairsRemove, 1, paste, collapse = "|")
+    edgesRemove <- edges(edgesRemove)
+
+    # remove edges from graph
+    g <- g - edgesRemove
 
     # Thresholded colours
-    edgeCols <- rev(edgeCols)[idx]
     edgeCols <- rev(edgeCols)
+    edgeCols <- rev(edgeCols)[idx]
 
     # Thresholded edge weights
-    indexWeight <- rev(edgeWidthScaled)[idx]
-    edgeWidthScaled <- rev(indexWeight)
+    indexWeight <- rev(edgeWidthScaled)
+    edgeWidthScaled <- rev(indexWeight)[idx]
 
 
-    # Delete vertex that have no edges (if thresholding)
-    Isolated <- which(igraph::degree(g) == 0)
-    if (length(Isolated) == 0) {
-      g <- g
-    } else {
-      g <- igraph::delete.vertices(g, Isolated)
-      imp <- imp[-c(Isolated)]
-      impScaled <- impScaled[-c(Isolated)]
-      nam <- nam[-c(Isolated)]
+    if (removeNode) {
+      # Delete vertex that have no edges (if thresholding)
+      Isolated <- which(igraph::degree(g) == 0)
+      if (length(Isolated) == 0) {
+        g <- g
+      } else {
+        g <- igraph::delete.vertices(g, Isolated)
+        imp <- imp[-c(Isolated)]
+        impScaled <- impScaled[-c(Isolated)]
+        nam <- nam[-c(Isolated)]
+      }
     }
   }
 
@@ -190,7 +196,7 @@ viviNetwork <- function(mat,
 
     # add numeric vector to cluster by, else use igraph clustering
     if (is.numeric(cluster)) {
-      group <- factor(cluster)
+      group <- cluster
     } else {
       com <- cluster(g)
       V(g)$color <- com$membership
@@ -204,7 +210,7 @@ viviNetwork <- function(mat,
       "orange", "pink", "green"
     )
 
-    colPal <- rep(colPal, times = length(group)) # get correct amount of aesthetics
+    colPal <- rep(colPal, length.out = length(group)) # get correct amount of aesthetics
     colCluster <- colPal[group] # select colours
 
     # plot
@@ -217,11 +223,11 @@ viviNetwork <- function(mat,
   }
 
 
-# Move labels to outside --------------------------------------------------
+  # Move labels to outside --------------------------------------------------
 
   geoms <- sapply(p$layers, function(x) class(x$geom)[1]) # get geoms
-  segments <-  p$layers[[which(geoms == "NewGeomSegment")]] # select segment
-  labels <-  p$layers[[which(geoms == "NewGeomLabel")]]  # select layers
+  segments <- p$layers[[which(geoms == "NewGeomSegment")]] # select segment
+  labels <- p$layers[[which(geoms == "NewGeomLabel")]] # select layers
 
   # set some values
   segments$data <- segments$data - 0.5
@@ -236,7 +242,8 @@ viviNetwork <- function(mat,
   labels$data$y <- labels$data$y * 1.1
 
   p$scales$scales <- lapply(p$scales$scales, function(x) {
-    if(class(x)[1] == "ScaleContinuousPosition") ScaleContinuousPosition else x })
+    if (class(x)[1] == "ScaleContinuousPosition") ScaleContinuousPosition else x
+  })
   p <- p + theme(axis.text = element_blank()) +
     theme_void() +
     theme(aspect.ratio = 1)
