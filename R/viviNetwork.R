@@ -4,7 +4,7 @@
 #'  and variable interaction.
 #'
 #' @param mat A matrix, such as that returned by vivi, of values to be plotted.
-#' @param threshold Remove edges with weight below this value if provided.
+#' @param intThreshold Remove edges with weight below this value if provided.
 #' @param intPal A vector of colours to show interactions, for use with scale_fill_gradientn.
 #' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
 #' @param intLims Specifies the fit range for the color map for interaction strength.
@@ -31,7 +31,7 @@
 #' @export
 # Plotting Function -------------------------------------------------------
 viviNetwork <- function(mat,
-                        threshold = 0,
+                        intThreshold = 0,
                         intLims = NULL,
                         impLims = NULL,
                         intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
@@ -44,25 +44,23 @@ viviNetwork <- function(mat,
   # Set up ------------------------------------------------------------------
 
   # convert to df
-  df <- as.data.frame(mat, class = "vivid")
+  df <- as.data.frame(mat)
 
   # get names
   nam <- colnames(mat)
 
   # get imp values and scale
   imp <- diag(mat)
-  impScaled <- (5 - 1) * ((imp - min(imp)) / (max(imp) - min(imp))) + 1 # scale between 1-5 for graphic
 
   # get int vals and scale
 
   # remove duplicates
   dfInt <- df[-which(df$Row < df$Col), ]
   # remove imp vals
-  dfInt <- dfInt[-which(dfInt$Measure == "Vimp"), ]
+  dfInt <- dfInt[which(dfInt$Measure == "Vint"), ]
   # sort
   dfInt <- dfInt[with(dfInt, order(Value)), ]
   int <- dfInt$Value # extract interaction values
-  edgeWidthScaled <- (5 - 1) * ((int - min(int)) / (max(int) - min(int))) + 1 # scale between 1-5 for graphic
 
   # Set up & create graph ---------------------------------------------------
 
@@ -77,11 +75,12 @@ viviNetwork <- function(mat,
   # add edge weight
   E(g)$weight <- int
 
+
   # Limits ------------------------------------------------------------------
 
   # set the limits for importance
   if (is.null(impLims)) {
-    impLimits <- range(diag(mat))
+    impLimits <- range(imp)
     impLimits <- range(labeling::rpretty(impLimits[1], impLimits[2]))
   } else {
     impLimits <- impLims
@@ -89,46 +88,44 @@ viviNetwork <- function(mat,
 
   # set the limits for interactions
   if (is.null(intLims)) {
-    intLimits <- range(as.dist(mat))
+    intLimits <- range(int)
     intLimits <- range(labeling::rpretty(intLimits[1], intLimits[2]))
   } else {
     intLimits <- intLims
   }
 
-  # Edge colour set up -------------------------------------------------------------
 
-  # Set the edge colours
-  if (is.null(intLims)) {
-    cut_int <- cut(int, length(intPal)) # cut
-    edgeCols <- intPal[cut_int]
-  } else {
-    cut_ii <- cut(int,
-      breaks = seq(intLims[1], intLims[2], len = (length(intPal))),
-      include.lowest = TRUE
-    )
-    edgeCols <- intPal[cut_ii]
+  mapinto <- function(x, lims, v) {
+
+    x <- pmin(pmax(x, lims[1]), lims[2])
+    i <- cut(x, breaks = seq(lims[1], lims[2], length = length(v) + 1), include.lowest = TRUE)
+    v[i]
   }
+
+  edgeCols<- mapinto(int, intLimits, intPal) # set edge cols
+  edgeWidthScaled <- mapinto(int, intLimits, c(1:4)) # scaling for graphic
+  impScaled <- mapinto(imp, impLimits, c(1:5)) # scaling for graphic
 
 
   # THRESHOLDING ------------------------------------------------------------
 
-  if (threshold > 0) {
+  if (intThreshold > 0) {
 
-    # Warning message if threshold value is set too high or too low
-    if (threshold > max(int)) {
+    # Warning message if intThreshold value is set too high or too low
+    if (intThreshold > max(int)) {
       warning("Selected threshold value is larger than maximum interaction strength")
-    } else if (threshold < min(int)) {
+    } else if (intThreshold < min(int)) {
       warning("Selected threshold value is less than minimum interaction strength")
     }
 
-    idx <- which(int > threshold)
-    dfRemove <- dfInt[dfInt$Value < threshold, ]
+    idx <- which(int > intThreshold)
+    dfRemove <- dfInt[dfInt$Value < intThreshold, ]
     pairsRemove <- dfRemove[c("Row", "Col")]
     # pairsRemove_1 <- as.vector(t(pairsRemove))
     # g1 <- delete.edges(g, pairsRemove_1)
 
     # delete edges
-    # g1 <- delete.edges(g, which(int < threshold)) #OG
+    # g1 <- delete.edges(g, which(int < intThreshold)) #OG
 
     edgesRemove <- apply(pairsRemove, 1, paste, collapse = "|")
     edgesRemove <- edges(edgesRemove)
@@ -195,19 +192,15 @@ viviNetwork <- function(mat,
 
     # add numeric vector to cluster by, else use igraph clustering
     if (is.numeric(cluster)) {
-      group <- cluster
+      group <- as.numeric(factor(cluster))
     } else {
-      com <- cluster(g)
-      # V(g)$color <- com$membership
-      # group <- V(g)$color
-      group <- com$membership
+      group <- cluster(g)$membership
     }
 
+
     # encircle groups
-    colPal <- c(
-      "yellow", "red", "blue", "black", "purple",
-      "orange", "pink", "green"
-    )
+    colPal <- rainbow(length(unique(group)))
+    colCluster <- colPal[group]
 
     colPal <- rep(colPal, length.out = length(group)) # get correct amount of aesthetics
     colCluster <- colPal[group] # select colours
