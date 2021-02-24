@@ -4,12 +4,10 @@
 \alias{as.data.frame.vivid}
 \title{as.data.frame.vivid}
 \usage{
-\method{as.data.frame}{vivid}(matrix, class = "vivid")
+\method{as.data.frame}{vivid}(matrix)
 }
 \arguments{
 \item{matrix}{A matrix of class 'vivid' to be converted to a data frame.}
-
-\item{class}{Set the class to that of 'vivid'.}
 }
 \value{
 A data frame of Vimp and Vint values and their index from the vivid matrix.
