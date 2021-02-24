@@ -53,7 +53,6 @@ viviNetwork <- function(mat,
   imp <- diag(mat)
 
   # get int vals and scale
-
   # remove duplicates
   dfInt <- df[-which(df$Row < df$Col), ]
   # remove imp vals
@@ -119,19 +118,10 @@ viviNetwork <- function(mat,
     }
 
     idx <- which(int > intThreshold)
-    dfRemove <- dfInt[dfInt$Value < intThreshold, ]
-    pairsRemove <- dfRemove[c("Row", "Col")]
-    # pairsRemove_1 <- as.vector(t(pairsRemove))
-    # g1 <- delete.edges(g, pairsRemove_1)
 
     # delete edges
-    # g1 <- delete.edges(g, which(int < intThreshold)) #OG
+    g <- delete.edges(g, which(int < intThreshold))
 
-    edgesRemove <- apply(pairsRemove, 1, paste, collapse = "|")
-    edgesRemove <- edges(edgesRemove)
-
-    # remove edges from graph
-    g <- g - edgesRemove
 
     # Thresholded colours
     edgeCols <- rev(edgeCols)
