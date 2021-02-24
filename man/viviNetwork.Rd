@@ -6,7 +6,7 @@
 \usage{
 viviNetwork(
   mat,
-  threshold = 0,
+  intThreshold = 0,
   intLims = NULL,
   impLims = NULL,
   intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
@@ -19,7 +19,7 @@ viviNetwork(
 \arguments{
 \item{mat}{A matrix, such as that returned by vivi, of values to be plotted.}
 
-\item{threshold}{Remove edges with weight below this value if provided.}
+\item{intThreshold}{Remove edges with weight below this value if provided.}
 
 \item{intLims}{Specifies the fit range for the color map for interaction strength.}
 
