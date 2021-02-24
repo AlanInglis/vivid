@@ -5,9 +5,6 @@
 #'  matrix.
 #'
 #' @param matrix A matrix of class 'vivid' to be converted to a data frame.
-#' @param class Set the class to that of 'vivid'.
-#'
-#' @importFrom reshape "melt"
 #'
 #' @return A data frame of Vimp and Vint values and their index from the vivid matrix.
 #'
@@ -22,17 +19,17 @@
 #' @export
 
 
-as.data.frame.vivid <- function(matrix, class = "vivid") {
+as.data.frame.vivid <- function(matrix) {
 
   # melt the matrix
-  df <- melt(matrix)
+  df <- cbind(expand.grid(dimnames(matrix)), value = as.vector(matrix))
 
   # get the row and colum index
   Row <- as.vector(row(matrix))
   Col <- as.vector(col(matrix))
 
   # Create measure column
-  df$Measure <- with(df, ifelse(X1 == X2, "Vimp", "Vint"))
+  df$Measure <- with(df, ifelse(Var1 == Var2, "Vimp", "Vint"))
 
   # cbind them together
   viviDataFrame <- cbind(df, Row, Col)
