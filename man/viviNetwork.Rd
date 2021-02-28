@@ -13,7 +13,8 @@ viviNetwork(
   impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
   removeNode = FALSE,
   layout = "circle",
-  cluster = NULL
+  cluster = NULL,
+  nudge = 0.5
 )
 }
 \arguments{
@@ -34,12 +35,14 @@ viviNetwork(
 \item{layout}{Layout of the plotted graph.}
 
 \item{cluster}{Either a vector of cluster memberships for nodes or an igraph clustering function.}
+
+\item{nudge}{Move labels a small distance from the nodes they are labelling. Ideal values are between 0 and 1.}
 }
 \value{
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 }
 \description{
-@description Create a Network plot displaying variable importance
+Create a Network plot displaying variable importance
 and variable interaction.
 }
 \examples{
