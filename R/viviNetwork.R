@@ -1,6 +1,6 @@
 #' viviNetwork
 #'
-#'  @description Create a Network plot displaying variable importance
+#' @description Create a Network plot displaying variable importance
 #'  and variable interaction.
 #'
 #' @param mat A matrix, such as that returned by vivi, of values to be plotted.
@@ -12,6 +12,7 @@
 #' @param removeNode If TRUE, then removes nodes with no connecting edges when thresholding interaction values.
 #' @param layout Layout of the plotted graph.
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
+#' @param nudge Move labels a small distance from the nodes they are labelling. Ideal values are between 0 and 1.
 #'
 #' @return A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 #'
@@ -38,7 +39,8 @@ viviNetwork <- function(mat,
                         impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
                         removeNode = FALSE,
                         layout = "circle",
-                        cluster = NULL) {
+                        cluster = NULL,
+                        nudge = 0.5) {
 
 
   # Set up ------------------------------------------------------------------
@@ -59,7 +61,22 @@ viviNetwork <- function(mat,
   dfInt <- dfInt[which(dfInt$Measure == "Vint"), ]
   # sort
   dfInt <- dfInt[with(dfInt, order(Value)), ]
+  dfLimsInt <- dfInt$Value # used to set the limits
   int <- dfInt$Value # extract interaction values
+
+  # Thresholding ------------------------------------------------------------
+  if (intThreshold > 0) {
+    # Warning message if intThreshold value is set too high or too low
+    if (intThreshold > max(int)) {
+      warning("Selected threshold value is larger than maximum interaction strength")
+    } else if (intThreshold < min(int)) {
+      warning("Selected threshold value is less than minimum interaction strength")
+    }
+
+    idx <- which(int > intThreshold)
+    dfInt <- dfInt[idx, ]
+    int <- int[idx]
+  }
 
   # Set up & create graph ---------------------------------------------------
 
@@ -87,7 +104,7 @@ viviNetwork <- function(mat,
 
   # set the limits for interactions
   if (is.null(intLims)) {
-    intLimits <- range(int)
+    intLimits <- range(dfLimsInt)
     intLimits <- range(labeling::rpretty(intLimits[1], intLimits[2]))
   } else {
     intLimits <- intLims
@@ -95,54 +112,26 @@ viviNetwork <- function(mat,
 
 
   mapinto <- function(x, lims, v) {
-
     x <- pmin(pmax(x, lims[1]), lims[2])
     i <- cut(x, breaks = seq(lims[1], lims[2], length = length(v) + 1), include.lowest = TRUE)
     v[i]
   }
 
-  edgeCols<- mapinto(int, intLimits, intPal) # set edge cols
+  edgeCols <- mapinto(int, intLimits, intPal) # set edge cols
   edgeWidthScaled <- mapinto(int, intLimits, c(1:4)) # scaling for graphic
   impScaled <- mapinto(imp, impLimits, c(1:5)) # scaling for graphic
 
 
-  # THRESHOLDING ------------------------------------------------------------
+  # Remove unconnected nodes ------------------------------------------------
 
-  if (intThreshold > 0) {
-
-    # Warning message if intThreshold value is set too high or too low
-    if (intThreshold > max(int)) {
-      warning("Selected threshold value is larger than maximum interaction strength")
-    } else if (intThreshold < min(int)) {
-      warning("Selected threshold value is less than minimum interaction strength")
-    }
-
-    idx <- which(int > intThreshold)
-
-    # delete edges
-    g <- delete.edges(g, which(int < intThreshold))
-
-
-    # Thresholded colours
-    edgeCols <- rev(edgeCols)
-    edgeCols <- rev(edgeCols)[idx]
-
-    # Thresholded edge weights
-    indexWeight <- rev(edgeWidthScaled)
-    edgeWidthScaled <- rev(indexWeight)[idx]
-
-
-    if (removeNode) {
-      # Delete vertex that have no edges (if thresholding)
-      Isolated <- which(igraph::degree(g) == 0)
-      if (length(Isolated) == 0) {
-        g <- g
-      } else {
-        g <- igraph::delete.vertices(g, Isolated)
-        imp <- imp[-c(Isolated)]
-        impScaled <- impScaled[-c(Isolated)]
-        nam <- nam[-c(Isolated)]
-      }
+  # Delete vertex that have no edges (if thresholding)
+  if (removeNode) {
+    Isolated <- which(igraph::degree(g) == 0)
+    if (length(Isolated) > 0) {
+      g <- igraph::delete.vertices(g, Isolated)
+      imp <- imp[-c(Isolated)]
+      impScaled <- impScaled[-c(Isolated)]
+      nam <- nam[-c(Isolated)]
     }
   }
 
@@ -157,7 +146,6 @@ viviNetwork <- function(mat,
     edge.color = edgeCols
   ) +
     theme(legend.text = element_text(size = 10)) +
-    geom_label(aes(label = nam)) +
     geom_point(aes(fill = imp), size = impScaled * 2, colour = "transparent", shape = 21) +
     scale_fill_gradientn(
       name = "Vimp", colors = impPal, limits = impLimits,
@@ -176,7 +164,6 @@ viviNetwork <- function(mat,
       ), oob = scales::squish
     )
 
-
   ## Clustering plot
   if (!is.null(cluster)) {
 
@@ -192,9 +179,6 @@ viviNetwork <- function(mat,
     colPal <- rainbow(length(unique(group)))
     colCluster <- colPal[group]
 
-    colPal <- rep(colPal, length.out = length(group)) # get correct amount of aesthetics
-    colCluster <- colPal[group] # select colours
-
     # plot
     p <- p + geom_encircle(aes(group = group),
       spread = 0.01,
@@ -204,30 +188,40 @@ viviNetwork <- function(mat,
     )
   }
 
+  # Reposition labels -------------------------------------------------------
 
-  # Move labels to outside --------------------------------------------------
+  if (nudge < 0 || nudge > 1) {
+    warning("Recommended nudge values are between 0 and 1. Values outside this range may not
+            display labels correctly.")
+  }
+  nudge <- nudge / 10
+  labelPosition <- function(labCoord, nudge) {
+    LmatX <- as.vector(scale(labCoord$x, center = (max(labCoord$x) + min(labCoord$x)) / 2, scale = (max(labCoord$x) - min(labCoord$x)) / 2))
+    LmatY <- as.vector(scale(labCoord$y, center = (max(labCoord$y) + min(labCoord$y)) / 2, scale = (max(labCoord$y) - min(labCoord$y)) / 2))
 
-  geoms <- sapply(p$layers, function(x) class(x$geom)[1]) # get geoms
-  segments <- p$layers[[which(geoms == "NewGeomSegment")]] # select segment
-  labels <- p$layers[[which(geoms == "NewGeomLabel")]] # select layers
+    LmatX <- ifelse(abs(LmatX) <= 1e-10, 0, LmatX)
+    LmatY <- ifelse(abs(LmatY) <= 1e-10, 0, LmatY)
 
-  # set some values
-  segments$data <- segments$data - 0.5
-  p$data$x <- p$data$x - 0.5
-  p$data$y <- p$data$y - 0.5
+    newX <- ifelse(LmatX > 0, labCoord$x + nudge, ifelse(LmatX < 0, labCoord$x - nudge, labCoord$x))
+    newY <- ifelse(LmatY > 0, labCoord$y + nudge, ifelse(LmatY < 0, labCoord$y - nudge, labCoord$y))
 
-  labels$position$y <- 0
+    labDf <- data.frame(newX, newY)
+    return(labDf)
+  }
+
+  labelDf <- labelPosition(p$data, nudge)
 
 
-  labels$data <- p$data
-  labels$data$x <- labels$data$x * 1.1
-  labels$data$y <- labels$data$y * 1.1
-
-  p$scales$scales <- lapply(p$scales$scales, function(x) {
-    if (class(x)[1] == "ScaleContinuousPosition") ScaleContinuousPosition else x
+  # plot with repositioned labels
+  suppressMessages({
+    p <- p +
+      geom_label(data = labelDf, aes(x = newX, y = newY, label = nam)) +
+      theme(axis.text = element_blank()) +
+      theme_void() +
+      theme(aspect.ratio = 1) +
+      xlim(c(-0.1, 1.1)) +
+      ylim(c(-0.1, 1.1))
   })
-  p <- p + theme(axis.text = element_blank()) +
-    theme_void() +
-    theme(aspect.ratio = 1)
+
   return(p)
 }
