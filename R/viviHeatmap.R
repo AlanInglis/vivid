@@ -27,8 +27,8 @@
 #' @export
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,
-                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 11)),
-                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 11)),
+                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
+                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
                         intLims = NULL,
                         impLims = NULL,
                         angle = NULL) {
@@ -68,32 +68,30 @@ viviHeatmap <- function(mat,
   # Set up plot -------------------------------------------------------
 
 
-  df <- as.data.frame(mat, class = "vivid")
-
-  # get index of imp and ints
-  indexImp <- df$Variable_1 == df$Variable_2
-  indexInt <- 1 - as.integer(indexImp)
-  Vimp <- as.integer(indexImp) * df$Value
-  Vint <- indexInt * df$Value
+  df <- as.data.frame(mat)
 
 
-  df_imp <- data.frame(
-    Vimp = Vimp[indexImp],
-    Variable_1 = df$Variable_1[indexImp],
-    Variable_2 = df$Variable_2[indexImp]
-  )
+
+  # get int vals
+  dfInt <- df[which(df$Measure == "Vint"), ]
+
+
+  # get imp vals
+  dfImp <- df[which(df$Measure == "Vimp"), ]
+
 
   # Create Plot ------------------------------------------------------------
 
   # order factors
-  df$Variable_1 <- factor(df$Variable_1, levels = labelNames)
-  df$Variable_2 <- factor(df$Variable_2, levels = labelNames)
+  # dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
+  # dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
 
 
-  p <- ggplot(df, aes(Variable_1, Variable_2)) +
-    geom_tile(aes(fill = Vint)) +
+
+  p <- ggplot(dfInt, aes(Variable_1, Variable_2)) +
+    geom_tile(aes(fill = Value)) +
     scale_x_discrete(position = "top") +
-    scale_y_discrete(limits = rev(levels(df$Variable_2))) +
+    scale_y_discrete(limits = rev(levels(dfInt$Variable_2))) +
     scale_fill_gradientn(
       colors = intPal, limits = limitsInt, name = "Vint",
       guide = guide_colorbar(
@@ -102,7 +100,7 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_tile(data = df_imp, aes(fill = Vimp)) +
+    geom_tile(data = dfImp, aes(fill = Value)) +
     scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
