@@ -18,6 +18,7 @@ pdpZen(
   rug = TRUE,
   predictFun = condvis2::CVpredict,
   parallel = FALSE,
+  convexHull = FALSE,
   ...
 )
 }
@@ -48,6 +49,8 @@ Predictions outside fitlims are squished on the color scale.}
 \item{rug}{If TRUE adds rugs for the data to the pdp plots}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
+
+\item{convexHull}{If TRUE, then the convex hull is computed and any points outside the convex hull are removed.}
 
 \item{...}{passed on to zenplot}
 }

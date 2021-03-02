@@ -16,7 +16,8 @@ pdpPairs(
   class = 1,
   nIce = 30,
   comboImage = FALSE,
-  predictFun = NULL
+  predictFun = NULL,
+  convexHull = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ Predictions outside fitlims are squished on the color scale.}
 \item{comboImage}{If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
+
+\item{convexHull}{If TRUE, then the convex hull is computed and any points outside the convex hull are removed.}
 }
 \value{
 A matrix of values.
