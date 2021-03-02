@@ -17,6 +17,7 @@
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param rug If TRUE adds rugs for the data to the pdp plots
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
+#' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
 #' @param ... passed on to zenplot
 #' @return A zenplot of partial dependence values.
 #' @examples
@@ -45,10 +46,21 @@
 
 
 
-pdpZen <- function(data, fit, response, zpath=NULL,
-                       pal=rev(RColorBrewer::brewer.pal(11,"RdYlBu")),
-                       fitlims="pdp", gridSize = 10, nmax=500,class = 1,
-                      comboImage =FALSE,rug=TRUE,predictFun=condvis2::CVpredict, parallel=FALSE,...){
+pdpZen <- function(data,
+                   fit,
+                   response,
+                   zpath=NULL,
+                   pal=rev(RColorBrewer::brewer.pal(11,"RdYlBu")),
+                   fitlims="pdp",
+                   gridSize = 10,
+                   nmax=500,
+                   class = 1,
+                   comboImage =FALSE,
+                   rug=TRUE,
+                   predictFun=condvis2::CVpredict,
+                   parallel=FALSE,
+                   convexHull = FALSE,
+                   ...){
 
   if (!(requireNamespace("zenplots", quietly=TRUE))){
     message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
@@ -116,7 +128,7 @@ pdpZen <- function(data, fit, response, zpath=NULL,
   for (i in 1:nrow(zpairs)){
     ind <- zpairs[i,]
     if (!is.na(ind[1])){
-      px <-pdp_data(data, ind, gridsize=gridSize)
+      px <-pdp_data(data, ind, gridsize=gridSize, conHull = convexHull)
       px$.pid <- i
       pdplist[[i]] <- px
     }

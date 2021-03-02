@@ -16,6 +16,7 @@
 #' @param nIce Number of ice curves to be plotted, defaults to 30.
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
+#' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
 #' @return A matrix of values.
 #'
 #' @importFrom condvis2 "CVpredict"
@@ -78,9 +79,8 @@ pdpPairs <- function(data,
                      class = 1,
                      nIce = 30,
                      comboImage = FALSE,
-                     predictFun = NULL) {
-
-
+                     predictFun = NULL,
+                     convexHull = FALSE) {
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5, nmax)
@@ -130,7 +130,7 @@ pdpPairs <- function(data,
 
   pdplist <- vector("list", length = nrow(xyvarn))
   for (i in 1:nrow(xyvarn)) {
-    px <- pdp_data(data, xyvarn[i, ], gridsize = gridSize)
+    px <- pdp_data(data, xyvarn[i, ], gridsize = gridSize, conHull = convexHull)
     px$.pid <- i
     pdplist[[i]] <- px
   }
@@ -189,7 +189,13 @@ pdpPairs <- function(data,
     filter(pdp, .id %in% sice) %>%
       ggplot(aes(x = .data[[var]], y = fit)) +
       geom_line(aes(color = predData, group = .id)) +
-      scale_color_gradientn(name = "\u0177", colors = pal, limits = limits, oob = scales::squish) +
+      scale_color_gradientn(
+        name = "\u0177", colors = pal, limits = limits, oob = scales::squish,
+        guide = guide_colorbar(
+          frame.colour = "black",
+          ticks.colour = "black"
+        )
+      ) +
       geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
   }
 
@@ -242,7 +248,7 @@ pdpPairs <- function(data,
 
 
 
-pdp_data <- function(d, var, gridsize = 30) {
+pdp_data <- function(d, var, gridsize = 30, conHull = convexHull) {
   if (length(var) == 1) {
     pdpvar <- d[[var]]
     if (is.factor(pdpvar)) {
@@ -260,6 +266,8 @@ pdp_data <- function(d, var, gridsize = 30) {
   else {
     pdpvar1 <- d[[var[1]]]
     pdpvar2 <- d[[var[2]]]
+
+
     if (is.factor(pdpvar1)) {
       gridvals1 <- levels(pdpvar1)
     } else {
@@ -271,6 +279,23 @@ pdp_data <- function(d, var, gridsize = 30) {
       gridvals2 <- seq(min(pdpvar2, na.rm = T), max(pdpvar2, na.rm = T), length.out = gridsize)
     }
     gridvals <- expand.grid(gridvals1, gridvals2)
+
+    if (conHull) {
+
+      hpts <- chull(pdpvar1, pdpvar2) # calc CHull
+      hpts <- c(hpts, hpts[1]) # close polygon
+      pdpvar1CH <- pdpvar1[hpts] # get x-coords of polygon
+      pdpvar2CH <- pdpvar2[hpts] # get y-coords of polygon
+
+      # find which are outside convex hull
+      res <- sp::point.in.polygon(gridvals$Var1, gridvals$Var2, pdpvar1CH, pdpvar2CH) != 0
+
+      # remove points outside convex hull
+      gridvals <- data.frame(
+        Var1 = gridvals$Var1[res],
+        Var2 = gridvals$Var2[res]
+      )
+    }
 
     dnew <- do.call(rbind, lapply(1:nrow(gridvals), function(i) {
       d1 <- d
