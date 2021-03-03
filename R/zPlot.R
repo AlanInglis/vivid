@@ -77,7 +77,7 @@ pdpZen <- function(data,
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
-  predData <- predictFun(fit, data) # error
+  predData <- predictFun(fit, data) # error - AI
 
   vars <- names(data)
   vars <- vars[-match(response, vars)]
@@ -134,7 +134,7 @@ pdpZen <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  pdplist$fit <- predictFun(fit, pdplist)  # error
+  pdplist$fit <- predictFun(fit, pdplist)  # error - AI
   pdplist <- split(pdplist, pdplist$.pid)
 
   pdplist0 <- vector("list", nrow(zpairs))
@@ -144,14 +144,14 @@ pdpZen <- function(data,
     ind <- zpairs[i, ]
     if (!is.na(ind[1])) {
       pdplist0[[i]] <- pdplist[[j]] %>%
-        group_by(.data[[ind[1]]], .data[[ind[2]]]) %>%    # warning
+        group_by(.data[[ind[1]]], .data[[ind[2]]]) %>%    # warning - AI
         summarise(fit = mean(fit))
       j <- j + 1
     } else {
       pdplist0[[i]] <- NULL
     }
   }
-  pdplist <- pdplist0  # fit column is now NA
+  pdplist <- pdplist0  # fit column is now NA - AI
   pdplist0 <- NULL
   names(pdplist) <- paste(zpairs[, 2], zpairs[, 1], sep = "pp")
   message("Finished ice/pdp")
@@ -160,7 +160,7 @@ pdpZen <- function(data,
   if (fitlims == "pdp") {
     pdplist0 <- pdplist[!sapply(pdplist, is.null)]
     r <- range(sapply(pdplist0, function(x) range(x$fit)))
-    limits <- range(labeling::rpretty(r[1], r[2]))      ### Error on this line
+    limits <- range(labeling::rpretty(r[1], r[2]))      ### Error - AI
   } else if (fitlims == "all") {
     pdplist0 <- pdplist[!sapply(pdplist, is.null)]
     r <- range(sapply(pdplist0, function(x) range(x$fit)))
