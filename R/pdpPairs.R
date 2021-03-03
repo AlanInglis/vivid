@@ -248,7 +248,7 @@ pdpPairs <- function(data,
 
 
 
-pdp_data <- function(d, var, gridsize = 30, conHull = convexHull) {
+pdp_data <- function(d, var, gridsize = 30, conHull = FALSE) {
   if (length(var) == 1) {
     pdpvar <- d[[var]]
     if (is.factor(pdpvar)) {
@@ -290,10 +290,8 @@ pdp_data <- function(d, var, gridsize = 30, conHull = convexHull) {
       res <- sp::point.in.polygon(gridvals$Var1, gridvals$Var2, pdpvar1CH, pdpvar2CH) != 0
 
       # remove points outside convex hull
-      gridvals <- data.frame(
-        Var1 = gridvals$Var1[res],
-        Var2 = gridvals$Var2[res]
-      )
+      gridvals <- gridvals[res,]
+
     }
 
     dnew <- do.call(rbind, lapply(1:nrow(gridvals), function(i) {
