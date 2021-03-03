@@ -130,7 +130,7 @@ pdpPairs <- function(data,
 
   pdplist <- vector("list", length = nrow(xyvarn))
   for (i in 1:nrow(xyvarn)) {
-    px <- pdp_data(data, xyvarn[i, ], gridsize = gridSize, conHull = convexHull)
+    px <- pdp_data(data, xyvarn[i, ], gridsize = gridSize, convexHull = convexHull)
     px$.pid <- i
     pdplist[[i]] <- px
   }
@@ -248,7 +248,7 @@ pdpPairs <- function(data,
 
 
 
-pdp_data <- function(d, var, gridsize = 30, conHull = FALSE) {
+pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
   if (length(var) == 1) {
     pdpvar <- d[[var]]
     if (is.factor(pdpvar)) {
@@ -279,7 +279,7 @@ pdp_data <- function(d, var, gridsize = 30, conHull = FALSE) {
     }
     gridvals <- expand.grid(gridvals1, gridvals2)
 
-    if (conHull) {
+    if (convexHull) {
 
       hpts <- chull(pdpvar1, pdpvar2) # calc CHull
       hpts <- c(hpts, hpts[1]) # close polygon
