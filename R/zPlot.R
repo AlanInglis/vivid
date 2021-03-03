@@ -57,9 +57,8 @@ pdpZen <- function(data,
                    class = 1,
                    comboImage = FALSE,
                    rug = TRUE,
-                   predictFun = condvis2::CVpredict,
-                   parallel = FALSE,
-                   convexHull = FALSE,
+                   predictFun = NULL,
+                  convexHull = FALSE,
                    ...) {
   if (!(requireNamespace("zenplots", quietly = TRUE))) {
     message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
@@ -76,41 +75,42 @@ pdpZen <- function(data,
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
-
-  predData <- predictFun(fit, data) # error - AI
+  predData <- predictFun(fit, data)
 
   vars <- names(data)
   vars <- vars[-match(response, vars)]
-
+  datap <- data[,vars]
 
   if (is.null(zpath)) {
     zpath <- 1:length(vars)
-    zdata <- data[, vars]
-    zpairs <- t(sapply(1:(length(zpath) - 1), function(i) {
-      z <- zpath[i:(i + 1)]
+    zdata <- datap
+    zpairs <- t(sapply(1:(length(zpath)-1), function(i){
+      z <- zpath[i:(i+1)]
       if (i %% 2 == 0) rev(z) else z
     }))
-  } else if (is.character(zpath)) {
-    zpath <- match(zpath, names(data))
+  }
+  else if (is.character(zpath)){
+    zpath <- match(zpath, vars)
     if (any(is.na(zpath))) stop("'zpath' should contain predictor names.")
-    zdata <- zenplots::indexData(data, zpath)
-    zpairs <- t(sapply(1:(length(zpath) - 1), function(i) {
-      z <- zpath[i:(i + 1)]
+    zdata <- zenplots::indexData(datap, zpath)
+    zpairs <- t(sapply(1:(length(zpath)-1), function(i){
+      z <- zpath[i:(i+1)]
       if (i %% 2 == 0) rev(z) else z
     }))
-  } else if (is.list(zpath)) {
+  }
+  else if (is.list(zpath)){
     zpath0 <- unlist(zpath)
     zpath0 <- match(zpath0, vars)
     if (any(is.na(zpath0))) stop("'zpath' should contain predictor names.")
-    zpath <- lapply(zpath, function(z) match(z, names(data)))
-    zpairs <- t(sapply(1:(length(zpath0) - 1), function(i) {
-      z <- zpath0[i:(i + 1)]
+    zpath <- lapply(zpath, function(z) match(z, vars))
+    zpairs <- t(sapply(1:(length(zpath0)-1), function(i){
+      z <- zpath0[i:(i+1)]
       if (i %% 2 == 0) rev(z) else z
     }))
     fixind <- cumsum(sapply(zpath, length))
     fixind <- fixind[-length(fixind)]
-    for (i in fixind) zpairs[i, ] <- NA
-    zdata <- zenplots::groupData(data, indices = zpath)
+    for (i in fixind) zpairs[i,]<- NA
+    zdata <- zenplots::groupData(datap, indices = zpath)
   }
 
   zpairs <- cbind(vars[zpairs[, 1]], vars[zpairs[, 2]])
@@ -125,7 +125,7 @@ pdpZen <- function(data,
   for (i in 1:nrow(zpairs)) {
     ind <- zpairs[i, ]
     if (!is.na(ind[1])) {
-      px <- pdp_data(data, ind, gridsize = gridSize, conHull = convexHull)
+      px <- pdp_data(data, ind, gridsize = gridSize, convexHull = convexHull)
       px$.pid <- i
       pdplist[[i]] <- px
     } else {
@@ -151,7 +151,8 @@ pdpZen <- function(data,
       pdplist0[[i]] <- NULL
     }
   }
-  pdplist <- pdplist0  # fit column is now NA - AI
+
+  pdplist <- pdplist0
   pdplist0 <- NULL
   names(pdplist) <- paste(zpairs[, 2], zpairs[, 1], sep = "pp")
   message("Finished ice/pdp")
@@ -160,7 +161,7 @@ pdpZen <- function(data,
   if (fitlims == "pdp") {
     pdplist0 <- pdplist[!sapply(pdplist, is.null)]
     r <- range(sapply(pdplist0, function(x) range(x$fit)))
-    limits <- range(labeling::rpretty(r[1], r[2]))      ### Error - AI
+    limits <- range(labeling::rpretty(r[1], r[2]))
   } else if (fitlims == "all") {
     pdplist0 <- pdplist[!sapply(pdplist, is.null)]
     r <- range(sapply(pdplist0, function(x) range(x$fit)))
