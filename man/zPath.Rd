@@ -36,26 +36,26 @@ Construct a path of indices to visit to order variables
 \examples{
 \dontrun{
 # To use this function, install zenplots and graph from Bioconductor.
-if (!requireNamespace("graph", quietly = TRUE)){
- install.packages("BiocManager")
- BiocManager::install("graph")
+if (!requireNamespace("graph", quietly = TRUE)) {
+  install.packages("BiocManager")
+  BiocManager::install("graph")
 }
 install.packages("zenplots")
 
-aq <- na.omit(airquality)*1.0
+aq <- na.omit(airquality) * 1.0
 
 # Run an mlr3 ranger model:
 library(mlr3)
 library(mlr3learners)
 library(ranger)
-ozonet  <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
-ozonel  <- lrn("regr.ranger", importance = "permutation")
-ozonef  <- ozonel$train(ozonet)
+ozonet <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
+ozonel <- lrn("regr.ranger", importance = "permutation")
+ozonef <- ozonel$train(ozonet)
 
 viv <- vivi(aq, ozonef, "Ozone")
 
 # Calculate Zpath:
-zpath<-zPath(viv,.8)
+zpath <- zPath(viv, .8)
 zpath
 }
 }

@@ -35,8 +35,8 @@ Recommend constructing zpath witn \code{calcZpath}.}
 \item{pal}{A vector of colors to show predictions, for use with scale_fill_gradientn}
 
 \item{fitlims}{Specifies the fit range for the color map. Options are a numeric vector of length 2,
-"pdp" (default), in which cases limits are calculated from the pdp, or "all", when limits are calculated from the observations and pdp.
-Predictions outside fitlims are squished on the color scale.}
+"pdp" (default), in which cases limits are calculated from the pdp, or "all", when limits are calculated from the observations and pdp
+predictions outside fitlims are squished on the color scale.}
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
@@ -63,22 +63,23 @@ Constructs a zigzag expanded navigation plot (zenplot) displaying partial depend
 \examples{
 \dontrun{
 # To use this function, install zenplots and graph from Bioconductor.
-if (!requireNamespace("graph", quietly = TRUE)){
- install.packages("BiocManager")
- BiocManager::install("graph")
+if (!requireNamespace("graph", quietly = TRUE)) {
+  install.packages("BiocManager")
+  BiocManager::install("graph")
 }
 install.packages("zenplots")
+
 library(MASS)
 library(ranger)
 Boston1 <- Boston
-Boston1$chas<- factor(Boston1$chas)
-rf <- ranger(medv ~ ., data=Boston1)
-pdpZen(Boston1[1:30,], rf, response="medv", zpath=names(Boston1)[1:4], comboImage=T)
-#Find the top variables in rf
+Boston1$chas <- factor(Boston1$chas)
+rf <- ranger(medv ~ ., data = Boston1)
+pdpZen(Boston1[1:30, ], rf, response = "medv", zpath = names(Boston1)[1:4], comboImage = T)
+# Find the top variables in rf
 set.seed(123)
-viv <- vivi(Boston1, rf, "medv", nmax=30) # use 30 rows, for speed
-pdpZen(Boston1, rf, response="medv", zpath=rownames(viv)[1:4], comboImage=T)
-zpath<-zPath(viv, cutoff=.2) # find plots whose interaction score exceeds .2
-pdpZen(Boston1, rf, response="medv", zpath=zpath, comboImage=T)
+viv <- vivi(Boston1, rf, "medv", nmax = 30) # use 30 rows, for speed
+pdpZen(Boston1, rf, response = "medv", zpath = rownames(viv)[1:4], comboImage = T)
+zpath <- zPath(viv, cutoff = .2) # find plots whose interaction score exceeds .2
+pdpZen(Boston1, rf, response = "medv", zpath = zpath, comboImage = T)
 }
 }
