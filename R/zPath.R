@@ -20,64 +20,68 @@
 #' @examples
 #' \dontrun{
 #' # To use this function, install zenplots and graph from Bioconductor.
-#' if (!requireNamespace("graph", quietly = TRUE)){
-#'  install.packages("BiocManager")
-#'  BiocManager::install("graph")
-#'}
+#' if (!requireNamespace("graph", quietly = TRUE)) {
+#'   install.packages("BiocManager")
+#'   BiocManager::install("graph")
+#' }
 #' install.packages("zenplots")
 #'
-#' aq <- na.omit(airquality)*1.0
+#' aq <- na.omit(airquality) * 1.0
 #'
 #' # Run an mlr3 ranger model:
 #' library(mlr3)
 #' library(mlr3learners)
 #' library(ranger)
-#' ozonet  <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
-#' ozonel  <- lrn("regr.ranger", importance = "permutation")
-#' ozonef  <- ozonel$train(ozonet)
+#' ozonet <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
+#' ozonel <- lrn("regr.ranger", importance = "permutation")
+#' ozonef <- ozonel$train(ozonet)
 #'
 #' viv <- vivi(aq, ozonef, "Ozone")
 #'
-#'# Calculate Zpath:
-#' zpath<-zPath(viv,.8)
+#' # Calculate Zpath:
+#' zpath <- zPath(viv, .8)
 #' zpath
-#'}
+#' }
 #' @export
 
 
 
-zPath <- function(viv, cutoff=NULL, method=c("greedy.weighted", "strictly.weighted"), connect=TRUE){
+zPath <- function(viv,
+                  cutoff = NULL,
+                  method = c("greedy.weighted", "strictly.weighted"),
+                  connect = TRUE) {
 
-  if (!(requireNamespace("zenplots", quietly=TRUE))){
+  if (!(requireNamespace("zenplots", quietly = TRUE))) {
     message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
-    return (invisible(NULL))
+    return(invisible(NULL))
   }
 
   method <- match.arg(method)
-
-  diag(viv)<- NA
+  zpath <- NULL
+  diag(viv) <- NA
   viv[upper.tri(viv)] <- NA
   # find the off-diagonal entries in viv that are bigger than some number
-  if (!is.numeric(cutoff)) cutoff <- quantile(viv, .8, na.rm=TRUE)
-  viv[is.na(viv)]<- 0
-  w <- viv>cutoff
+  if (!is.numeric(cutoff)) cutoff <- quantile(viv, .8, na.rm = TRUE)
+  viv[is.na(viv)] <- 0
+  w <- viv > cutoff
   if (sum(w) == 0) stop("No off diagonal entries in 'viv' exceed 'cutoff'.")
-  zinfo <- cbind(viv[w],  row(viv)[w],col(viv)[w])
+  zinfo <- cbind(viv[w], row(viv)[w], col(viv)[w])
 
   # form an eulerian path with these pairs of variables
-  if (method=="greedy.weighted"){
-    zpath <- tryCatch(zpath <- zenplots::zenpath(zinfo[,1], pairs=zinfo[,-1], method="greedy.weighted"),
-                      error = function(e) NULL,warning = function(w) {})
+  if (method == "greedy.weighted") {
+    zpath <- tryCatch(zpath <- zenplots::zenpath(zinfo[, 1], pairs = zinfo[, -1], method = "greedy.weighted"),
+      error = function(e) NULL, warning = function(w) {}
+    )
   }
-  if (method=="strictly.weighted"| is.null(zpath)| length(zpath)==0){
-    zpath <- zenplots::zenpath(zinfo[,1], pairs=zinfo[,-1], method="strictly.weighted")
-    zpath <-  zenplots::connect_pairs(zpath)
+  if (method == "strictly.weighted" | is.null(zpath) | length(zpath) == 0) {
+    zpath <- zenplots::zenpath(zinfo[, 1], pairs = zinfo[, -1], method = "strictly.weighted")
+    zpath <- zenplots::connect_pairs(zpath)
     if (connect) zpath <- unlist(zpath)
   }
 
-  if (is.numeric(zpath))
+  if (is.numeric(zpath)) {
     zpath <- rownames(viv)[zpath]
-  else if (is.list(zpath)) zpath <- lapply(zpath, function(z) rownames(viv)[z])
+  } else if (is.list(zpath)) zpath <- lapply(zpath, function(z) rownames(viv)[z])
 
   zpath
 }

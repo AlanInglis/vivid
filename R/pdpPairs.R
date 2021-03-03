@@ -267,7 +267,6 @@ pdp_data <- function(d, var, gridsize = 30, conHull = convexHull) {
     pdpvar1 <- d[[var[1]]]
     pdpvar2 <- d[[var[2]]]
 
-
     if (is.factor(pdpvar1)) {
       gridvals1 <- levels(pdpvar1)
     } else {
