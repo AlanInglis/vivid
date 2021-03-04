@@ -21,8 +21,8 @@
 
 as.data.frame.vivid <- function(matrix) {
 
-  # melt the matrix
-  df <- cbind(expand.grid(dimnames(matrix)), value = as.vector(matrix))
+
+  df <- cbind(expand.grid(dimnames(matrix),stringsAsFactors = FALSE), value = as.vector(matrix) )
 
   # get the row and colum index
   Row <- as.vector(row(matrix))
@@ -35,9 +35,9 @@ as.data.frame.vivid <- function(matrix) {
   viviDataFrame <- cbind(df, Row, Col)
 
   # set names
-  colnames(viviDataFrame)[1] <- "Variable_1"
-  colnames(viviDataFrame)[2] <- "Variable_2"
-  colnames(viviDataFrame)[3] <- "Value"
+  names(viviDataFrame)[1] <- "Variable_1"
+  names(viviDataFrame)[2] <- "Variable_2"
+  names(viviDataFrame)[3] <- "Value"
 
   return(viviDataFrame)
 }
