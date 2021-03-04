@@ -16,7 +16,10 @@
 
 viviUpdate <- function(mat, newImp) {
   orderNames <- names(newImp)
-  mat <- mat[orderNames, orderNames] # make sure the order of vImp & vInt match
-  diag(mat) <- newImp # set diagonal to equal vImps
-  return(mat)
+  viviMatrix <- mat[orderNames, orderNames] # make sure the order of vImp & vInt match
+  diag(viviMatrix) <- newImp # set diagonal to equal vImps
+
+  class(viviMatrix) <- c("vivid", class(viviMatrix))
+  return(viviMatrix)
+
 }
