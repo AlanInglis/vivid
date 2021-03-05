@@ -10,12 +10,10 @@ vivi(
   response,
   gridSize = 50,
   importanceType = NULL,
-  importanceMode = NULL,
   nmax = NULL,
   reorder = TRUE,
   class = 1,
-  predictFun = NULL,
-  ...
+  predictFun = NULL
 )
 }
 \arguments{
@@ -27,9 +25,8 @@ vivi(
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{importanceType}{Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.}
-
-\item{importanceMode}{Variable importance mode. One of either "\%IncMSE" or "IncNodePurity". For use with randomForest.}
+\item{importanceType}{One of either "\%IncMSE" or "IncNodePurity" for use with randomForest. Or set to equal "agnostic" to override
+embedded importance measures and return agnostic importance values.}
 
 \item{nmax}{Maximum number of data rows to consider.}
 

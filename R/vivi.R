@@ -7,8 +7,8 @@
 #' @param data Data frame used for fit.
 #' @param response The name of the response for the fit.
 #' @param gridSize The size of the grid for evaluating the predictions.
-#' @param importanceType Set to equal "agnostic" to override embedded importance measures and return agnostic importance values.
-#' @param importanceMode Variable importance mode. One of either "%IncMSE" or "IncNodePurity". For use with randomForest.
+#' @param importanceType  One of either "%IncMSE" or "IncNodePurity" for use with randomForest. Or set to equal "agnostic" to override
+#' embedded importance measures and return agnostic importance values.
 #' @param nmax Maximum number of data rows to consider.
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
@@ -54,12 +54,10 @@ vivi <- function(data,
                  response,
                  gridSize = 50,
                  importanceType = NULL,
-                 importanceMode = NULL,
                  nmax = NULL,
                  reorder = TRUE,
                  class = 1,
-                 predictFun = NULL,
-                 ...) {
+                 predictFun = NULL) {
 
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
@@ -67,10 +65,21 @@ vivi <- function(data,
     predictFun <- CVpredictfun(classif, class)
   }
 
+
+
+
   # Call the importance function
   if (!is.null(importanceType)) {
     if (importanceType == "agnostic") {
       vImp <- vividImportance.default(
+        data = data,
+        fit = fit,
+        response = response,
+        importanceType = importanceType,
+        predictFun = predictFun
+      )
+    } else {
+      vImp <- vividImportance(
         data = data,
         fit = fit,
         response = response,
@@ -84,10 +93,10 @@ vivi <- function(data,
       fit = fit,
       response = response,
       importanceType = importanceType,
-      importanceMode = importanceMode,
       predictFun = predictFun
     )
   }
+
 
   # Call the interaction function
   vInt <- vividInteraction(
@@ -163,7 +172,7 @@ vividReorder <- function(d) {
 # vividImportance ---------------------------------------------------------
 
 # Main vImp function:
-vividImportance <- function(fit, data, response = NULL, importanceType = NULL, importanceMode = NULL, predictFun = NULL, ...) {
+vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, ...) {
   UseMethod("vividImportance", fit)
 }
 
@@ -176,7 +185,6 @@ vividImportance.default <- function(fit,
                                     data,
                                     response = NULL,
                                     importanceType = NULL,
-                                    importanceMode = NULL,
                                     predictFun = NULL) {
 
 
@@ -219,14 +227,13 @@ vividImportance.ranger <- function(fit,
                                    data,
                                    response = NULL,
                                    importanceType = NULL,
-                                   importanceMode = NULL,
                                    predictFun = NULL) {
 
 
   # If no importance mode selected, then default! Else, extract importance type
   if (fit$importance.mode == "none") {
-    message("No variable importance mode selected. Using agnostic method.")
-    vividImportance.default(fit, data, response, importanceType, importanceMode, predictFun = predictFun)
+    message("No variable importance mode selected.")
+    vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
   } else if (fit$importance.mode == "permutation") {
     importance <- fit$variable.importance
     message("Embedded permutation variable importance method used.")
@@ -250,23 +257,22 @@ vividImportance.randomForest <- function(fit,
                                          data,
                                          response = NULL,
                                          importanceType = NULL,
-                                         importanceMode = NULL,
                                          predictFun = NULL) {
-
 
   # check the dimension of importance. If importance = T, then there will be 2 columns
   fitImp <- dim(fit$importance)
 
-  # if importance = T, then choose between mse and nodePurity
-  if (fitImp[2] == 2) {
-    if (is.null(importanceMode)) {
-      stop("importanceMode must not be NULL. Choose either '%IncMSE' or 'IncNodePurity'.")
-    }
-    if (importanceMode == "%IncMSE") {
+  if (!is.null(importanceType) && fitImp[2] == 2) {
+    if (importanceType == "%IncMSE") {
+      message("%IncMSE variable importance method used.")
       importance <- fit$importance[, 1]
-    } else if (importanceMode == "IncNodePurity") {
+    } else if (importanceType == "IncNodePurity") {
+      message("IncNodePurity variable importance method used.")
       importance <- fit$importance[, 2]
     }
+  } else if (is.null(importanceType) && fitImp[2] == 2) {
+    message("No importanceType selected. Returning %IncMSE importance values")
+    importance <- fit$importance[, 1]
   } else {
     importance <- fit$importance[, 1]
   }
@@ -281,40 +287,39 @@ vividImportance.Learner <- function(fit,
                                     data,
                                     response = NULL,
                                     importanceType = NULL,
-                                    importanceMode = NULL,
                                     predictFun = NULL) {
 
 
   # if no importance mode selected, use default
   if (fit$packages == "ranger" && fit$model$importance.mode == "none") {
     message("No variable importance mode selected. Using agnostic method.")
-    vividImportance.default(fit, data, response, importanceType, importanceMode, predictFun = predictFun)
+    vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
   } else {
 
-  # get data names without response
-  featureNames <- names(data[, !(names(data) %in% response)])
+    # get data names without response
+    featureNames <- names(data[, !(names(data) %in% response)])
 
-  # check object properties
-  lrnID <- fit$properties
+    # check object properties
+    lrnID <- fit$properties
 
-  # if learner doesnt have an embedded vImp method then use default
-  if (length(lrnID) == 0) {
-    message("No variable importance mode available. Using agnostic method.")
-    vividImportance.default(fit, data, response, importanceType, importanceMode, predictFun = predictFun)
-  } else if (fit$packages == "xgboost") {
-    # mlr3 xgboost omits some features. Here we are adding the omitted feature back
-    # with a value of 0
-    importance <- fit$importance()
-    message("Embedded variable importance method used.")
-    impNames <- names(importance)
-    differernceNames <- setdiff(featureNames, impNames)
-    importance <- c(importance, setNames(0, differernceNames))
-    return(importance)
-  } else {
-    importance <- fit$importance()
-    message("Embedded variable importance method used.")
-    return(importance)
-  }
+    # if learner doesnt have an embedded vImp method then use default
+    if (length(lrnID) == 0) {
+      message("No variable importance mode available. Using agnostic method.")
+      vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
+    } else if (fit$packages == "xgboost") {
+      # mlr3 xgboost omits some features. Here we are adding the omitted feature back
+      # with a value of 0
+      importance <- fit$importance()
+      message("Embedded variable importance method used.")
+      impNames <- names(importance)
+      differernceNames <- setdiff(featureNames, impNames)
+      importance <- c(importance, setNames(0, differernceNames))
+      return(importance)
+    } else {
+      importance <- fit$importance()
+      message("Embedded variable importance method used.")
+      return(importance)
+    }
   }
 }
 
@@ -326,7 +331,6 @@ vividImportance.lda <- function(fit,
                                 data,
                                 response = NULL,
                                 importanceType = NULL,
-                                importanceMode = NULL,
                                 predictFun = NULL) {
   fl <- flashlight(
     model = fit, data = data, y = response, label = "",
@@ -407,7 +411,7 @@ vividInteraction.default <- function(fit,
     predict_function = function(fit, data) predictFun(fit, data)
   )
 
-  if(is.null(nmax)){
+  if (is.null(nmax)) {
     nmax <- nrow(data)
   }
   # calculate interactions
