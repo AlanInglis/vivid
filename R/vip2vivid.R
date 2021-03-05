@@ -54,5 +54,9 @@ vip2vivid <- function(importance, interaction, reorder = TRUE) {
     mat <- vividReorder(mat)
   }
 
+  if(class(mat)[1] != "vivid"){
+    class(mat) <- c("vivid", class(mat))
+  }
+
   return(mat)
 }
