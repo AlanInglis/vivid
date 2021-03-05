@@ -83,8 +83,8 @@ viviHeatmap <- function(mat,
   # Create Plot ------------------------------------------------------------
 
   # order factors
-  # dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
-  # dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
+  dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
+  dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
 
 
 
