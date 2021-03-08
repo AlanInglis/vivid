@@ -21,7 +21,6 @@ imports:
     igraph,
     flashlight,
     ggnewscale,
-    reshape,
     tidyr
 Suggests: 
     knitr,
