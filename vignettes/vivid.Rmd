@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
-library(vividPackage)
+library(vivid)
 ```
 
 ## Introduction
@@ -48,10 +48,11 @@ Alternatively you can install the latest development version of the package in R
 We then load the required packages. `vividPackage` to create the visualizations and some other packages to create various model fits. 
 
 ```{r, warning=FALSE, message=FALSE}
-library(vividPackage) # for visualisations 
+library(vivid) # for visualisations 
 library(randomForest) # for model fit
 library(mlr3)         # for model fit
 library(mlr3learners) # for model fit
+library(ggplot2)
 ```
 \
 \
@@ -70,7 +71,7 @@ For the following examples we set the number of features to equal 10 and the num
 
 Create the data:
 ```{r, messages = FALSE}
-set.seed(1701)
+set.seed(101)
 myData <- genFriedman(noFeatures = 9, noSamples = 450, sigma = 1, bins = NULL, seed = NULL)
 ```
 
@@ -83,11 +84,11 @@ Here we create two model fits. First we fit a SVM model from the `mlr3` package 
 * Create an `mlr3` `SVM` model:
 
 ```{r}
-set.seed(1701)
+set.seed(101)
 SVM_task  <- TaskRegr$new(id = "Friedman", backend = myData, target = "y")
-set.seed(1701)
+set.seed(101)
 SVM_lrn <- lrn("regr.svm")
-set.seed(1701)
+set.seed(101)
 SVM_mod <- SVM_lrn$train(SVM_task)
 ```
 
@@ -108,17 +109,16 @@ This function works with multiple model fits and results in a matrix which can b
 * Create a matrix from the SVM fit to be supplied to the plotting functions.
 
 ```{r, message = F, warning = F}
-set.seed(1701)
+set.seed(101)
 SVM_fit <- vivi(fit = SVM_mod, 
                 data = myData, 
                 response = "y",
                 gridSize = 10,
                 importanceType = NULL,
-                importanceMode = NULL,
                 nmax = 500,
                 reorder = TRUE,
                 class = 1,
-                predictFun = NULL,)
+                predictFun = NULL)
 ```
 
  
@@ -126,17 +126,16 @@ SVM_fit <- vivi(fit = SVM_mod,
 * Create a matrix from the random forest fit to be supplied to the plotting functions.
 
 ```{r, message = F, warning = F}
-set.seed(1701)
+set.seed(101)
 rf_fit  <- vivi(fit = rf, 
                 data = myData, 
                 response = "y",
                 gridSize = 10,
-                importanceType = NULL,
-                importanceMode = "%IncMSE",
+                importanceType = "%IncMSE",
                 nmax = 500,
                 reorder = TRUE,
                 class = 1,
-                predictFun = NULL,)
+                predictFun = NULL)
 ```
 
 ## Visualizing the results
@@ -146,7 +145,7 @@ rf_fit  <- vivi(fit = rf,
 The first visualization option supplied by `vivid` creates a heatmap plot displaying variable importance on the diagonal and variable interaction on the off-diagonal. As mentioned above, the matrix created by `vivi` is ordered. This will push variables of interest to the top left of the heatmap plot.
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
-viviHeatmap(SVM_fit, title = "SVM heatmap")
+viviHeatmap(SVM_fit) + ggtitle("SVM fit")
 ```
 <center>
 Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
@@ -154,7 +153,7 @@ Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off
 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
-viviHeatmap(rf_fit, title = "rf heatmap")
+viviHeatmap(rf_fit) + ggtitle("rf fit")
 ```
 <center>
 Fig 1.1: *Heatmap of a random forest fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
