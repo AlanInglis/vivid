@@ -3,8 +3,10 @@ title: "vivid"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{vivid}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -131,7 +133,11 @@ rf_fit  <- vivi(fit = rf,
                 data = myData, 
                 response = "y",
                 gridSize = 10,
+<<<<<<< HEAD
                 importanceType = "%IncMSE",
+=======
+                importanceType = NULL,
+>>>>>>> 3b54229f108949b8122f7b4dd37ccb360f9dc343
                 nmax = 500,
                 reorder = TRUE,
                 class = 1,
@@ -145,7 +151,12 @@ rf_fit  <- vivi(fit = rf,
 The first visualization option supplied by `vivid` creates a heatmap plot displaying variable importance on the diagonal and variable interaction on the off-diagonal. As mentioned above, the matrix created by `vivi` is ordered. This will push variables of interest to the top left of the heatmap plot.
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
+<<<<<<< HEAD
 viviHeatmap(SVM_fit) + ggtitle("SVM fit")
+=======
+library(ggplot2)
+viviHeatmap(SVM_fit) + ggtitle("SVM heatmap")
+>>>>>>> 3b54229f108949b8122f7b4dd37ccb360f9dc343
 ```
 <center>
 Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
@@ -153,7 +164,11 @@ Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off
 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
+<<<<<<< HEAD
 viviHeatmap(rf_fit) + ggtitle("rf fit")
+=======
+viviHeatmap(rf_fit) + ggtitle("rf heatmap")
+>>>>>>> 3b54229f108949b8122f7b4dd37ccb360f9dc343
 ```
 <center>
 Fig 1.1: *Heatmap of a random forest fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
