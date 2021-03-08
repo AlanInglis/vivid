@@ -3,8 +3,10 @@ title: "vivid"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{vivid}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -15,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
-library(vividPackage)
+library(vivid)
 ```
 
 ## Introduction
@@ -48,7 +50,7 @@ Alternatively you can install the latest development version of the package in R
 We then load the required packages. `vividPackage` to create the visualizations and some other packages to create various model fits. 
 
 ```{r, warning=FALSE, message=FALSE}
-library(vividPackage) # for visualisations 
+library(vivid) # for visualisations 
 library(randomForest) # for model fit
 library(mlr3)         # for model fit
 library(mlr3learners) # for model fit
@@ -114,11 +116,10 @@ SVM_fit <- vivi(fit = SVM_mod,
                 response = "y",
                 gridSize = 10,
                 importanceType = NULL,
-                importanceMode = NULL,
                 nmax = 500,
                 reorder = TRUE,
                 class = 1,
-                predictFun = NULL,)
+                predictFun = NULL)
 ```
 
  
@@ -132,11 +133,10 @@ rf_fit  <- vivi(fit = rf,
                 response = "y",
                 gridSize = 10,
                 importanceType = NULL,
-                importanceMode = "%IncMSE",
                 nmax = 500,
                 reorder = TRUE,
                 class = 1,
-                predictFun = NULL,)
+                predictFun = NULL)
 ```
 
 ## Visualizing the results
@@ -146,7 +146,8 @@ rf_fit  <- vivi(fit = rf,
 The first visualization option supplied by `vivid` creates a heatmap plot displaying variable importance on the diagonal and variable interaction on the off-diagonal. As mentioned above, the matrix created by `vivi` is ordered. This will push variables of interest to the top left of the heatmap plot.
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
-viviHeatmap(SVM_fit, title = "SVM heatmap")
+library(ggplot2)
+viviHeatmap(SVM_fit) + ggtitle("SVM heatmap")
 ```
 <center>
 Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
@@ -154,7 +155,7 @@ Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off
 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
-viviHeatmap(rf_fit, title = "rf heatmap")
+viviHeatmap(rf_fit) + ggtitle("rf heatmap")
 ```
 <center>
 Fig 1.1: *Heatmap of a random forest fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
