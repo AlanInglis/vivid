@@ -62,6 +62,7 @@
 #' @importFrom dplyr "%>%"
 #' @importFrom GGally "eval_data_col"
 #' @importFrom dplyr "bind_rows"
+#' @importFrom grDevices "chull"
 #' @export
 
 
