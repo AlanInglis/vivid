@@ -361,6 +361,51 @@ Returning a vector of 1's for importance values.
 
 
 
+# mlr original ------------------------------------------------------------
+vividImportance.WrappedModel <- function(fit,
+                                         data,
+                                         response = NULL,
+                                         importanceType = NULL,
+                                         predictFun = NULL) {
+  data <- as.data.frame(data)
+
+  # get data names without response
+  featureNames <- names(data[, !(names(data) %in% response)])
+
+  lrnID <- fit$learner$properties
+  testString <- "featimp"
+
+
+  logID <- logical(length(lrnID))
+  for (i in seq_along(lrnID)) {
+    logID[i] <- grepl(lrnID[i], testString, fixed = TRUE)
+  }
+
+  if (any(logID) == TRUE) {
+    if (fit$learner$id == "regr.ranger") {
+      importance <- fit$learner.model$variable.importance
+    } else if (fit$learner$id == "regr.randomForest") {
+      fitImp <- dim(fit$learner.model$importance)
+      if (!is.null(importanceType) && fitImp[2] == 2) {
+        if (importanceType == "%IncMSE") {
+          message("%IncMSE variable importance method used.")
+          importance <- fit$learner.model$importance[, 1]
+        } else if (importanceType == "IncNodePurity") {
+          message("IncNodePurity variable importance method used.")
+          importance <- fit$learner.model$importance[, 2]
+        }
+      } else if (is.null(importanceType) && fitImp[2] == 2) {
+        message("No importanceType selected. Returning %IncMSE importance values")
+        importance <- fit$learner.model$importance[, 1]
+      } else {
+        importance <- fit$learner.model$importance[, 1]
+      }
+    } else {
+      importance <- vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
+    }
+  }
+  return(importance)
+}
 
 
 #  Space for more ML models here ------------------------------------------
