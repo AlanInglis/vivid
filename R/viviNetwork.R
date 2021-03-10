@@ -20,9 +20,9 @@
 #' @import igraph
 #' @import ggplot2
 #' @importFrom GGally ggnet2
-#' @importFrom ggnewscale "new_scale_fill"
-#' @importFrom ggalt "geom_encircle"
-#' @importFrom colorspace "sequential_hcl"
+#' @importFrom ggnewscale new_scale_fill
+#' @importFrom ggalt geom_encircle
+#' @importFrom colorspace sequential_hcl
 #'
 #' @examples
 #' library(ranger)
