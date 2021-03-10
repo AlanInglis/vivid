@@ -10,10 +10,9 @@
 #' @param impLims Specifies the fit range for the color map for importance.
 #' @param angle The angle to display the x-axis labels.
 #'
-#' @importFrom ggplot2 "ggplot"
-#' @importFrom ggnewscale "new_scale_fill"
-#' @importFrom stats "as.dist"
-#' @importFrom colorspace "sequential_hcl"
+#' @import ggplot2
+#' @importFrom ggnewscale new_scale_fill
+#' @importFrom stats as.dist
 #'
 #' @return A heatmap plot showing variable importance on the diagonal
 #' and variable interaction on the off-diagonal.
@@ -23,12 +22,12 @@
 #' aq <- na.omit(airquality)
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
-#' viviHeatMap(myMat)
+#' viviHeatmap(myMat)
 #' @export
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,
-                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
-                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
+                        intPal = rev(colorspace::sequential_hcl(palette = "Blues 3", n = 100)),
+                        impPal = rev(colorspace::sequential_hcl(palette = "Reds 3", n = 100)),
                         intLims = NULL,
                         impLims = NULL,
                         angle = NULL) {

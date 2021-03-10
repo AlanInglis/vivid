@@ -19,9 +19,17 @@
 #' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
 #' @return A matrix of values.
 #'
-#' @importFrom condvis2 "CVpredict"
-#' @importFrom dplyr "bind_rows"
-#' @importFrom dplyr "filter"
+#' @importFrom condvis2 CVpredict
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr filter
+#' @importFrom dplyr summarise
+#' @importFrom dplyr group_by
+#' @importFrom dplyr %>%
+#' @importFrom GGally ggpairs
+#' @importFrom GGally eval_data_col
+#' @importFrom stats na.omit
+#' @importFrom grDevices chull
+#' @import ggplot2
 #'
 #' @examples
 #' # Load in the data:
@@ -55,14 +63,6 @@
 #' fitm <- lrn("classif.ranger", importance = "permutation", predict_type = "prob")$train(task)
 #' pdpPairs(iris, fitm, "Species", class = "versicolor")
 #' }
-#' @importFrom GGally "ggpairs"
-#' @import ggplot2
-#' @importFrom dplyr "summarise"
-#' @importFrom dplyr "group_by"
-#' @importFrom dplyr "%>%"
-#' @importFrom GGally "eval_data_col"
-#' @importFrom dplyr "bind_rows"
-#' @importFrom grDevices "chull"
 #' @export
 
 

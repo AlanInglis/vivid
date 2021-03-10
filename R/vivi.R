@@ -19,12 +19,15 @@
 #' @importFrom flashlight light_importance
 #' @importFrom flashlight light_interaction
 #' @importFrom condvis2 CVpredict
+#' @importFrom stats reorder
+#' @importFrom stats setNames
+#'
 #' @examples
-#' aq <- data.frame(airquality)
 #' aq <- na.omit(airquality)
 #' f <- lm(Ozone ~ ., data = aq)
-#' plot(vivi(fit = f, data = aq, response = "Ozone")) # as expected all interactions are zero
-#' \dontrun{
+#' m <- vivi(fit = f, data = aq, response = "Ozone") # as expected all interactions are zero
+#' viviHeatmap(m)
+#'  \dontrun{
 #' # Run an mlr ranger model:
 #' library(mlr3)
 #' library(mlr3learners)
@@ -35,14 +38,14 @@
 #' aq_fit <- aq_lrn$train(aq_Task)
 #'
 #' m <- vivi(fit = aq_fit, data = aq, response = "Ozone")
-#' plot(m, type = "heatMap")
+#' viviHeatmap(m)
 #' }
 #' \dontrun{
 #' library(ranger)
 #' rf <- ranger(Species ~ ., data = iris)
-#' plot(vivi(fit = rf, data = iris, response = "Species"))
+#' vivi(fit = rf, data = iris, response = "Species")
 #' rf <- ranger(Species ~ ., data = iris, importance = "impurity")
-#' plot(vivi(fit = rf, data = iris, response = "Species"))
+#' vivi(fit = rf, data = iris, response = "Species")
 #' }
 #' @export
 
@@ -136,8 +139,6 @@ vivi <- function(data,
 #' @description Reorders a square matrix so that values of high importance and
 #' interaction strength are pushed to the top left of the matrix.
 #' @param d A matrix such as that returned by vivi
-#' @param newImp A named vector of variable importances.
-#' @param reorder If TRUE, uses vividReorder on the matrix
 #' @name vividReorder
 #' @return A reordered version of d.
 #' @importFrom DendSer dser
@@ -206,18 +207,19 @@ vividImportance.default <- function(fit,
 
 
   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
-  suppressWarnings(
-    if (is.nan(importance[1:length(importance)])) {
-      message("
-Response type not supported.
-Models with numeric or binary response are currently supported.
-Returning a vector of 1's for importance values.
-              ")
-      importance <- replace(importance, is.nan(importance), 1)
-    } else {
-      message("Agnostic variable importance method used.")
-    }
-  )
+  # THIS NEEDS TO BE FIXED
+  #   suppressWarnings(
+#     if (is.nan(importance[1:length(importance)])) {
+#       message("
+# Response type not supported.
+# Models with numeric or binary response are currently supported.
+# Returning a vector of 1's for importance values.
+#               ")
+#       importance <- replace(importance, is.nan(importance), 1)
+#     } else {
+#       message("Agnostic variable importance method used.")
+#     }
+#   )
   return(importance)
 }
 

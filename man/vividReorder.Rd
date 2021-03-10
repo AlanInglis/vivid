@@ -8,10 +8,6 @@ vividReorder(d)
 }
 \arguments{
 \item{d}{A matrix such as that returned by vivi}
-
-\item{newImp}{A named vector of variable importances.}
-
-\item{reorder}{If TRUE, uses vividReorder on the matrix}
 }
 \value{
 A reordered version of d.

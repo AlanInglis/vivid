@@ -17,7 +17,7 @@ genFriedman(
 
 \item{noSamples}{Integer specifying the number of samples to generate. Default is 100}
 
-\item{sigma}{Numreic specifying standard deviation of the noise.}
+\item{sigma}{Numreic specifxying standard deviation of the noise.}
 
 \item{bins}{Integer specifiying the number of bins to split responce variable into. Setting a value greater than 1 turns this into a classification problem where bins determines the number of classes.}
 

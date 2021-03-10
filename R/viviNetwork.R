@@ -22,7 +22,7 @@
 #' @importFrom GGally ggnet2
 #' @importFrom ggnewscale new_scale_fill
 #' @importFrom ggalt geom_encircle
-#' @importFrom colorspace sequential_hcl
+#' @importFrom grDevices rainbow
 #'
 #' @examples
 #' library(ranger)
@@ -37,8 +37,8 @@ viviNetwork <- function(mat,
                         intThreshold = NULL,
                         intLims = NULL,
                         impLims = NULL,
-                        intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
-                        impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
+                        intPal = rev(colorspace::sequential_hcl(palette = "Blues 3", n = 100)),
+                        impPal = rev(colorspace::sequential_hcl(palette = "Reds 3", n = 100)),
                         removeNode = FALSE,
                         layout = igraph::layout_in_circle,
                         cluster = NULL,

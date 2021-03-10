@@ -6,8 +6,8 @@
 \usage{
 viviHeatmap(
   mat,
-  intPal = rev(sequential_hcl(palette = "Blues 3", n = 100)),
-  impPal = rev(sequential_hcl(palette = "Reds 3", n = 100)),
+  intPal = rev(colorspace::sequential_hcl(palette = "Blues 3", n = 100)),
+  impPal = rev(colorspace::sequential_hcl(palette = "Reds 3", n = 100)),
   intLims = NULL,
   impLims = NULL,
   angle = NULL
@@ -39,5 +39,5 @@ library(ranger)
 aq <- na.omit(airquality)
 rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 myMat <- vivi(fit = rF, data = aq, response = "Ozone")
-viviHeatMap(myMat)
+viviHeatmap(myMat)
 }

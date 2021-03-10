@@ -20,6 +20,8 @@
 #' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
 #' @param ... passed on to zenplot
 #' @return A zenplot of partial dependence values.
+#'
+#' @importFrom stats na.omit
 #' @examples
 #' \dontrun{
 #' # To use this function, install zenplots and graph from Bioconductor.
@@ -134,7 +136,7 @@ pdpZen <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  pdplist$fit <- predictFun(fit, pdplist)  # error - AI
+  pdplist$fit <- predictFun(fit, pdplist)
   pdplist <- split(pdplist, pdplist$.pid)
 
   pdplist0 <- vector("list", nrow(zpairs))
@@ -144,7 +146,7 @@ pdpZen <- function(data,
     ind <- zpairs[i, ]
     if (!is.na(ind[1])) {
       pdplist0[[i]] <- pdplist[[j]] %>%
-        group_by(.data[[ind[1]]], .data[[ind[2]]]) %>%    # warning - AI
+        group_by(.data[[ind[1]]], .data[[ind[2]]]) %>%
         summarise(fit = mean(fit))
       j <- j + 1
     } else {
