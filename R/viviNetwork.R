@@ -10,7 +10,7 @@
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
 #' @param removeNode If TRUE, then removes nodes with no connecting edges when thresholding interaction values.
-#' @param layout Igraph layout function or a numeric matrix with two columns, one row per node. Defaults to igraph::layout_as_circle
+#' @param layout igraph layout function or a numeric matrix with two columns, one row per node. Defaults to igraph::layout_as_circle
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
 #' @param nudge_x Nudge (centered) labels by this amount, outward horizontally
 #' @param nudge_y Nudge (centered) labels by this amount, outward vertically
@@ -128,8 +128,8 @@ viviNetwork <- function(mat,
   }
 
   edgeCols <- mapinto(dfInt1$Value, intLimits, intPal) # set edge cols
-  edgeWidthScaled <- mapinto(dfInt1$Value, intLimits, c(1, 4)) # scaling for graphic
-  impScaled <- mapinto(dfImp$Value, impLimits, c(1, 5)) # scaling for graphic
+  edgeWidthScaled <- mapinto(dfInt1$Value, intLimits, c(1:4)) # scaling for graphic
+  impScaled <- mapinto(dfImp$Value, impLimits, c(1:5)) # scaling for graphic
 
   glayout[abs(glayout) < .0001] <- 0
   nudged <- sign(glayout)
