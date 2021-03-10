@@ -33,7 +33,7 @@ viviNetwork(
 
 \item{removeNode}{If TRUE, then removes nodes with no connecting edges when thresholding interaction values.}
 
-\item{layout}{Igraph layout function or a numeric matrix with two columns, one row per node. Defaults to igraph::layout_as_circle}
+\item{layout}{igraph layout function or a numeric matrix with two columns, one row per node. Defaults to igraph::layout_as_circle}
 
 \item{cluster}{Either a vector of cluster memberships for nodes or an igraph clustering function.}
 
