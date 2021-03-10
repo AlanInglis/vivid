@@ -136,12 +136,8 @@ viviNetwork <- function(mat,
   nudged[nudged[, 2] == 0, 2] <- 1
 
 
-  impSqrt <- ifelse(dfImp$Value < 0, sqrt(abs(dfImp$Value))*(-1), sqrt(abs(dfImp$Value))) #AI
-  limitsSqrt <- ifelse(impLimits < 0, sqrt(abs(impLimits))*(-1), sqrt(abs(impLimits))) #AI
 
-  nodeSize <- mapinto(impSqrt, limitsSqrt, seq(1, 2.4, length.out = 10)) # AI
-
-  #nodeSize <- mapinto(sqrt(dfImp$Value), sqrt(impLimits), seq(1, 2.4, length.out = 10))
+  nodeSize <- mapinto(dfImp$Value, impLimits, seq(1, 2.4, length.out = 10))
   nudged[, 1] <- nudged[, 1] * nodeSize * nudge_x
   nudged[, 2] <- nudged[, 2] * nodeSize * nudge_y
 

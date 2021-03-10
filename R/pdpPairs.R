@@ -262,7 +262,7 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
       d1[[var]] <- i
       d1
     }))
-    if (is.factor(pdpvar)) dnew[[var]] <- factor(dnew[[var]], levels = levels(pdpvar))
+    if (is.factor(pdpvar)) dnew[[var]] <- factor(dnew[[var]], levels = levels(pdpvar), ordered= is.ordered(pdpvar))
   }
   else {
     pdpvar1 <- d[[var[1]]]
@@ -301,8 +301,8 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
       d1[[var[2]]] <- gridvals[i, 2]
       d1
     }))
-    if (is.factor(pdpvar1)) dnew[[var[1]]] <- factor(dnew[[var[1]]], levels = levels(pdpvar1))
-    if (is.factor(pdpvar2)) dnew[[var[2]]] <- factor(dnew[[var[2]]], levels = levels(pdpvar2))
+    if (is.factor(pdpvar1)) dnew[[var[1]]] <- factor(dnew[[var[1]]], levels = levels(pdpvar1),ordered= is.ordered(pdpvar1))
+    if (is.factor(pdpvar2)) dnew[[var[2]]] <- factor(dnew[[var[2]]], levels = levels(pdpvar2),ordered= is.ordered(pdpvar2))
   }
   dnew$.id <- 1:nrow(d)
   rownames(dnew) <- NULL
