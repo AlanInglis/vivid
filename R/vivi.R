@@ -114,12 +114,14 @@ vivi <- function(data,
   vInt <- vInt[orderNames, orderNames] # make sure the order of vImp & vInt match
   diag(vInt) <- vImp # set diagonal to equal vImps
 
+  featureNames <- names(data[, !(names(data) %in% response)])
 
   # reorder
   if (reorder) {
     viviMatrix <- vividReorder(vInt)
   } else {
     viviMatrix <- vInt
+    viviMatrix <- viviMatrix[featureNames, featureNames] # presereve original data order
   }
 
   class(viviMatrix) <- c("vivid", class(viviMatrix))
