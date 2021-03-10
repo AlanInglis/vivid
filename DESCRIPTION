@@ -21,7 +21,7 @@ imports:
     igraph,
     flashlight,
     ggnewscale,
-    tidyr
+    `    tidyr
 Suggests: 
     knitr,
     rmarkdown,

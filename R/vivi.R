@@ -15,10 +15,10 @@
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @return A matrix of interaction values, with importance on the diagonal.
 #'
-#' @importFrom flashlight "flashlight"
-#' @importFrom flashlight "light_importance"
-#' @importFrom flashlight "light_interaction"
-#' @importFrom condvis2 "CVpredict"
+#' @importFrom flashlight flashlight
+#' @importFrom flashlight light_importance
+#' @importFrom flashlight light_interaction
+#' @importFrom condvis2 CVpredict
 #' @examples
 #' aq <- data.frame(airquality)
 #' aq <- na.omit(airquality)
@@ -138,8 +138,8 @@ vivi <- function(data,
 #' @param reorder If TRUE, uses vividReorder on the matrix
 #' @name vividReorder
 #' @return A reordered version of d.
-#' @importFrom DendSer "dser"
-#' @importFrom DendSer "costLS"
+#' @importFrom DendSer dser
+#' @importFrom DendSer costLS
 #' @export
 #'
 #' @examples
@@ -159,7 +159,7 @@ vividReorder <- function(d) {
     vInt <- (vInt - rvInt[1]) / (rvInt[2] - rvInt[1])
   }
   score <- apply(as.matrix(vInt), 1, max) + vImp
-  o <- dser(-vInt, -score, cost = DendSer::costLS)
+  o <- DendSer::dser(-vInt, -score, cost = DendSer::costLS)
   res <- d[o, o]
   res
 }

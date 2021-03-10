@@ -13,8 +13,14 @@ test_that("Vivi function works for mlr3 example data",{
   aq_lrn <- lrn("regr.ranger", importance = "permutation")
   aq_fit <- aq_lrn$train(aq_Task)
 
+  aq_test <- lm(Ozone~., aq)
+
   # Default values
   m <- vivi(fit = aq_fit, data = aq, response = "Ozone")
+  print(sort(colnames(m)))
+  print(sort(colnames(aq)[-1]))
+
+
   expect_s3_class(m,c("vivid","matrix","array"))
   expect_identical(sort(colnames(m)), sort(colnames(aq)[-1]))
   expect_identical(sort(rownames(m)), sort(colnames(aq)[-1]))
@@ -32,6 +38,7 @@ test_that("Vivi function works for mlr3 example data",{
 
   # Set reorder to FALSE
   m <- vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 10, reorder = FALSE)
+  m <- vivi(fit = aq_test, data = aq, response = "Ozone", gridSize = 10, reorder = FALSE)
   expect_identical(colnames(m), colnames(aq)[-1])
 
 })
