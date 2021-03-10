@@ -3,6 +3,9 @@
 library(mlr3)
 library(mlr3learners)
 library(ranger)
+library(randomForest)
+
+
 aq <- na.omit(airquality)
 
 test_that("Vivi function works for mlr3 example data",{
@@ -37,7 +40,7 @@ test_that("vivi function works for classification", {
   rf <- ranger(Species ~ ., data = iris, importance = "impurity")
   expect_s3_class(vivi(fit = rf, data = iris, response = "Species"), c("vivid","matrix","array"))
 
-  # Check that the classification value can be changed - didn't make any difference?
+  # Check that the classification value can be changed
   expect_s3_class(vivi(fit = rf, data = iris, response = "Species", class = 2), c("vivid","matrix","array"))
 
 })
@@ -47,8 +50,18 @@ test_that("Changing prediction function works", {
 
 })
 
+
+library(mlr)
 test_that("Works for old mlr models", {
-  # No tests yet
+
+  rgrTask  <- makeRegrTask(data = aq, target = "Ozone")
+  regr.lrn = makeLearner("regr.randomForest")
+  mod = train(regr.lrn,rgrTask)
+
+  m <- vivi(fit = mod, data = aq, response = "Ozone")
+  expect_s3_class(m,c("vivid","matrix","array"))
+
+
 
 })
 
