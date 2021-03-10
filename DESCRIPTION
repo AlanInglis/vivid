@@ -8,7 +8,7 @@ Description: A package for displaying variable importance and two-way variable i
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
-imports: 
+Imports: 
     condvis2,
     ggplot2,
     GGally,
@@ -21,8 +21,14 @@ imports:
     igraph,
     flashlight,
     ggnewscale,
-    `    tidyr
+    tidyr
 Suggests: 
+    mlr3,
+    mlr3learners,
+    sp,
+    scales,
+    ranger,
+    vip,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
@@ -32,3 +38,4 @@ VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Config/testthat/edition: 3
+
