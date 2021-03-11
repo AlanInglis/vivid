@@ -26,7 +26,7 @@ Variable importance, interaction measures and partial dependence plots are impor
 
 
 ## Install instructions
-Some of the plots used by `vividPackage` are built upon the `zenplots` package which requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
+Some of the plots used by `vivid` are built upon the `zenplots` package which requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
 
 `if (!requireNamespace("graph", quietly = TRUE)){` \
   `install.packages("BiocManager")` \
@@ -62,7 +62,7 @@ library(ggplot2)
 
 ## Data used in this vignette:
 
-The data used in the following examples is simulated from the Friedman benchmark problem 1^[Friedman, Jerome H. (1991) Multivariate adaptive regression splines. The Annals of Statistics 19 (1), pages 1-67.] using the `genFriedman()` function. This benchmark problem is commonly used for testing purposes. The output is created according to the equation:
+The data used in the following examples is simulated from the Friedman benchmark problem 1^[Friedman, Jerome H. (1991) Multivariate adaptive regression splines. The Annals of Statistics 19 (1), pages 1-67.]. This benchmark problem is commonly used for testing purposes. The output is created according to the equation:
 
 
 <center>
@@ -75,7 +75,31 @@ For the following examples we set the number of features to equal 10 and the num
 Create the data:
 ```{r, messages = FALSE}
 set.seed(101)
-myData <- genFriedman(noFeatures = 9, noSamples = 500, sigma = 1, bins = NULL, seed = NULL)
+genFriedman <- function(noFeatures = 10,
+                        noSamples = 100,
+                        sigma = 1
+                        ) {
+  # Set Values
+  n <- noSamples # no of rows
+  p <- noFeatures # no of variables
+  e <- rnorm(n, sd = sigma)
+
+
+  # Create matrix of values
+  xValues <- matrix(runif(n * p, 0, 1), nrow = n) # Create matrix
+  colnames(xValues) <- paste0("x", 1:p) # Name columns
+  df <- data.frame(xValues) # Create dataframe
+
+
+  # Equation:
+  # y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε
+  y <- (10 * sin(pi * df$x1 * df$x2) + 20 * (df$x3 - 0.5)^2 + 10 * df$x4 + 5 *    df$x5 + e)
+  # Adding y to df
+  df$y <- y
+  df
+}
+
+myData <- genFriedman(noFeatures = 9, noSamples = 500, sigma = 1)
 ```
 
 
@@ -222,7 +246,7 @@ Fig 2.5: *Clustered network plot of a random forest fit.*
 
 The clustered plot in Fig 2.5 shows a cluster around $x_1$ and $x_2$ and another clustered group around the remaining variables. This is due to them having similar connecting edge weights (i.e., interactions). 
 
-### Generalized partial dependence plot
+### Generalized partial dependence pairs plot
 
 This function creates a generalized pairs plot style matrix plot of the 2D partial dependence (PD) of each of the variables in the upper diagonal, the individual partial dependence plots (PDP) and ice curves (ICE) on the diagonal and a scatter-plot of the data on the lower diagonal. The PDP shows the marginal effect that one or two features have on the predicted outcome of a machine learning model^[Friedman, Jerome H. “Greedy function approximation: A gradient boosting machine.” Annals of statistics (2001): 1189-1232.]. A partial dependence plot is used to show whether the relationship between the response variable and a feature is linear or more complex. 
 As PD is calculated on a grid, this may result in the PDP extrapolating where there is no data. To solve this issue we calculate a convex hull around the data and remove any points that fall outside the convex hull. This is illustrated in the classification example in Section 3.0. 
