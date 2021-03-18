@@ -280,30 +280,26 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
     gridvals <- expand.grid(gridvals1, gridvals2)
 
     if (convexHull) {
-
       if (is.factor(pdpvar1) && is.factor(pdpvar2)) {
         t <- table(pdpvar1, pdpvar2)
-        meltTable <- cbind(expand.grid(dimnames(t), stringsAsFactors = FALSE), value = as.vector(t))
-        row_sub = apply(meltTable, 1, function(row) all(row !=0 ))
-        gridvals <- meltTable[row_sub,]
-        gridvals <- gridvals[,-3]
-        print("both fac")
+        w <- sapply(1:nrow(gridvals), function(i) t[gridvals[i, 1], gridvals[i, 2]] == 0)
+        gridvals <- gridvals[!w, ]
       } else if (is.factor(pdpvar1) && is.numeric(pdpvar2)) {
         rangeData <- tapply(pdpvar2, pdpvar1, range)
-        rangeGrid <- tapply(gridvals$Var2, gridvals$Var1, list)
-        new_gridvals <- mapply(function(x, y) {
-          x[x > y[1] & x < y[2]]
-        }, rangeGrid, rangeData, SIMPLIFY = FALSE)
-        gridvals <- stack(new_gridvals, stringsAsFactors = TRUE)
-        print("1 fac 1 num")
-      } else if (is.numeric(pdpvar1) && is.factor(pdpvar2)){
+        w <- sapply(1:nrow(gridvals), function(i) {
+          r <- rangeData[[as.character(gridvals[i, 1])]]
+          gridvals[i, 2] >= r[1] && gridvals[i, 2] <= r[2]
+        })
+
+        gridvals <- gridvals[w, ]
+      } else if (is.numeric(pdpvar1) && is.factor(pdpvar2)) {
         rangeData <- tapply(pdpvar1, pdpvar2, range)
-        rangeGrid <- tapply(gridvals$Var1, gridvals$Var2, list)
-        new_gridvals <- mapply(function(x, y) {
-          x[x > y[1] & x < y[2]]
-        }, rangeGrid, rangeData, SIMPLIFY = FALSE)
-        gridvals <- stack(new_gridvals, stringsAsFactors = TRUE)
-        print("1 num 1 fac")
+        w <- sapply(1:nrow(gridvals), function(i) {
+          r <- rangeData[[as.character(gridvals[i, 2])]]
+          gridvals[i, 1] >= r[1] && gridvals[i, 1] <= r[2]
+        })
+
+        gridvals <- gridvals[w, ]
       } else {
         hpts <- chull(pdpvar1, pdpvar2) # calc CHull
         hpts <- c(hpts, hpts[1]) # close polygon
@@ -315,7 +311,6 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
 
         # remove points outside convex hull
         gridvals <- gridvals[res, ]
-        print("both num")
       }
     }
 
