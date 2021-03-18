@@ -154,8 +154,7 @@ pdpPairs <- function(data,
     r <- sapply(pdplist, function(x) range(x$fit))
     r <- range(c(r, r1, predData))
     limits <- range(labeling::rpretty(r[1], r[2]))
-  }
-  else if (fitlims == "pdp") {
+  } else if (fitlims == "pdp") {
     r <- sapply(pdplist, function(x) range(x$fit))
     r <- range(r)
     limits <- range(labeling::rpretty(r[1], r[2]))
@@ -262,7 +261,7 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
       d1[[var]] <- i
       d1
     }))
-    if (is.factor(pdpvar)) dnew[[var]] <- factor(dnew[[var]], levels = levels(pdpvar), ordered= is.ordered(pdpvar))
+    if (is.factor(pdpvar)) dnew[[var]] <- factor(dnew[[var]], levels = levels(pdpvar), ordered = is.ordered(pdpvar))
   }
   else {
     pdpvar1 <- d[[var[1]]]
@@ -282,17 +281,42 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
 
     if (convexHull) {
 
-      hpts <- chull(pdpvar1, pdpvar2) # calc CHull
-      hpts <- c(hpts, hpts[1]) # close polygon
-      pdpvar1CH <- pdpvar1[hpts] # get x-coords of polygon
-      pdpvar2CH <- pdpvar2[hpts] # get y-coords of polygon
+      if (is.factor(pdpvar1) && is.factor(pdpvar2)) {
+        t <- table(pdpvar1, pdpvar2)
+        meltTable <- cbind(expand.grid(dimnames(t), stringsAsFactors = FALSE), value = as.vector(t))
+        row_sub = apply(meltTable, 1, function(row) all(row !=0 ))
+        gridvals <- meltTable[row_sub,]
+        gridvals <- gridvals[,-3]
+        print("both fac")
+      } else if (is.factor(pdpvar1) && is.numeric(pdpvar2)) {
+        rangeData <- tapply(pdpvar2, pdpvar1, range)
+        rangeGrid <- tapply(gridvals$Var2, gridvals$Var1, list)
+        new_gridvals <- mapply(function(x, y) {
+          x[x > y[1] & x < y[2]]
+        }, rangeGrid, rangeData, SIMPLIFY = FALSE)
+        gridvals <- stack(new_gridvals, stringsAsFactors = TRUE)
+        print("1 fac 1 num")
+      } else if (is.numeric(pdpvar1) && is.factor(pdpvar2)){
+        rangeData <- tapply(pdpvar1, pdpvar2, range)
+        rangeGrid <- tapply(gridvals$Var1, gridvals$Var2, list)
+        new_gridvals <- mapply(function(x, y) {
+          x[x > y[1] & x < y[2]]
+        }, rangeGrid, rangeData, SIMPLIFY = FALSE)
+        gridvals <- stack(new_gridvals, stringsAsFactors = TRUE)
+        print("1 num 1 fac")
+      } else {
+        hpts <- chull(pdpvar1, pdpvar2) # calc CHull
+        hpts <- c(hpts, hpts[1]) # close polygon
+        pdpvar1CH <- pdpvar1[hpts] # get x-coords of polygon
+        pdpvar2CH <- pdpvar2[hpts] # get y-coords of polygon
 
-      # find which are outside convex hull
-      res <- sp::point.in.polygon(gridvals$Var1, gridvals$Var2, pdpvar1CH, pdpvar2CH) != 0
+        # find which are outside convex hull
+        res <- sp::point.in.polygon(gridvals$Var1, gridvals$Var2, pdpvar1CH, pdpvar2CH) != 0
 
-      # remove points outside convex hull
-      gridvals <- gridvals[res,]
-
+        # remove points outside convex hull
+        gridvals <- gridvals[res, ]
+        print("both num")
+      }
     }
 
     dnew <- do.call(rbind, lapply(1:nrow(gridvals), function(i) {
@@ -301,8 +325,8 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
       d1[[var[2]]] <- gridvals[i, 2]
       d1
     }))
-    if (is.factor(pdpvar1)) dnew[[var[1]]] <- factor(dnew[[var[1]]], levels = levels(pdpvar1),ordered= is.ordered(pdpvar1))
-    if (is.factor(pdpvar2)) dnew[[var[2]]] <- factor(dnew[[var[2]]], levels = levels(pdpvar2),ordered= is.ordered(pdpvar2))
+    if (is.factor(pdpvar1)) dnew[[var[1]]] <- factor(dnew[[var[1]]], levels = levels(pdpvar1), ordered = is.ordered(pdpvar1))
+    if (is.factor(pdpvar2)) dnew[[var[2]]] <- factor(dnew[[var[2]]], levels = levels(pdpvar2), ordered = is.ordered(pdpvar2))
   }
   dnew$.id <- 1:nrow(d)
   rownames(dnew) <- NULL
