@@ -50,10 +50,10 @@ Predictions outside fitlims are squished on the color scale.}
 \item{convexHull}{If TRUE, then the convex hull is computed and any points outside the convex hull are removed.}
 }
 \value{
-A matrix of values.
+A pairs plot
 }
 \description{
-Creates a pairs plot showing bivariate pdp on upper diagonal, ice/pdp on the diagonal and data on the lower diagonal
+Creates a pairs plot showing bivariate pdp on upper diagonal, ice/univariate pdp on the diagonal and data on the lower diagonal
 }
 \examples{
 # Load in the data:

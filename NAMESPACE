@@ -2,6 +2,7 @@
 
 S3method(as.data.frame,vivid)
 export(pdpPairs)
+export(pdpVars)
 export(pdpZen)
 export(vip2vivid)
 export(vivi)
