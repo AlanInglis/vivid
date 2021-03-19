@@ -34,10 +34,11 @@
 #' pdpVars(aq, fit, "Ozone")
 #'
 #' # Classification
+#' library(ranger)
 #' rfClassif <- ranger(Species ~ ., data = iris, probability = TRUE)
 #' pdpVars(iris, rfClassif, "Species", class = 3)
 #'
-#' pp <- pdpVars(iris, rfClassif, "Species", class = 2, draw = F)
+#' pp <- pdpVars(iris, rfClassif, "Species", class = 2, draw = FALSE)
 #' pp[[1]]
 #' pdpVars(iris, rfClassif, "Species", class = 2, colorVar = "Species")
 #'
@@ -57,7 +58,7 @@ pdpVars <- function(data, fit, response,
   gridSize <- min(gridSize, nmax)
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
-  if (is.null(predictFun)) predictFun <- vivid:::CVpredictfun(classif, class)
+  if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
 
   predData <- predictFun(fit, data)
@@ -74,7 +75,7 @@ pdpVars <- function(data, fit, response,
   data$predData <- predData
   pdplist1 <- vector("list", length = length(vars))
   for (i in 1:length(vars)) {
-    px <- vivid:::pdp_data(data, vars[i], gridsize = gridSize)
+    px <- pdp_data(data, vars[i], gridsize = gridSize)
     px$.pid <- i
     pdplist1[[i]] <- px
   }
