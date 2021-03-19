@@ -16,7 +16,7 @@
 #'
 #' @return Returns a zpath from viv showing pairs with viv entry over the cutoff
 #'
-#'
+#' @importFrom stats quantile
 #' @examples
 #' \dontrun{
 #' # To use this function, install zenplots and graph from Bioconductor.
