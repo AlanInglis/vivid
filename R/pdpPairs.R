@@ -1,6 +1,6 @@
 #' pdpPairs
 #'
-#' @description Creates a pairs plot showing bivariate pdp on upper diagonal, ice/pdp on the diagonal and data on the lower diagonal
+#' @description Creates a pairs plot showing bivariate pdp on upper diagonal, ice/univariate pdp on the diagonal and data on the lower diagonal
 #'
 #' @param data Data frame used for fit.
 #' @param fit A supervised machine learning model, which understands condvis2::CVpredict
@@ -17,7 +17,7 @@
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
-#' @return A matrix of values.
+#' @return A pairs plot
 #'
 #' @importFrom condvis2 CVpredict
 #' @importFrom dplyr bind_rows
