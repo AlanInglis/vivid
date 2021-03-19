@@ -2,7 +2,7 @@
 title: "vivid - quickstart guide"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{vivid}
+  %\VignetteIndexEntry{vivid - quickstart guide}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -12,9 +12,9 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  rmarkdown.html_vignette.check_title = FALSE
+  comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 The aim of this guide is to give a brief introduction and explanation to the functions contained inside the `vivid` package. `vivid` (variable importance and variable interaction dispays) is used for investigating relationships within a machine learning model fit. All of the visualisations in this vignette are highly customizable (see the long-form `vivid` vignette to see examples) and return `ggplot` objects which can be customized using the normal `ggplot` options.

@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
@@ -55,6 +56,7 @@ library(randomForest) # for model fit
 library(mlr3)         # for model fit
 library(mlr3learners) # for model fit
 library(ranger)       # for model fit
+library(e1071)        # for model fit
 library(ggplot2) 
 ```
 

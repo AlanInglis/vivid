@@ -112,19 +112,18 @@ vivi <- function(data,
     predictFun = predictFun
   )
 
+  # perserve original data order
+  newimp <- vector("numeric", length = ncol(data)-1)
+  names(newimp) <- names(data)[-match(response, names(data))]
+  newimp[names(vImp)]<- vImp
+  diag(vInt) <- newimp # set diagonal to equal vImps
 
-  orderNames <- names(vImp)
-  vInt <- vInt[orderNames, orderNames] # make sure the order of vImp & vInt match
-  diag(vInt) <- vImp # set diagonal to equal vImps
-
-  featureNames <- names(data[, !(names(data) %in% response)])
 
   # reorder
   if (reorder) {
     viviMatrix <- vividReorder(vInt)
   } else {
     viviMatrix <- vInt
-    viviMatrix <- viviMatrix[featureNames, featureNames] # presereve original data order
   }
 
   class(viviMatrix) <- c("vivid", class(viviMatrix))
@@ -190,7 +189,7 @@ vividImportance.default <- function(fit,
                                     importanceType = NULL,
                                     predictFun = NULL) {
 
-
+  message("Agnostic variable importance method used.")
 
   # create flashlight
   fl <- flashlight(
@@ -205,21 +204,6 @@ vividImportance.default <- function(fit,
   importance <- imp$data[, 3:4]
   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
 
-
-  # if flashlight cant handle the response. return a vector of 1s instead of NaNs
-  # THIS NEEDS TO BE FIXED
-  #   suppressWarnings(
-#     if (is.nan(importance[1:length(importance)])) {
-#       message("
-# Response type not supported.
-# Models with numeric or binary response are currently supported.
-# Returning a vector of 1's for importance values.
-#               ")
-#       importance <- replace(importance, is.nan(importance), 1)
-#     } else {
-#       message("Agnostic variable importance method used.")
-#     }
-#   )
   return(importance)
 }
 
@@ -296,7 +280,7 @@ vividImportance.Learner <- function(fit,
 
   # if no importance mode selected, use default
   if (fit$packages == "ranger" && fit$model$importance.mode == "none") {
-    message("No variable importance mode selected. Using agnostic method.")
+    message("No variable importance mode selected.")
     vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
   } else {
 
@@ -308,7 +292,7 @@ vividImportance.Learner <- function(fit,
 
     # if learner doesnt have an embedded vImp method then use default
     if (length(lrnID) == 0) {
-      message("No variable importance mode available. Using agnostic method.")
+      message("No variable importance mode available.")
       vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
     } else if (fit$packages == "xgboost") {
       # mlr3 xgboost omits some features. Here we are adding the omitted feature back
@@ -336,9 +320,11 @@ vividImportance.lda <- function(fit,
                                 response = NULL,
                                 importanceType = NULL,
                                 predictFun = NULL) {
+
+
   fl <- flashlight(
     model = fit, data = data, y = response, label = "",
-    predict_function = CVpredictfun(TRUE, class = 1)
+    predict_function = function(fit, data) predictFun(fit, data)
   )
 
   suppressWarnings(
@@ -346,18 +332,18 @@ vividImportance.lda <- function(fit,
   )
   importance <- imp$data[, 3:4]
   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
-
+  print(importance)
   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
   suppressWarnings(
     if (is.nan(importance[1:length(importance)])) {
       message("
 Response type not supported.
-Models with numeric or binary response are currently supported.
 Returning a vector of 1's for importance values.
               ")
       importance <- replace(importance, is.nan(importance), 1)
     } else {
       message("Agnostic variable importance method used.")
+      vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
     }
   )
   return(importance)

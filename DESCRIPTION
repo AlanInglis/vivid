@@ -23,6 +23,8 @@ Imports:
     ggnewscale,
     tidyr
 Suggests: 
+    gridExtra,
+    lemon,
     mlr3,
     mlr3learners,
     sp,
@@ -31,6 +33,7 @@ Suggests:
     vip,
     knitr,
     rmarkdown,
+    randomForest,
     testthat (>= 3.0.0),
     labeling,
     zenplots
