@@ -398,6 +398,21 @@ vividImportance.WrappedModel <- function(fit,
 }
 
 
+# tidyModels --------------------------------------------------------------
+
+vividImportance.model_fit <- function(fit,
+                                 data,
+                                 response = NULL,
+                                 importanceType = NULL,
+                                 predictFun = NULL) {
+
+  vImp <- vip::vi_model(fit)
+  vImp <- vImp[, 1:2]
+  importance <- vImp$Importance
+  names(importance) <- vImp$Variable
+  return(importance)
+}
+
 #  Space for more ML models here ------------------------------------------
 
 
