@@ -23,6 +23,7 @@ Imports:
     ggnewscale,
     tidyr
 Suggests: 
+    e1071,
     gridExtra,
     lemon,
     mlr3,
