@@ -23,6 +23,7 @@ Imports:
     ggnewscale,
     tidyr
 Suggests: 
+    tidymodels,
     pdp,
     network,
     e1071,

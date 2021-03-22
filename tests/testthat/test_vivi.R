@@ -3,6 +3,7 @@
 library(mlr3)
 library(mlr3learners)
 library(ranger)
+library(tidymodels)
 #library(randomForest)
 #library(mlr)
 
@@ -26,7 +27,7 @@ test_that("Vivi function works for mlr3 example data",{
   expect_s3_class(vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 10),c("vivid","matrix","array"))
 
   # Try changing importance type FAILS check() test
-  # expect_s3_class(vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 10, importanceType = "agnostic"),c("vivid","matrix","array"))
+   expect_s3_class(vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 10, importanceType = "agnostic"),c("vivid","matrix","array"))
 
   # Change number of rows
   expect_s3_class(vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 10, nmax = 10),
@@ -68,7 +69,13 @@ test_that("Works for old mlr models", {
 })
 
 test_that("Works for tidymodels", {
-  # No tests yet
+  lm_aq_model <- linear_reg() %>%
+    set_engine("lm")
+
+  lm_fit <- lm_aq_model %>%
+    fit(Ozone ~ ., data = aq)
+
+  expect_s3_class(vivi(fit = lm_fit, data = aq, response = "Ozone", gridSize = 10),c("vivid","matrix","array"))
 
 })
 
