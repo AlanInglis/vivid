@@ -69,8 +69,8 @@ test_that("Changing prediction function works", {
 test_that("Works for old mlr models", {
 
   rgrTask  <- makeRegrTask(data = aq, target = "Ozone")
-  regr.lrn = makeLearner("regr.randomForest", importance = TRUE)
-  mod = train(regr.lrn,rgrTask)
+  regr.lrn <- makeLearner("regr.randomForest", importance = TRUE)
+  mod <- train(regr.lrn,rgrTask)
 
   m <- vivi(fit = mod, data = aq, response = "Ozone", importanceType = "%IncMSE")
   expect_s3_class(m,c("vivid","matrix","array"))

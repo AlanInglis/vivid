@@ -11,6 +11,7 @@
 #'
 #'
 #' @examples
+#'
 #' library(ranger)
 #' library(vip)
 #' aq <- na.omit(airquality) # get data

@@ -51,7 +51,7 @@ pdpVars(
 A grid displaying ICE curves and univariate partial dependence.
 }
 \description{
-Displays the individual coditional expectation (ICE) curves and aggregated partial dependence
+Displays the individual conditional expectation (ICE) curves and aggregated partial dependence
 for each variable in a grid.
 }
 \examples{

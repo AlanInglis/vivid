@@ -87,7 +87,7 @@ viviHeatmap <- function(mat,
 
 
 
-  p <- ggplot(dfInt, aes(Variable_1, Variable_2)) +
+  p <- ggplot(dfInt, aes(.data[["Variable_1"]], .data[["Variable_2"]])) +
     geom_tile(aes(fill = Value)) +
     scale_x_discrete(position = "top") +
     scale_y_discrete(limits = rev(levels(dfInt$Variable_2))) +

@@ -332,10 +332,10 @@ vividImportance.lda <- function(fit,
   )
   importance <- imp$data[, 3:4]
   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
-  print(importance)
+
   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
   suppressWarnings(
-    if (is.nan(importance[1:length(importance)])) {
+    if(any(is.nan(importance))){
       message("
 Response type not supported.
 Returning a vector of 1's for importance values.
@@ -458,7 +458,7 @@ vividInteraction.default <- function(fit,
   # create flashlight
   fl <- flashlight(
     model = fit, data = data, y = response, label = "",
-    predict_function = function(fit, data) predictFun(fit, data)
+    predict_function = function(fit, data) predictFun(fit, as.data.frame(data))
   )
 
   if (is.null(nmax)) {

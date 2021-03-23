@@ -23,6 +23,8 @@ Imports:
     ggnewscale,
     tidyr
 Suggests:
+    mlr,
+    MASS,
     tidymodels,
     pdp,
     network,
