@@ -9,3 +9,5 @@ if (!requireNamespace("graph", quietly = TRUE)){
 }
 install.packages("zenplots")
 ```
+
+[![codecov](https://codecov.io/gh/AlanInglis/vivid/branch/master/graph/badge.svg?token=IJTT3ZW1RP)](https://codecov.io/gh/AlanInglis/vivid)
