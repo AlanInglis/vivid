@@ -4,8 +4,9 @@ library(mlr3)
 library(mlr3learners)
 library(ranger)
 library(tidymodels)
-#library(randomForest)
-#library(mlr)
+library(randomForest)
+library(MASS)
+library(mlr)
 
 
 aq <- na.omit(airquality)
@@ -49,7 +50,17 @@ test_that("vivi function works for classification", {
 })
 
 test_that("Changing prediction function works", {
-  # No tests yet
+  aq <- aq[1:100,]
+  lmf <- lm(Ozone ~ ., data = aq)
+
+  vi <- vivi(fit = lmf,
+             data = aq,
+             response = "Ozone",
+             gridSize = 10,
+             nmax = 10,
+             predictFun = function(fit, data) predict(lmf, aq))
+
+  expect_s3_class(vi,c("vivid","matrix","array"))
 
 })
 
@@ -57,12 +68,18 @@ test_that("Changing prediction function works", {
 
 test_that("Works for old mlr models", {
 
-  # rgrTask  <- makeRegrTask(data = aq, target = "Ozone")
-  # regr.lrn = makeLearner("regr.randomForest")
-  # mod = train(regr.lrn,rgrTask)
-  #
-  # m <- vivi(fit = mod, data = aq, response = "Ozone")
-  # expect_s3_class(m,c("vivid","matrix","array"))
+  rgrTask  <- makeRegrTask(data = aq, target = "Ozone")
+  regr.lrn = makeLearner("regr.randomForest", importance = TRUE)
+  mod = train(regr.lrn,rgrTask)
+
+  m <- vivi(fit = mod, data = aq, response = "Ozone", importanceType = "%IncMSE")
+  expect_s3_class(m,c("vivid","matrix","array"))
+
+  m1 <- vivi(fit = mod, data = aq, response = "Ozone", importanceType = "IncNodePurity")
+  expect_s3_class(m1, c("vivid","matrix","array"))
+
+  m2 <- vivi(fit = mod, data = aq, response = "Ozone")
+  expect_s3_class(m2, c("vivid","matrix","array"))
 
 
 
@@ -78,5 +95,79 @@ test_that("Works for tidymodels", {
   expect_s3_class(vivi(fit = lm_fit, data = aq, response = "Ozone", gridSize = 10),c("vivid","matrix","array"))
 
 })
+
+test_that("Works for lm", {
+  lmf <- lm(Ozone ~ ., data = aq)
+  vi <- vivi(fit = lmf, data = aq, response = "Ozone")
+  expect_s3_class(vi, c("vivid","matrix","array"))
+
+})
+
+test_that("Works for ranger", {
+  fr <- ranger(Ozone ~ ., data = aq, importance = "permutation")
+  vi <- vivi(fit = fr, data = aq, response = "Ozone")
+  expect_s3_class(vi, c("vivid","matrix","array"))
+
+  # change importance type
+  fr <- ranger(Ozone ~ ., data = aq, importance = "impurity")
+  vi1 <- vivi(fit = fr, data = aq, response = "Ozone")
+  expect_s3_class(vi1, c("vivid","matrix","array"))
+
+})
+
+test_that("Works for randomForest", {
+  fr <- randomForest(Ozone ~ ., data = aq)
+  vi <- vivi(fit = fr, data = aq, response = "Ozone")
+  expect_s3_class(vi, c("vivid","matrix","array"))
+
+  # changing importance types
+  fr <- randomForest(Ozone ~ ., data = aq, importance = TRUE)
+  vi1 <- vivi(fit = fr, data = aq, response = "Ozone", importanceType = "IncNodePurity")
+  expect_s3_class(vi1, c("vivid","matrix","array"))
+
+  fr <- randomForest(Ozone ~ ., data = aq, importance = TRUE)
+  vi2 <- vivi(fit = fr, data = aq, response = "Ozone", importanceType = "%IncMSE")
+  expect_s3_class(vi2, c("vivid","matrix","array"))
+
+  fr <- randomForest(Ozone ~ ., data = aq, importance = TRUE)
+  vi3 <- vivi(fit = fr, data = aq, response = "Ozone")
+  expect_s3_class(vi3, c("vivid","matrix","array"))
+
+})
+
+test_that("Works for LDA", {
+  LDAf <- lda(Species ~ ., data = iris)
+  vi <- vivi(fit = LDAf, data = iris, response = "Species")
+  expect_s3_class(vi, c("vivid","matrix","array"))
+
+})
+
+
+test_that("works for mlr3", {
+  ozonet <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
+  ozonel <- lrn("regr.ranger")
+  ozonef <- ozonel$train(ozonet)
+
+  vi <- vivi(fit = ozonef, data = aq, response = "Ozone")
+  expect_s3_class(vi, c("vivid","matrix","array"))
+
+  # xboost
+  ozonetXG <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
+  ozonelXG <- lrn("regr.xgboost")
+  ozonefXG <- ozonelXG$train(ozonetXG)
+
+  vi1 <- vivi(fit = ozonefXG, data = aq, response = "Ozone")
+  expect_s3_class(vi1, c("vivid","matrix","array"))
+
+  # svm
+  ozonetSVM <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
+  ozonelSVM <- lrn("regr.svm")
+  ozonefSVM <- ozonelSVM$train(ozonetSVM)
+
+  vi2 <- vivi(fit = ozonefSVM, data = aq, response = "Ozone")
+  expect_s3_class(vi2, c("vivid","matrix","array"))
+
+})
+
 
 
