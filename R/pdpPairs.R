@@ -150,11 +150,11 @@ pdpPairs <- function(data,
   message("Finished ice/pdp")
 
   # Set limits for pairs
-  if (fitlims == "all") {
+  if (fitlims[1] == "all") {
     r <- sapply(pdplist, function(x) range(x$fit))
     r <- range(c(r, predData))
     limits <- range(labeling::rpretty(r[1], r[2]))
-  } else if (fitlims == "pdp") {
+  } else if (fitlims[1] == "pdp") {
     r <- sapply(pdplist, function(x) range(x$fit))
     r <- range(r)
     limits <- range(labeling::rpretty(r[1], r[2]))
