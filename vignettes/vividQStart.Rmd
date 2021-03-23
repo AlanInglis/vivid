@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-The aim of this guide is to give a brief introduction and explanation to the functions contained inside the `vivid` package. `vivid` (variable importance and variable interaction dispays) is used for investigating relationships within a machine learning model fit. All of the visualisations in this vignette are highly customizable (see the long-form `vivid` vignette to see examples) and return `ggplot` objects which can be customized using the normal `ggplot` options.
+The aim of this guide is to give a brief introduction and explanation to the functions contained inside the `vivid` package. `vivid` (variable importance and variable interaction displays) is used for investigating relationships within a machine learning model fit. All of the visualisations in this vignette are highly customizable (see the long-form `vivid` vignette to see examples) and return `ggplot` objects which can be customized using the normal `ggplot` options.
 
 ## Install instructions
 Some of the plots used by `vivid` are built upon the `zenplots` package which requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
@@ -134,7 +134,7 @@ Fig 1.1: *Network plot of a SVM fit displaying 2-way interaction strength and in
 
 ### Generalized partial dependence pairs plot 
 
-In this plot we use a generalised pairs plot matirx style layout (which we call GPDP) to display partial dependence plots (PDPs) in the upper triangle, individual conditional exception curves (allong with the aggregated 1-way partial dependence) on the diagonal and a scatterplot in the lower triangle.
+In this plot we use a generalized pairs plot matrix style layout (which we call GPDP) to display partial dependence plots (PDPs) in the upper triangle, individual conditional exception curves (along with the aggregated 1-way partial dependence) on the diagonal and a scatterplot in the lower triangle.
 
 To create the plot we supply the model fit to the plotting function. 
 

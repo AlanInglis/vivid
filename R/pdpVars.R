@@ -1,6 +1,6 @@
 #' pdpVars
 #'
-#' @description Displays the individual coditional expectation (ICE) curves and aggregated partial dependence
+#' @description Displays the individual conditional expectation (ICE) curves and aggregated partial dependence
 #' for each variable in a grid.
 #'
 #' @param data Data frame used for fit.
