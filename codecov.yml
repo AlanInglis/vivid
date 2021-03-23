@@ -1,0 +1,21 @@
+comment: false
+
+codecov:
+  token: a56c6a18-7d95-4b05-b535-c7006b26cc0b
+
+language: R
+sudo: false
+cache: packages
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
