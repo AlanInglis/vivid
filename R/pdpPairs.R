@@ -152,7 +152,7 @@ pdpPairs <- function(data,
   # Set limits for pairs
   if (fitlims == "all") {
     r <- sapply(pdplist, function(x) range(x$fit))
-    r <- range(c(r, r1, predData))
+    r <- range(c(r, predData))
     limits <- range(labeling::rpretty(r[1], r[2]))
   } else if (fitlims == "pdp") {
     r <- sapply(pdplist, function(x) range(x$fit))
