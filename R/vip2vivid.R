@@ -11,7 +11,7 @@
 #'
 #'
 #' @examples
-#'
+#' \dontrun{
 #' library(ranger)
 #' library(vip)
 #' aq <- na.omit(airquality) # get data
@@ -22,6 +22,7 @@
 #' vInt <- vint(rF, feature_names = nameAq) # vip interaction
 #'
 #' vip2vivid(vImp, vInt)
+#' }
 #' @export
 
 vip2vivid <- function(importance, interaction, reorder = TRUE) {
