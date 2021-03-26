@@ -168,7 +168,7 @@ pdpPairs <- function(data,
     pdp <- pdplist[[paste(vars[1], vars[2], sep = "pp")]]
     ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
       geom_tile(aes(fill = fit)) +
-      scale_fill_gradientn(name = "\u0177", colors = pal, limits = limits, oob = scales::squish)
+      scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
   }
 
   pdpc <- function(data, mapping, ...) {
@@ -190,7 +190,7 @@ pdpPairs <- function(data,
       ggplot(aes(x = .data[[var]], y = fit)) +
       geom_line(aes(color = predData, group = .id)) +
       scale_color_gradientn(
-        name = "\u0177", colors = pal, limits = limits, oob = scales::squish,
+        name = "y-hat", colors = pal, limits = limits, oob = scales::squish,
         guide = guide_colorbar(
           frame.colour = "black",
           ticks.colour = "black"
@@ -205,7 +205,7 @@ pdpPairs <- function(data,
     df <- data.frame(x = x, y = y)
     ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_point(shape = 16, size = 1, show.legend = FALSE) +
-      scale_colour_gradientn(name = "\u0177", colors = pal, limits = limits, oob = scales::squish)
+      scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
   }
 
   dplotm <- function(data, mapping) {
@@ -217,7 +217,7 @@ pdpPairs <- function(data,
 
     ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_jitter(shape = 16, size = 1, show.legend = FALSE, width = jitterx, height = jittery) +
-      scale_colour_gradientn(name = "\u0177", colors = pal, limits = limits, oob = scales::squish)
+      scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
   }
 
 

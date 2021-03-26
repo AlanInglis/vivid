@@ -193,12 +193,12 @@ pdpZen <- function(data,
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
           geom_tile(aes(fill = fit)) +
-          scale_fill_gradientn(name = "\u0177", colors = pal, limits = limits, oob = scales::squish)
+          scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         if (rug) {
           p <- p +
             geom_rug(data = data, sides = "b", position = posx, aes(color = pred)) +
             geom_rug(data = data, sides = "l", position = posy, aes(color = pred)) +
-            scale_color_gradientn(name = "\u0177", colors = pal, limits = limits, oob = scales::squish)
+            scale_color_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         }
       }
       p <- p +
