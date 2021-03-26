@@ -146,9 +146,9 @@ pdpPairs(data = myData, fit = fit, response = "y", gridSize = 10)
 Fig 1.3: *GPDP of a random forest fit on the Friedman data. From the plot we can see a clear interaction between $x_1$ and $x_2$. This can be seen in both the changing ICE curves and 2-way PDPs*
 </center>
 
-### Partial dependence Zenplot
+### Partial dependence 'Zenplot'
 
-For this plot, we calculate the bivariate partial dependence and display them in a _zenplots_ layout, which we call (ZPDP). The ZPDP is based on graph Eulerians and focuses on key subsets. Zenplots create a zigzag expanded navigation plot (zenplot) of the partial dependence values. This results in an alternating sequence of two-dimensional plots laid out in a zigzag structure, as shown in Fig 4.0 below and can be used as a useful space-saving plot that displays the most influential variables.
+For this plot, we calculate the bivariate partial dependence and display them in a _zenplots_ layout, which we call (ZPDP). The ZPDP is based on graph Eulerians and focuses on key subsets. 'Zenplots' create a zigzag expanded navigation plot ('zenplot') of the partial dependence values. This results in an alternating sequence of two-dimensional plots laid out in a zigzag structure, as shown in Fig 4.0 below and can be used as a useful space-saving plot that displays the most influential variables.
 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}

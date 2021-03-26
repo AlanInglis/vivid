@@ -274,9 +274,9 @@ pdpPairs(data = myData, fit =  rf, response = "y", gridSize = 10,
 Fig 3.1: *GPDP of a random forest fit on a subset of the Friedman data.*
 </center>
 
-### Partial dependence Zenplot
+### Partial dependence 'Zenplot'
 
-The final installment in `vivid` is a partial dependence plot, laid out in a `zenplot` style, which we call (ZPDP). The ZPDP is based on graph Eulerians and focuses on key subsets. Zenplots create a zigzag expanded navigation plot (zenplot) of the partial dependence values. This results in an alternating sequence of two-dimensional plots laid out in a zigzag structure, as shown in Fig 4.0 below and can be used as a useful space-saving plot that displays the most influential variables.
+The final installment in `vivid` is a partial dependence plot, laid out in a `zenplot` style, which we call (ZPDP). The ZPDP is based on graph Eulerians and focuses on key subsets. 'Zenplots' create a zigzag expanded navigation plot ('zenplot') of the partial dependence values. This results in an alternating sequence of two-dimensional plots laid out in a zigzag structure, as shown in Fig 4.0 below and can be used as a useful space-saving plot that displays the most influential variables.
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
