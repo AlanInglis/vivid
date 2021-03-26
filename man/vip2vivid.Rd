@@ -21,6 +21,7 @@ A matrix of interaction values, with importance on the diagonal.
 which can be used for plotting. Accepts any of the variable importance methods supplied by vip.
 }
 \examples{
+\dontrun{
 library(ranger)
 library(vip)
 aq <- na.omit(airquality) # get data
@@ -31,4 +32,5 @@ vImp <- vi(rF) # vip importance
 vInt <- vint(rF, feature_names = nameAq) # vip interaction
 
 vip2vivid(vImp, vInt)
+}
 }

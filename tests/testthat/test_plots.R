@@ -121,8 +121,8 @@ test_that("Test pdpPairs", {
   expect_type(pp9, "list")
 
   # adding own limits ERROR
-  #pp10 <- pdpPairs(aq, fit, "Ozone", fitlims = c(0,200))
-  #expect_type(pp10, "list")
+  pp10 <- pdpPairs(aq, fit, "Ozone", fitlims = c(0,200))
+  expect_type(pp10, "list")
 
   # change class
   rf <- ranger(Species ~ ., data = iris, probability = TRUE)
@@ -171,8 +171,8 @@ test_that("Test pdpZen", {
 
 
   # adding own limits
-  #z3 <- pdpZen(aq, fit, "Ozone", fitlims = c(0,20))
-  #expect_type(z3, "list")
+  z3 <- pdpZen(aq, fit, "Ozone", fitlims = c(0,20))
+  expect_type(z3, "list")
 
   # change fitlims
   z31 <- pdpZen(aq, fit, response = "Ozone",  fitlims = "all")
