@@ -152,12 +152,12 @@ test_that("works for mlr3", {
   expect_s3_class(vi, c("vivid","matrix","array"))
 
   # xboost
-  ozonetXG <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
-  ozonelXG <- lrn("regr.xgboost")
-  ozonefXG <- ozonelXG$train(ozonetXG)
-
-  vi1 <- vivi(fit = ozonefXG, data = aq, response = "Ozone")
-  expect_s3_class(vi1, c("vivid","matrix","array"))
+  # ozonetXG <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
+  # ozonelXG <- lrn("regr.xgboost")
+  # ozonefXG <- ozonelXG$train(ozonetXG)
+  #
+  # vi1 <- vivi(fit = ozonefXG, data = aq, response = "Ozone")
+  # expect_s3_class(vi1, c("vivid","matrix","array"))
 
   # svm
   ozonetSVM <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")

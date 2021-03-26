@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Author: Alan Inglis, Andrew Parnell, Catherine Hurley
 Maintainer: Alan Inglis <alan.inglis@mu.ie>
 Language: en-US
-Description: A suite of plots for displaying variable importance and two-way variable interaction jointly. Can also display partial dependence plots laid out in a pairs plot or zenplots style.
+Description: A suite of plots for displaying variable importance and two-way variable interaction jointly. Can also display partial dependence plots laid out in a pairs plot or 'zenplots' style.
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
@@ -26,8 +26,6 @@ Suggests:
     mlr,
     MASS,
     tidymodels,
-    pdp,
-    network,
     e1071,
     gridExtra,
     lemon,
