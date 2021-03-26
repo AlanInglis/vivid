@@ -186,9 +186,9 @@ pdpPairs <- function(data,
       group_by(.data[[var]]) %>%
       summarise(fit = mean(fit))
 
-    filter(pdp, .id %in% sice) %>%
+    filter(pdp, .data[[".id"]] %in% sice) %>%
       ggplot(aes(x = .data[[var]], y = fit)) +
-      geom_line(aes(color = predData, group = .id)) +
+      geom_line(aes(color = predData, group = .data[[".id"]])) +
       scale_color_gradientn(
         name = "y-hat", colors = pal, limits = limits, oob = scales::squish,
         guide = guide_colorbar(

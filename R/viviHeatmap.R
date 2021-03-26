@@ -90,7 +90,7 @@ viviHeatmap <- function(mat,
 
 
   p <- ggplot(dfInt, aes(.data[["Variable_1"]], .data[["Variable_2"]])) +
-    geom_tile(aes(fill = Value)) +
+    geom_tile(aes(fill = .data[["Value"]])) +
     scale_x_discrete(position = "top") +
     scale_y_discrete(limits = rev(levels(dfInt$Variable_2))) +
     scale_fill_gradientn(
@@ -101,7 +101,7 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_tile(data = dfImp, aes(fill = Value)) +
+    geom_tile(data = dfImp, aes(fill = .data[["Value"]])) +
     scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(

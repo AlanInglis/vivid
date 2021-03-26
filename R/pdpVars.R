@@ -98,18 +98,18 @@ pdpVars <- function(data, fit, response,
     aggr <- pdp %>%
       group_by(.data[[var]]) %>%
       summarise(fit = mean(fit))
-    pdp1 <- filter(pdp, .id %in% sice)
+    pdp1 <- filter(pdp, .data[[".id"]] %in% sice)
     if (is.null(colorVar)) {
       p <- pdp1 %>%
         ggplot(aes(x = .data[[var]], y = fit)) +
-        geom_line(aes(color = predData, group = .id)) +
+        geom_line(aes(color = predData, group = .data[[".id"]])) +
         scale_color_gradientn(
           name = "yhat", colors = pal, limits = limits, oob = scales::squish
         )
     } else {
       p <- pdp1 %>%
         ggplot(aes(x = .data[[var]], y = fit)) +
-        geom_line(aes(color = .data[[colorVar]], group = .id))
+        geom_line(aes(color = .data[[colorVar]], group = .data[[".id"]]))
     }
 
     p <- p +

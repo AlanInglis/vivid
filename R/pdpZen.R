@@ -187,7 +187,7 @@ pdpZen <- function(data,
 
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = fit, color = .data[[vars[2]]])) +
           geom_line() +
-          geom_rug(data = data, sides = "b", aes(y = pred))
+          geom_rug(data = data, sides = "b", aes(y = .data[["pred"]]))
       } else {
         if (is.factor(pdp[[vars[1]]])) posx <- "jitter" else posx <- "identity"
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
@@ -196,8 +196,8 @@ pdpZen <- function(data,
           scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         if (rug) {
           p <- p +
-            geom_rug(data = data, sides = "b", position = posx, aes(color = pred)) +
-            geom_rug(data = data, sides = "l", position = posy, aes(color = pred)) +
+            geom_rug(data = data, sides = "b", position = posx, aes(color = .data[["pred"]])) +
+            geom_rug(data = data, sides = "l", position = posy, aes(color = .data[["pred"]])) +
             scale_color_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         }
       }
