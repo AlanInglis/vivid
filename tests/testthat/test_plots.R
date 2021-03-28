@@ -215,7 +215,7 @@ test_that("Test pdpZen", {
 test_that("Test zpath",{
 
   fit <- ranger(Ozone ~ ., data = aq, importance = "permutation")
-  aqVivi <- vivi(aq, fit, "Ozone", 5)
+  aqVivi <- vivi(aq, fit, "Ozone")
   zpath <- zPath(aqVivi, cutoff = 1, connect = F, method = "strictly.weighted")
   expect_type(zpath, "list")
 

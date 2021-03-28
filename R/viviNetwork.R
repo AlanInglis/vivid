@@ -46,6 +46,9 @@ viviNetwork <- function(mat,
                         cluster = NULL,
                         nudge_x = .05,
                         nudge_y = .03) {
+
+
+
   nnodes <- nrow(mat)
   if (nnodes == 1) stop("Only one node provided, no graph drawn")
 
