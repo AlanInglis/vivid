@@ -36,7 +36,7 @@ test_that("vip2vivid test class", {
 test_that("update matrix test", {
   aq <- na.omit(airquality)
   fr <- ranger(Ozone ~ ., data = aq, importance = "permutation")
-  m <- vivi(fit = fr, data = aq, response = "Ozone")
+  m <- vivi(fit = fr, data = aq, response = "Ozone", gridSize = 5)
 
   # update matrix importance
   corimp <- abs(cor(aq[, -1])[1, ])

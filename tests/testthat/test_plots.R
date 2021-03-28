@@ -13,7 +13,7 @@ test_that("Test heatmap and network", {
 
 
   ## test heatmap
-  vi <- vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 10)
+  vi <- vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 5)
   viH <- viviHeatmap(vi)
   expect_type(viH, "list")
 
@@ -81,65 +81,61 @@ test_that("Test pdpPairs", {
   fit <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 
   # test plot
-  pp <- pdpPairs(aq, fit, "Ozone")
+  pp <- pdpPairs(aq, fit, "Ozone", gridSize = 5)
   expect_type(pp, "list")
 
   # change vars
-  pp1 <- pdpPairs(aq, fit, "Ozone", vars = c("Solar.R", "Wind", "Temp"))
+  pp1 <- pdpPairs(aq, fit, "Ozone", vars = c("Solar.R", "Wind", "Temp"), gridSize = 5)
   expect_type(pp1, "list")
 
   # change palette
-  pp2 <- pdpPairs(aq, fit, "Ozone", pal = rev(colorspace::sequential_hcl(palette = "Inferno", n = 100)))
+  pp2 <- pdpPairs(aq, fit, "Ozone", gridSize = 5, pal = rev(colorspace::sequential_hcl(palette = "Inferno", n = 100)))
   expect_type(pp2, "list")
 
   # change fitlims
-  pp3 <- pdpPairs(aq, fit, "Ozone", fitlims = "all")
+  pp3 <- pdpPairs(aq, fit, "Ozone", fitlims = "all", gridSize = 5)
   expect_type(pp3, "list")
 
-  # change gridsize
-  pp4 <- pdpPairs(aq, fit, "Ozone", gridSize = 5)
-  expect_type(pp4, "list")
-
   # change no or rows
-  pp5 <- pdpPairs(aq, fit, "Ozone", nmax = 100)
+  pp5 <- pdpPairs(aq, fit, "Ozone", nmax = 100, gridSize = 5)
   expect_type(pp5, "list")
 
   # change no of ice curves
-  pp6 <- pdpPairs(aq, fit, "Ozone", nIce = 10)
+  pp6 <- pdpPairs(aq, fit, "Ozone", nIce = 10, gridSize = 5)
   expect_type(pp6, "list")
 
   # change comboimage
-  pp7 <- pdpPairs(aq, fit, "Ozone", comboImage = TRUE)
+  pp7 <- pdpPairs(aq, fit, "Ozone", comboImage = TRUE, gridSize = 5)
   expect_type(pp7, "list")
 
   # change convex hull
-  pp8 <- pdpPairs(aq, fit, "Ozone", convexHull = T)
+  pp8 <- pdpPairs(aq, fit, "Ozone", convexHull = T, gridSize = 5)
   expect_type(pp8, "list")
 
   # namx to NULL
-  pp9 <- pdpPairs(aq, fit, "Ozone", nmax = NULL)
+  pp9 <- pdpPairs(aq, fit, "Ozone", nmax = NULL, gridSize = 5)
   expect_type(pp9, "list")
 
   # adding own limits ERROR
-  pp10 <- pdpPairs(aq, fit, "Ozone", fitlims = c(0,200))
+  pp10 <- pdpPairs(aq, fit, "Ozone", fitlims = c(0,200), gridSize = 5)
   expect_type(pp10, "list")
 
   # change class
   rf <- ranger(Species ~ ., data = iris, probability = TRUE)
-  ppC <- pdpPairs(iris, rf, "Species") # prediction probs for first class, setosa
+  ppC <- pdpPairs(iris, rf, "Species", gridSize = 5) # prediction probs for first class, setosa
   expect_type(ppC, "list")
 
-  ppC1 <-  pdpPairs(iris, rf, "Species", class = "versicolor") # prediction probs versicolor
+  ppC1 <-  pdpPairs(iris, rf, "Species", class = "versicolor", gridSize = 5) # prediction probs versicolor
   expect_type(ppC1, "list")
 
   # for factors
   dat <- na.omit(ChickWeight)
   fit <- ranger(Chick~., data = dat, probability = TRUE)
-  ppF <- pdpPairs(dat, fit, "Chick", convexHull = TRUE)
+  ppF <- pdpPairs(dat, fit, "Chick", convexHull = TRUE, gridSize = 5)
   expect_type(ppF, "list")
 
   fit <- ranger(weight~., data = dat)
-  ppF1 <- pdpPairs(dat, fit, "weight", convexHull = TRUE)
+  ppF1 <- pdpPairs(dat, fit, "weight", convexHull = TRUE, gridSize = 5)
   expect_type(ppF1, "list")
 
 
@@ -152,68 +148,64 @@ test_that("Test pdpZen", {
   fit <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 
   # test plot
-  z <- pdpZen(aq, fit, response = "Ozone")
+  z <- pdpZen(aq, fit, response = "Ozone", gridSize = 5)
   expect_type(z, "list")
 
   # change palette
-  z1 <- pdpZen(aq, fit, response = "Ozone", pal =  rev(colorspace::sequential_hcl(palette = "Inferno", n = 100)))
+  z1 <- pdpZen(aq, fit, response = "Ozone", gridSize = 5, pal =  rev(colorspace::sequential_hcl(palette = "Inferno", n = 100)))
   expect_type(z1, "list")
 
   # add zpath
-  aqVivi <- vivi(aq, fit, "Ozone", 20)
+  aqVivi <- vivi(aq, fit, "Ozone", 5)
   zpath <- zPath(aqVivi, cutoff = 1, connect = T, method = "strictly.weighted")
-  z2 <- pdpZen(aq, fit, "Ozone", zpath = zpath)
+  z2 <- pdpZen(aq, fit, "Ozone", zpath = zpath, gridSize = 5)
   expect_type(z2, "list")
 
   zpath <- zPath(aqVivi, cutoff = 1, connect = F, method = "strictly.weighted")
-  z21 <- pdpZen(aq, fit, "Ozone", zpath = zpath)
+  z21 <- pdpZen(aq, fit, "Ozone", zpath = zpath, gridSize = 5)
   expect_type(z21, "list")
 
 
   # adding own limits
-  z3 <- pdpZen(aq, fit, "Ozone", fitlims = c(0,20))
+  z3 <- pdpZen(aq, fit, "Ozone", fitlims = c(0,20), gridSize = 5)
   expect_type(z3, "list")
 
   # change fitlims
-  z31 <- pdpZen(aq, fit, response = "Ozone",  fitlims = "all")
+  z31 <- pdpZen(aq, fit, response = "Ozone",  fitlims = "all", gridSize = 5)
   expect_type(z31, "list")
 
-  # change gridsize
-  z4 <- pdpZen(aq, fit, "Ozone", gridSize = 5)
-  expect_type(z4, "list")
-
   # change no or rows
-  z5 <- pdpZen(aq, fit, "Ozone", nmax = 100)
+  z5 <- pdpZen(aq, fit, "Ozone", nmax = 100, gridSize = 5)
   expect_type(z5, "list")
 
   # change comboimage
-  z6 <- pdpZen(aq, fit, "Ozone", comboImage = TRUE)
+  z6 <- pdpZen(aq, fit, "Ozone", comboImage = TRUE, gridSize = 5)
   expect_type(z6, "list")
 
   # change convex hull
-  z7 <- pdpZen(aq, fit, "Ozone", convexHull = T)
+  z7 <- pdpZen(aq, fit, "Ozone", convexHull = T, gridSize = 5)
   expect_type(z7, "list")
 
   # namx to NULL
-  z8 <- pdpZen(aq, fit, "Ozone", nmax = NULL)
+  z8 <- pdpZen(aq, fit, "Ozone", nmax = NULL, gridSize = 5)
   expect_type(z8, "list")
 
   # change class
   rf <- ranger(Species ~ ., data = iris, probability = TRUE)
-  zC <- pdpZen(iris, rf, "Species") # prediction probs for first class, setosa
+  zC <- pdpZen(iris, rf, "Species", gridSize = 5) # prediction probs for first class, setosa
   expect_type(zC, "list")
 
-  zC1 <-  pdpZen(iris, rf, "Species", class = "versicolor") # prediction probs versicolor
+  zC1 <-  pdpZen(iris, rf, "Species", class = "versicolor", gridSize = 5) # prediction probs versicolor
   expect_type(zC1, "list")
 
   # for factors
   dat <- na.omit(ChickWeight)
   fit <- ranger(Chick~., data = dat, probability = TRUE)
-  zF <- pdpZen(dat, fit, "Chick", convexHull = TRUE)
+  zF <- pdpZen(dat, fit, "Chick", convexHull = TRUE, gridSize = 5)
   expect_type(zF, "list")
 
   fit <- ranger(weight~., data = dat)
-  zF1 <- pdpZen(dat, fit, "weight", convexHull = TRUE)
+  zF1 <- pdpZen(dat, fit, "weight", convexHull = TRUE, gridSize = 5)
   expect_type(zF1, "list")
 
 
@@ -223,7 +215,7 @@ test_that("Test pdpZen", {
 test_that("Test zpath",{
 
   fit <- ranger(Ozone ~ ., data = aq, importance = "permutation")
-  aqVivi <- vivi(aq, fit, "Ozone", 20)
+  aqVivi <- vivi(aq, fit, "Ozone", 5)
   zpath <- zPath(aqVivi, cutoff = 1, connect = F, method = "strictly.weighted")
   expect_type(zpath, "list")
 
@@ -239,17 +231,17 @@ test_that("Test zpath",{
 
 test_that("Test pdpVars",{
   fit <- lm(Ozone ~ ., data = aq)
-  p <- pdpVars(aq, fit, "Ozone")
+  p <- pdpVars(aq, fit, "Ozone", gridSize = 5)
   expect_type(p, "list")
 
-  p1 <- pdpVars(aq, fit, "Ozone", nmax = NULL)
+  p1 <- pdpVars(aq, fit, "Ozone", nmax = NULL, gridSize = 5)
   expect_type(p1, "list")
 
-  rfClassif <- ranger(Species ~ ., data = iris, probability = TRUE)
-  p2 <- pdpVars(iris, rfClassif, "Species", class = 2, draw = FALSE)
+  rfClassif <- ranger(Species ~ ., data = iris, probability = TRUE,)
+  p2 <- pdpVars(iris, rfClassif, "Species", class = 2, draw = FALSE, gridSize = 5)
   expect_type(p2, "list")
 
-  p3 <- pdpVars(iris, rfClassif, "Species", class = 2, colorVar = "Species")
+  p3 <- pdpVars(iris, rfClassif, "Species", class = 2, colorVar = "Species", gridSize = 5)
   expect_type(p3, "list")
 })
 
