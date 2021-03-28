@@ -14,12 +14,15 @@
 #'
 #'
 #' @examples
+#'  \dontrun{
 #' library(ranger)
 #' aq <- na.omit(airquality)
+#' aq <- aq[1:20,]# for speed
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 #' myDf <- as.data.frame(myMat)
 #' myDf
+#' }
 #' @export
 
 
