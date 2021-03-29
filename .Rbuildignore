@@ -3,3 +3,4 @@
 ^\.httr-oauth$
 ^codecov\.yml$
 ^README\.Rmd$
+^badge$
