@@ -21,7 +21,7 @@ only for column names treatment, basically with the meaning of data.frame(*, che
 A data frame of Vimp and Vint values and their index from the vivid matrix.
 }
 \description{
-@description Takes a matrix of class \code{vivid} and turn it into a data frame
+Takes a matrix of class \code{vivid} and turn it into a data frame
 containing variable names, Vimp and Vint values, and the row and column index from the original
 matrix.
 }

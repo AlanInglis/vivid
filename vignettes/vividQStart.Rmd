@@ -44,7 +44,6 @@ library(vivid) # for visualisations
 library(randomForest) # for model fit
 library(ranger)       # for model fit
 library(e1071)        # for model fit
-library(network)
 library(ggplot2) 
 ```
 
