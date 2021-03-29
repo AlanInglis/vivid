@@ -37,6 +37,16 @@ Now we can install and load `vivid` by using:
 library(vivid)
 ```
 
+We then load the other required packages.
+
+```{r, warning=FALSE, message=FALSE}
+library(vivid) # for visualisations 
+library(randomForest) # for model fit
+library(ranger)       # for model fit
+library(e1071)        # for model fit
+library(network)
+library(ggplot2) 
+```
 
 # Section 1: Data and model fits
 
@@ -82,9 +92,6 @@ In the following examples, we use a `ranger` random forest model fit on the data
 
 
 ```{r, warning=FALSE, message=FALSE}
-library(ranger) # for model fit
-library(ggplot2)
-
 fit <- ranger(y ~ ., data = myData, importance = "permutation")
 ```
 
@@ -113,7 +120,6 @@ viFit <- vivi(
 To create a heatmap of the vivi-matrix, we use:
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
-library(ggplot2)
 viviHeatmap(mat = viFit) + ggtitle("random forest fit heatmap")
 ```
 <center>
@@ -128,7 +134,7 @@ To create a network graph of the vivi-matrix, we use:
 viviNetwork(mat = viFit)
 ```
 <center>
-Fig 1.1: *Network plot of a SVM fit displaying 2-way interaction strength and individual variable importance. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
+Fig 1.1: *Network plot of a random forest fit displaying 2-way interaction strength and individual variable importance. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
 </center>
 
 
