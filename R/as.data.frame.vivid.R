@@ -1,6 +1,6 @@
 #' as.data.frame.vivid
 #'
-#'  @description Takes a matrix of class \code{vivid} and turn it into a data frame
+#' @description Takes a matrix of class \code{vivid} and turn it into a data frame
 #'  containing variable names, Vimp and Vint values, and the row and column index from the original
 #'  matrix.
 #'
