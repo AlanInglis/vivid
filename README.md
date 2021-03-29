@@ -19,13 +19,6 @@ To install vivid use:
 
 `install.packages("vivid")`
 
-You can then load the package and view either the the full detailed vignette or the quick start vignette with:
-
-```
-library(vivid)
-vignette("vivid")
-vignette("vividQStart")
-```
 
 Alternatively you can install the latest development version of the package in R with the commands:
 
