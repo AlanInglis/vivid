@@ -299,8 +299,8 @@ pdpZen(data = myData, fit = rf, response = "y", gridSize = 10, zpath = zpath)
 <center>
 Fig 4.1: *ZPDP of a random forest fit on a subset of the Friedman data with a zpath of 0.1.*
 </center>
-/
-/
+
+
 # Section 3: Classification example
 
 In this section, we briefly describe how to apply the above visualisations to a classification example using the `iris` data set. 
