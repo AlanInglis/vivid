@@ -1,5 +1,6 @@
 [![codecov](https://codecov.io/gh/AlanInglis/vivid/branch/master/graph/badge.svg?token=IJTT3ZW1RP)](https://codecov.io/gh/AlanInglis/vivid)
 
+<img src="https://github.com/AlanInglis/vivid/blob/master/badge/vividLogoNew.png" width="240" height="276" />
 
 # vividPackage
 
