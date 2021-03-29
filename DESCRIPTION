@@ -23,6 +23,9 @@ Imports:
     ggnewscale,
     tidyr
 Suggests:
+    intergraph (>= 2.0-2),
+    network (>= 1.12.0),
+    sna (>= 2.3-2),
     mlr,
     MASS,
     tidymodels,
