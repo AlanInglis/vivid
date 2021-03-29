@@ -204,11 +204,6 @@ test_that("Test pdpZen", {
   zF <- pdpZen(dat, fit, "Chick", convexHull = TRUE, gridSize = 5)
   expect_type(zF, "list")
 
-  fit <- ranger(weight~., data = dat)
-  zF1 <- pdpZen(dat, fit, "weight", convexHull = TRUE, gridSize = 5)
-  expect_type(zF1, "list")
-
-
   })
 
 
