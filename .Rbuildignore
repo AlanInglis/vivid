@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^\.httr-oauth$
 ^codecov\.yml$
+^README\.Rmd$
