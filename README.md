@@ -3,7 +3,7 @@
 <img src="https://github.com/AlanInglis/vivid/blob/master/badge/vividLogoNew.png" width="240" height="276" />
 
 
-# vividPackage
+# vivid
 
 The `zenplots` package requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
 
