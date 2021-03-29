@@ -5,7 +5,7 @@
 
 # vivid
 
-The `zenplots` package requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
+The `zenplots` package (which is used withi `vivid`) requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
 
 ```
 if (!requireNamespace("graph", quietly = TRUE)){
