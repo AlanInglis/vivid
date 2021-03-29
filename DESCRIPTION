@@ -1,6 +1,6 @@
 Package: vivid
 Title: Variable Importance and Variable Interaction Displays
-Version: 0.0.0.9000
+Version: 0.1.0
 Author: Alan Inglis, Andrew Parnell, Catherine Hurley
 Maintainer: Alan Inglis <alan.inglis@mu.ie>
 Language: en-US
