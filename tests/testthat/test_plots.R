@@ -144,7 +144,7 @@ test_that("Test pdpPairs", {
 
 
 test_that("Test pdpZen", {
-
+  set.seed(1701)
   fit <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 
   # test plot
@@ -156,6 +156,7 @@ test_that("Test pdpZen", {
   expect_type(z1, "list")
 
   # add zpath
+  set.seed(1701)
   aqVivi <- vivi(aq, fit, "Ozone", 5)
   zpath <- zPath(aqVivi, cutoff = 1, connect = T, method = "strictly.weighted")
   z2 <- pdpZen(aq, fit, "Ozone", zpath = zpath, gridSize = 5)
