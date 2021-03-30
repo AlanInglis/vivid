@@ -158,11 +158,11 @@ test_that("Test pdpZen", {
   # add zpath
   set.seed(1701)
   aqVivi <- vivi(aq, fit, "Ozone", 5)
-  zpath <- zPath(aqVivi, cutoff = 1, connect = T, method = "strictly.weighted")
+  zpath <- zPath(aqVivi, connect = T, method = "strictly.weighted")
   z2 <- pdpZen(aq, fit, "Ozone", zpath = zpath, gridSize = 5)
   expect_type(z2, "list")
 
-  zpath <- zPath(aqVivi, cutoff = 1, connect = F, method = "strictly.weighted")
+  zpath <- zPath(aqVivi, connect = F, method = "strictly.weighted")
   z21 <- pdpZen(aq, fit, "Ozone", zpath = zpath, gridSize = 5)
   expect_type(z21, "list")
 
