@@ -7,7 +7,6 @@ Language: en-US
 Description: A suite of plots for displaying variable importance and two-way variable interaction jointly. Can also display partial dependence plots laid out in a pairs plot or 'zenplots' style.
 License: GPL (>=2)
 Encoding: UTF-8
-LazyData: true
 Imports: 
     condvis2,
     ggplot2,
