@@ -62,10 +62,11 @@ zPath <- function(viv,
   viv[upper.tri(viv)] <- NA
   # find the off-diagonal entries in viv that are bigger than some number
   if (!is.numeric(cutoff)) cutoff <- quantile(viv, .8, na.rm = TRUE)
-  viv[is.na(viv)] <- 0
+  viv[is.na(viv)] <- -Inf
   w <- viv > cutoff
   if (sum(w) == 0) stop("No off diagonal entries in 'viv' exceed 'cutoff'.")
   zinfo <- cbind(viv[w], row(viv)[w], col(viv)[w])
+  if (nrow(zinfo) == 1) return(rownames(viv)[zinfo[1,2:3]])
 
   # form an eulerian path with these pairs of variables
   if (method == "greedy.weighted") {
