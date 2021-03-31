@@ -19,6 +19,9 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 The aim of this guide is to give a brief introduction and explanation to the functions contained inside the `vivid` package. `vivid` (variable importance and variable interaction displays) is used for investigating relationships within a machine learning model fit. All of the visualisations in this vignette are highly customizable (see the long-form `vivid` vignette to see examples) and return `ggplot` objects which can be customized using the normal `ggplot` options.
 
+Note: For the purposes of speed, the grid size (i.e., `gridSize` - the size of the gid on which the evaluations are made) and the number of rows subsetted (`nmax`) are small. This achieve more accurate results, incerease both the grid size and the number of rows used. 
+
+
 ## Install instructions
 Some of the plots used by `vivid` are built upon the `zenplots` package which requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
 
@@ -43,7 +46,6 @@ We then load the other required packages.
 library(vivid) # for visualisations 
 library(randomForest) # for model fit
 library(ranger)       # for model fit
-library(e1071)        # for model fit
 library(ggplot2) 
 ```
 
@@ -84,14 +86,15 @@ genFriedman <- function(noFeatures = 10,
   df
 }
 
-myData <- genFriedman(noFeatures = 9, noSamples = 500, sigma = 1)
+myData <- genFriedman(noFeatures = 9, noSamples = 350, sigma = 1)
 ```
 
 In the following examples, we use a `ranger` random forest model fit on the data, with the importance set to `permutation`. 
 
 
 ```{r, warning=FALSE, message=FALSE}
-fit <- ranger(y ~ ., data = myData, importance = "permutation")
+set.seed(101)
+fit <- randomForest(y ~ ., data = myData)
 ```
 
 Next, we create the 'vivi-matrix', which will contain variable importance on the diagonal and variable interactions in the upper and lower triangle. This matrix can then be supplied to the `vivid` plotting functions.
@@ -104,7 +107,7 @@ viFit <- vivi(
   response = "y",
   gridSize = 10,
   importanceType = NULL,
-  nmax = 500,
+  nmax = 100,
   reorder = TRUE,
   class = 1,
   predictFun = NULL
@@ -145,7 +148,7 @@ To create the plot we supply the model fit to the plotting function.
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpPairs(data = myData, fit = fit, response = "y", gridSize = 10)
+pdpPairs(data = myData, fit = fit, response = "y", nmax = 50, gridSize = 10)
 ```
 <center>
 Fig 1.3: *GPDP of a random forest fit on the Friedman data. From the plot we can see a clear interaction between $x_1$ and $x_2$. This can be seen in both the changing ICE curves and 2-way PDPs*
@@ -158,7 +161,7 @@ For this plot, we calculate the bivariate partial dependence and display them in
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpZen(data = myData, fit = fit, response = "y", gridSize = 10)
+pdpZen(data = myData, fit = fit, response = "y", nmax = 50, gridSize = 10)
 ```
 <center>
 Fig 4.0: *ZPDP of a random forest fit on a subset of the Friedman data.*
@@ -173,7 +176,7 @@ Using the `zpath` argument, we can filter out any interactions below a set value
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
 zpath <- zPath(viv = viFit, cutoff = 0.1)
-pdpZen(data = myData, fit = fit, response = "y", gridSize = 10, zpath = zpath)
+pdpZen(data = myData, fit = fit, response = "y", nmax = 50, gridSize = 10, zpath = zpath)
 ```
 <center>
 Fig 4.1: *ZPDP of a random forest fit on a subset of the Friedman data with a zpath of 0.1.*
@@ -199,7 +202,7 @@ viviClassif <- vivi(
   response = "Species",
   gridSize = 10,
   importanceType = NULL,
-  nmax = 500,
+  nmax = 50,
   reorder = TRUE,
   class = "setosa",
   predictFun = NULL
@@ -229,7 +232,7 @@ As PDPs are evaluated on a grid, they can extrapolate where there is no data. To
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpPairs(data = iris, fit = rfClassif, response = "Species", class = "setosa", convexHull = T)
+pdpPairs(data = iris, fit = rfClassif, response = "Species", class = "setosa", convexHull = T,  gridSize = 10, nmax = 50)
 ```
 <center>
 Fig 5.2 *GPDP of random forest fit on the iris data with extrapolated data removed.*
@@ -239,7 +242,7 @@ Finally, a ZPDP for the random forest fit on the iris data with extrapolated dat
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpZen(data = iris, fit = rfClassif, response = "Species", class = "setosa", convexHull = T)
+pdpZen(data = iris, fit = rfClassif, response = "Species", class = "setosa", convexHull = T,  gridSize = 10, nmax = 50)
 ```
 <center>
 Fig 5.2 *ZPDP of random forest fit on the iris data with extrapolated data removed.*

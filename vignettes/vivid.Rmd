@@ -56,7 +56,6 @@ library(randomForest) # for model fit
 library(mlr3)         # for model fit
 library(mlr3learners) # for model fit
 library(ranger)       # for model fit
-library(e1071)        # for model fit
 library(ggplot2) 
 ```
 
@@ -71,7 +70,7 @@ The data used in the following examples is simulated from the Friedman benchmark
 $$y = 10 sin(π x_1 x_2) + 20 (x_3 - 0.5)^2 + 10 x_4 + 5 x_5 + e$$
 </center>
 
-For the following examples we set the number of features to equal 10 and the number of samples is set to 450 and fit an `mlr3`-`SVM` and a `randomForest` random forest model with $y$ as the response. As the features $x_1$ to $x_5$ are the only variables in the model, therefore $x_6$ to $x_{10}$ are noise variables. As can be seen by the above equation, the only interaction is between $x_1$ and $x_2$
+For the following examples we set the number of features to equal 9 and the number of samples is set to 350 and fit a `randomForest` random forest model with $y$ as the response. As the features $x_1$ to $x_5$ are the only variables in the model, therefore $x_6$ to $x_{9}$ are noise variables. As can be seen by the above equation, the only interaction is between $x_1$ and $x_2$
   
 
 Create the data:
@@ -101,25 +100,13 @@ genFriedman <- function(noFeatures = 10,
   df
 }
 
-myData <- genFriedman(noFeatures = 9, noSamples = 500, sigma = 1)
+myData <- genFriedman(noFeatures = 9, noSamples = 350, sigma = 1)
 ```
 
 
-## Model fits 
+## Model fit 
 
-Here we create two model fits. First we fit a SVM model from the `mlr3` package and second, we create a random forest fit from the `randomForest` package. 
-
-
-* Create an `mlr3` `SVM` model:
-
-```{r}
-set.seed(10)
-SVM_task  <- TaskRegr$new(id = "Friedman", backend = myData, target = "y")
-set.seed(101)
-SVM_lrn <- lrn("regr.svm")
-set.seed(101)
-SVM_mod <- SVM_lrn$train(SVM_task)
-```
+Here we create two model fits. We create a random forest fit from the `randomForest` package. 
 
 
 * Create a `randomForest` model:
@@ -132,26 +119,12 @@ Note that for a `randomForest` model, if `importance = TRUE`, then when running 
 ## vivi function 
 
 To begin, we use the `vivi` function to create a symmetrical matrix filled with pair-wise interaction strengths on the off-diagonals and variable importance on the diagonal. The matrix is ordered so that variables with high interaction strength and importance are _pushed_ to the top left.
-The `vivi` uses Friedman's unnormalized H-Statistic to calculate the pair-wise interaction strength and uses either embedded feature selection methods to determine the variable importance, or if the supplied model does not support an embedded variable importance measure (e.g., the SVM fit has no embedded variable importance measure), an agnostic permutation approach will be applied automatically to generate the importance values. The unnormalized version of the H-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of H are on the scale of the response.
+The `vivi` uses Friedman's unnormalized H-Statistic to calculate the pair-wise interaction strength and uses either embedded feature selection methods to determine the variable importance, or if the supplied model does not support an embedded variable importance measure an agnostic permutation approach will be applied automatically to generate the importance values. The unnormalized version of the H-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of H are on the scale of the response.
 
 This function works with multiple model fits and results in a matrix which can be supplied to the plotting functions. The predict function argument uses `condvis2::CVpredict` by default, which works for many fit classes.
 
-* Create a matrix from the SVM fit to be supplied to the plotting functions.
+Note: For the purposes of speed, the grid size (i.e., `gridSize` - the size of the gid on which the evaluations are made) and the number of rows subsetted (`nmax`) are small. This achieve more accurate results, incerease both the grid size and the number of rows used. 
 
-```{r, message = F, warning = F}
-set.seed(100)
-SVM_fit <- vivi(fit = SVM_mod, 
-                data = myData, 
-                response = "y",
-                gridSize = 10,
-                importanceType = NULL,
-                nmax = 500,
-                reorder = TRUE,
-                class = 1,
-                predictFun = NULL)
-```
-
- 
 
 * Create a matrix from the random forest fit to be supplied to the plotting functions.
 
@@ -162,51 +135,37 @@ rf_fit  <- vivi(fit = rf,
                 response = "y",
                 gridSize = 10,
                 importanceType = "%IncMSE",
-                nmax = 500,
+                nmax = 100,
                 reorder = TRUE,
                 class = 1,
                 predictFun = NULL)
 ```
 
-#Section 2: Visualizing the results
+# Section 2: Visualizing the results
 
 ### Heatmap plot
 
 The first visualization option supplied by `vivid` creates a heatmap plot displaying variable importance on the diagonal and variable interaction on the off-diagonal. As mentioned above, the matrix created by `vivi` is ordered. using a seriation method This will push variables of interest to the top left of the heatmap plot.
-
-```{r, fig.width=6, fig.height=6, fig.align='center'}
-library(ggplot2)
-viviHeatmap(mat = SVM_fit) + ggtitle("SVM heatmap")
-```
-<center>
-Fig 1.0: *Heatmap of a SVM fit  displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
-</center>
 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 viviHeatmap(mat = rf_fit) + ggtitle("rf heatmap")
 ```
 <center>
-Fig 1.1: *Heatmap of a random forest fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
+Fig 1.0: *Heatmap of a random forest fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
 </center>
 
 ### Network plot
 
 An alternative to the heatmap plot, is a network graph. This has the advantage of allowing the user to quickly identify which variables have a strong interaction in a model. The importance of the variable is represented by both the size of the node (with larger nodes meaning they have greater importance) and the colour of the node. Importance is displayed by using a gradient of white to red, representing the low to high values. The two-way interaction strengths between variables are represented by the connecting lines (or edges). Both the size and colour of the edge are used to highlight interaction strength. Thicker lines between variables indicate a greater interaction strength. The interaction strength values are displayed by using a gradient of white to dark blue, representing the low to high values.
 
-```{r, fig.width=6, fig.height=6, fig.align='center'}
-viviNetwork(mat = SVM_fit)
-```
-<center>
-Fig 2.0: *Network plot of a SVM fit displaying 2-way interaction strength and individual variable importance. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
-</center>
 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 viviNetwork(mat = rf_fit)
 ```
 <center>
-Fig 2.1: *Network plot of a random forest fit displaying 2-way interaction strength and individual variable importance. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
+Fig 2.0: *Network plot of a random forest fit displaying 2-way interaction strength and individual variable importance. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.*
 </center>
 
 We can also filter out any interactions below a set value using the `intThreshold` argument. This can be useful when the number of variables included in the model is large or just to highlight the strongest interactions. By default, unconnected nodes are displayed, however, they can be removed by setting the argument `removeNode = T`. 
@@ -246,7 +205,7 @@ viviNetwork(mat = rf_fit, cluster = igraph::cluster_fast_greedy)
 Fig 2.5: *Clustered network plot of a random forest fit.*
 </center>
 
-The clustered plot in Fig 2.5 shows a cluster around $x_1$ and $x_2$ and another clustered group around the remaining variables. This is due to them having similar connecting edge weights (i.e., interactions). 
+The clustered plot in Fig 2.5 shows two clustered groups. As mentioned above, to get more sensible clustered groups, both `gridSize` and `nmax` should be increased. 
 
 ### Generalized partial dependence pairs plot
 
@@ -256,7 +215,7 @@ In Fig 3.0 below, we display the generalized partial dependence pairs plot (GPDP
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpPairs(data = myData, fit = rf, response = "y", gridSize = 10)
+pdpPairs(data = myData, fit = rf, response = "y", nmax = 50, gridSize = 10)
 ```
 <center>
 Fig 3.0: *GPDP of a random forest fit on the Friedman data. From the plot we can see a clear interaction between $x_1$ and $x_2$. This can be seen in both the changing ICE curves and 2-way PDPs*
@@ -267,7 +226,7 @@ As calculating the PD can computationally expensive. To speed the process up we 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpPairs(data = myData, fit =  rf, response = "y", gridSize = 10, 
+pdpPairs(data = myData, fit =  rf, response = "y", nmax = 50, gridSize = 10, 
          vars = c("x1", "x2", "x3", "x4", "x5"))
 ```
 <center>
@@ -280,7 +239,7 @@ The final installment in `vivid` is a partial dependence plot, laid out in a `ze
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpZen(data = myData, fit = rf, response = "y", gridSize = 10)
+pdpZen(data = myData, fit = rf, response = "y", nmax = 50, gridSize = 10)
 ```
 <center>
 Fig 4.0: *ZPDP of a random forest fit on a subset of the Friedman data.*
@@ -294,7 +253,7 @@ Using the `zpath` argument, we can filter out any interactions below a set value
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
 zpath <- zPath(viv = rf_fit, cutoff = 0.1)
-pdpZen(data = myData, fit = rf, response = "y", gridSize = 10, zpath = zpath)
+pdpZen(data = myData, fit = rf, response = "y", nmax = 50, gridSize = 10, zpath = zpath)
 ```
 <center>
 Fig 4.1: *ZPDP of a random forest fit on a subset of the Friedman data with a zpath of 0.1.*
@@ -318,7 +277,7 @@ viviClassif  <- vivi(fit = rfClassif,
                 response = "Species",
                 gridSize = 10,
                 importanceType = NULL,
-                nmax = 500,
+                nmax = 50,
                 reorder = TRUE,
                 class = "setosa",
                 predictFun = NULL)
@@ -348,7 +307,7 @@ As mentioned above, as PDPs are evaluated on a grid, they can extrapolate where 
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpPairs(data = iris, fit = rfClassif, response = "Species", class = "setosa",  convexHull = T) 
+pdpPairs(data = iris, fit = rfClassif, response = "Species", class = "setosa",  convexHull = T, gridSize = 10, nmax = 50) 
 ```
 <center>
 Fig 5.2 *GPDP of random forest fit on the iris data with extrapolated data removed.*
@@ -358,7 +317,7 @@ Finally, a ZPDP for the random forest fit on the iris data with extrapolated dat
 
 ```{r, fig.width=6, fig.height=6, fig.align='center'}
 set.seed(1701)
-pdpZen(data = iris, fit = rfClassif, response = "Species", class = "setosa",  convexHull = T) 
+pdpZen(data = iris, fit = rfClassif, response = "Species", class = "setosa",  convexHull = T, gridSize = 10, nmax = 50) 
 ```
 <center>
 Fig 5.2 *ZPDP of random forest fit on the iris data with extrapolated data removed.*
