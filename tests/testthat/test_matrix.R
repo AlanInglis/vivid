@@ -1,7 +1,7 @@
 # Test the matrix
 
 library(ranger)
-library(vip)
+#library(vip)
 library(dplyr)
 
 
@@ -10,7 +10,7 @@ test_that("vip2vivid test class", {
   aq <- na.omit(airquality)
 
   # create fit
-  fr <- ranger(Ozone ~ ., data = aq, importance = "permutation")
+  #fr <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 
   # get vip importance and interactions
   #vipImp <- vi(fr, method = "model")
@@ -36,7 +36,7 @@ test_that("vip2vivid test class", {
 test_that("update matrix test", {
   aq <- na.omit(airquality)
   fr <- ranger(Ozone ~ ., data = aq, importance = "permutation")
-  m <- vivi(fit = fr, data = aq, response = "Ozone", gridSize = 5)
+  m <- vivi(fit = fr, data = aq, response = "Ozone",nmax = 10, gridSize = 5)
 
   # update matrix importance
   corimp <- abs(cor(aq[, -1])[1, ])
