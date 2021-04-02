@@ -49,11 +49,11 @@ Create a Network plot displaying variable importance
 and variable interaction.
 }
 \examples{
-
+\donttest{
 library(ranger)
 aq <- na.omit(airquality)
 rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 viviNetwork(myMat)
-
+}
 }

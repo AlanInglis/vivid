@@ -26,7 +26,7 @@ containing variable names, Vimp and Vint values, and the row and column index fr
 matrix.
 }
 \examples{
- \dontrun{
+ \donttest{
 library(ranger)
 aq <- na.omit(airquality)
 aq <- aq[1:20,]# for speed
