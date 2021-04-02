@@ -60,7 +60,7 @@ Creates a pairs plot showing bivariate pdp on upper diagonal, ice/univariate pdp
 aq <- na.omit(airquality)
 f <- lm(Ozone ~ ., data = aq)
 pdpPairs(aq, f, "Ozone")
-\dontrun{
+\donttest{
 # Run an mlr ranger model:
 library(mlr3)
 library(mlr3learners)
@@ -77,7 +77,7 @@ viv <- vivi(Boston1, fit, "medv")
 # show top variables only
 pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE, vars = rownames(viv)[1:4])
 }
-\dontrun{
+\donttest{
 library(ranger)
 rf <- ranger(Species ~ ., data = iris, probability = TRUE)
 pdpPairs(iris, rf, "Species") # prediction probs for first class, setosa

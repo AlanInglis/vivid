@@ -55,7 +55,7 @@ Displays the individual conditional expectation (ICE) curves and aggregated part
 for each variable in a grid.
 }
 \examples{
- \dontrun{
+
 # Load in the data:
 aq <- na.omit(airquality)
 fit <- lm(Ozone ~ ., data = aq)
@@ -69,5 +69,5 @@ pdpVars(iris, rfClassif, "Species", class = 3)
 pp <- pdpVars(iris, rfClassif, "Species", class = 2, draw = FALSE)
 pp[[1]]
 pdpVars(iris, rfClassif, "Species", class = 2, colorVar = "Species")
-}
+
 }

@@ -18,13 +18,13 @@
 #' and variable interaction on the off-diagonal.
 #'
 #' @examples
-#'
+#'\donttest{
 #' library(ranger)
 #' aq <- na.omit(airquality)
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 #' viviHeatmap(myMat)
-#'
+#'}
 #' @export
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,

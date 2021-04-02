@@ -44,13 +44,13 @@ Creates a matrix displaying variable importance on the diagonal
 and variable interaction on the off-diagonal.
 }
 \examples{
- \dontrun{
+
 aq <- na.omit(airquality)
 f <- lm(Ozone ~ ., data = aq)
 m <- vivi(fit = f, data = aq, response = "Ozone") # as expected all interactions are zero
 viviHeatmap(m)
-}
- \dontrun{
+
+\donttest{
 # Run an mlr ranger model:
 library(mlr3)
 library(mlr3learners)
@@ -63,10 +63,8 @@ aq_fit <- aq_lrn$train(aq_Task)
 m <- vivi(fit = aq_fit, data = aq, response = "Ozone")
 viviHeatmap(m)
 }
-\dontrun{
+\donttest{
 library(ranger)
-rf <- ranger(Species ~ ., data = iris)
-vivi(fit = rf, data = iris, response = "Species")
 rf <- ranger(Species ~ ., data = iris, importance = "impurity")
 vivi(fit = rf, data = iris, response = "Species")
 }

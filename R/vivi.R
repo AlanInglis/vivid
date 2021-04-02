@@ -29,7 +29,7 @@
 #' m <- vivi(fit = f, data = aq, response = "Ozone") # as expected all interactions are zero
 #' viviHeatmap(m)
 #'
-#'  \donttest{
+#'\donttest{
 #' # Run an mlr ranger model:
 #' library(mlr3)
 #' library(mlr3learners)
@@ -42,7 +42,7 @@
 #' m <- vivi(fit = aq_fit, data = aq, response = "Ozone")
 #' viviHeatmap(m)
 #' }
-#' \dontest{
+#'\donttest{
 #' library(ranger)
 #' rf <- ranger(Species ~ ., data = iris, importance = "impurity")
 #' vivi(fit = rf, data = iris, response = "Species")

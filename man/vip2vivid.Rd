@@ -21,7 +21,7 @@ A matrix of interaction values, with importance on the diagonal.
 which can be used for plotting. Accepts any of the variable importance methods supplied by vip.
 }
 \examples{
-\dontrun{
+\donttest{
 library(ranger)
 library(vip)
 aq <- na.omit(airquality) # get data
