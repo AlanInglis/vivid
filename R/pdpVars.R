@@ -29,6 +29,7 @@
 #'
 #' @examples
 #'
+#'\donttest{
 #' # Load in the data:
 #' aq <- na.omit(airquality)
 #' fit <- lm(Ozone ~ ., data = aq)
@@ -42,7 +43,7 @@
 #' pp <- pdpVars(iris, rfClassif, "Species", class = 2, draw = FALSE)
 #' pp[[1]]
 #' pdpVars(iris, rfClassif, "Species", class = 2, colorVar = "Species")
-#'
+#'}
 #' @export
 
 pdpVars <- function(data, fit, response,
