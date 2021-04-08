@@ -11,7 +11,7 @@
 #'
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(ranger)
 #' library(vip)
 #' aq <- na.omit(airquality) # get data
