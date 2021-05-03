@@ -162,7 +162,8 @@ viviNetwork <- function(mat,
       ylim(ylim) +
       geom_label(aes(label = dfImp$Variable_1),
         nudge_x = nudged[, 1], nudge_y = nudged[, 2],
-        hjust = "middle", vjust = "middle"
+        hjust = "middle", vjust = "middle",
+        label.size = NA
       ) +
       # theme(legend.text = element_text(size = 10)) +
       geom_point(aes(fill = dfImp$Value), size = impScaled * 2, colour = "transparent", shape = 21) +
