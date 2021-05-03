@@ -234,10 +234,10 @@ pdpPairs <- function(data,
     theme(
       panel.border = element_rect(colour = "black", fill = NA, size = 1),
       axis.line = element_line(),
-      axis.ticks = element_blank(),
-      axis.text.x = element_text(angle = 45, hjust = 1, size = 0),
-      axis.text.y = element_text(size = 0),
-      strip.text = element_text(face = "bold", colour = "red", size = 5)
+     # axis.ticks = element_blank(),
+      axis.text.x = element_text(angle = 0, hjust = 1, size = 10),
+      axis.text.y = element_text(size = 10),
+      strip.text = element_text(face = "bold", colour = "red", size = 7)
     )
 
 
