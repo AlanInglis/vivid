@@ -78,7 +78,7 @@ pdpPairs <- function(data,
                      gridSize = 10,
                      nmax = 500,
                      class = 1,
-                     nIce = 30,
+                     nIce = NULL,
                      comboImage = FALSE,
                      predictFun = NULL,
                      convexHull = FALSE) {
@@ -100,8 +100,13 @@ pdpPairs <- function(data,
   vars <- vars[vars %in% vars0]
   if (is.null(vars)) vars <- vars0
 
+  if(!is.null(nIce)){
+    sice <- c(NA, min(nIce):max(nIce))
+  }else{
+  nIce <- 30
   nIce <- min(nIce, nrow(data))
   sice <- c(NA, sample(nrow(data), nIce)) # for use with iceplots
+  }
 
   # loop through vars and create a list of pdps
 
@@ -235,8 +240,8 @@ pdpPairs <- function(data,
       panel.border = element_rect(colour = "black", fill = NA, size = 1),
       axis.line = element_line(),
      # axis.ticks = element_blank(),
-      axis.text.x = element_text(angle = 0, hjust = 1, size = 10),
-      axis.text.y = element_text(size = 10),
+      axis.text.x = element_text(angle = 0, hjust = 1, size = 6),
+      axis.text.y = element_text(size = 6),
       strip.text = element_text(face = "bold", colour = "red", size = 7)
     )
 
