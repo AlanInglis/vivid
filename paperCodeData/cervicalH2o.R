@@ -61,12 +61,14 @@ h2o.no_progress()
 
 
 # Fit the model
-set.seed(12345)
+set.seed(1234)
 fit_NN <- h2o.deeplearning(x,
                            y,
                            as.h2o(cervical),
-                           epochs = 50,
+                           #epochs = 50,
                            variable_importances = T)
+
+# create vivi matrix
 set.seed(12345)
 vi <- vividH2oClassif(data = cervical,
                       fit = fit_NN,
