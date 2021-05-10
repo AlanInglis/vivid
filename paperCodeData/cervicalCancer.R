@@ -47,14 +47,6 @@ imbalanceRatio(cervical, classAttr = "Biopsy") # check imbalance ratio again
 set.seed(12345)
 cervicalRF <- ranger(Biopsy~., data = cervical, probability = TRUE, importance = "impurity")
 
-# check model fit
-require(pROC)
-votes <- predict(cervicalRF, cervical)$predictions
-rfROC <- roc(cervical$Biopsy, votes[,1])
-plot(rfROC)
-auc(rfROC)
-cervicalRF$prediction.error
-
 # vivi
 set.seed(1701)
 cervicalVIVI <- vivi(fit = cervicalRF, data = cervical, response = "Biopsy", class = "Cancer")
