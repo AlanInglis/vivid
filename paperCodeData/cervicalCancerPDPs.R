@@ -10,7 +10,8 @@ library(ranger)
 library(imbalance) # to balance data
 
 
-cervical <-  read.csv("/Users/alaninglis/Desktop/cervicalCancer.csv", sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+cervical <- read.csv("/Users/alaninglis/Desktop/cervicalCancerCopy.csv", sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+
 
 
 cervicalData = dplyr::select(cervical, -Citology, -Schiller, -Hinselmann)
@@ -58,6 +59,12 @@ set.seed(1701)
 pdpPairs(cervicalData, cervicalRF_1, "Biopsy",  vars = varNames,
          gridSize = 20, class = "Cancer", convexHull = TRUE,
          nmax = nrow(cervicalData))
+
+dim(cervicalData)
+set.seed(1701)
+pdpVars(cervicalData, cervicalRF_1, "Biopsy", vars = "Horm_Cont_yrs",
+        nmax = nrow(cervicalData), class = "Cancer", gridSize = 20,
+        nIce = c(0,200))
 
 
 
