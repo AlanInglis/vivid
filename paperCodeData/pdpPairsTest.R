@@ -55,18 +55,19 @@ pdpPairsH2O(aq, aqDL, "Ozone", convexHull = T)
 # DOESNT WORK AT ALL FOR CLASSIFICATION
 
 # data
-y <- "Species"
-x <- names(iris[,-5])
+yC <- "Species"
+xC <- names(iris[,-5])
 
 set.seed(1234)
-irisDL <- h2o.deeplearning(x,
-                           y,
+irisDL <- h2o.deeplearning(xC,
+                           yC,
                            as.h2o(iris)
 )
 
 
-pdpPairsH2O(iris, irisDL, "Species")
+pdpPairsH2O(iris, irisDL, "Species", class = "setosa")
 
 
-
+h2o.shutdown()
+Y
 
