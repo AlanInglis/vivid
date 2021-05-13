@@ -116,5 +116,5 @@ viviNetwork(vi, intThreshold = 0.024, removeNode = T,
             cluster = igraph::cluster_sp)
 
 
-h2o.shutdown
+h2o.shutdown()
 Y
