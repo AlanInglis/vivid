@@ -46,7 +46,7 @@ message("Generating ice/pdp fits... waiting...")
 
 pData <- as.data.frame(predData) # ADD
 data$predData <- pData$predict # ADD
-predCol <- pData$predict # ADD
+
 
 
 
@@ -114,7 +114,7 @@ if (fitlims[1] == "all") {
 
 
 pdTest <- data$predData # ADD
-data <- select(data, - predData) # ADD
+data <- dplyr::select(data, - predData) # ADD
 data$predData <- pdTest # ADD
 
 
@@ -145,7 +145,7 @@ ice <- function(data, mapping, ...) {
 
   filter(pdp, .data[[".id"]] %in% sice) %>%
     ggplot(aes(x = .data[[var]], y = fit)) +
-    geom_line(aes(color = data$predData, group = .data[[".id"]])) + # ADD data$predData
+    geom_line(aes(color = .data$predData, group = .data[[".id"]])) + # ADD .data$predData
     scale_color_gradientn(
       name = "y-hat", colors = pal, limits = limits, oob = scales::squish,
       guide = guide_colorbar(
@@ -156,23 +156,24 @@ ice <- function(data, mapping, ...) {
     geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
 }
 
-dplotn <- function(data, mapping) {
+
+dplotn <- function(data, mapping, pred = pdTest) { # ADD pred = pdTest
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
-  df <- data.frame(x = x, y = y)
-  ggplot(df, aes(x = x, y = y, color = data$predData)) + # ADD data$predData
+  df <- data.frame(x = x, y = y, pred = pred) # ADD pre = pred
+  ggplot(df, aes(x = x, y = y, color = pred)) + # ADD color = pred
     geom_point(shape = 16, size = 1, show.legend = FALSE) +
     scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
 }
 
-dplotm <- function(data, mapping) {
+dplotm <- function(data, mapping,  pred = pdTest) { # ADD pred = pdTest
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
-  df <- data.frame(x = x, y = y)
+  df <- data.frame(x = x, y = y, pred = pred) # ADD pre = pred
   jitterx <- if (is.factor(df$x)) .25 else 0
   jittery <- if (is.factor(df$y)) .25 else 0
 
-  ggplot(df, aes(x = x, y = y, color = data$predData)) + # ADD data$predData
+  ggplot(df, aes(x = x, y = y, color = pred)) + # ADD color = pred
     geom_jitter(shape = 16, size = 1, show.legend = FALSE, width = jitterx, height = jittery) +
     scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
 }

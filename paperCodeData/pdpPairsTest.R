@@ -43,12 +43,35 @@ y <- "Ozone"
 
 set.seed(1234)
 aqDL <- h2o.deeplearning(x,
-                           y,
-                           as.h2o(aq)
+                         y,
+                         as.h2o(aq)
 )
 
 
 pdpPairsH2O(aq, aqDL, "Ozone", convexHull = T)
+
+
+
+
+# boston ------------------------------------------------------------------
+
+library(MASS)
+Boston1 <- Boston[, c(4:6, 8, 13:14)]
+Boston1$chas <- factor(Boston1$chas)
+
+x <- names(Boston1[,-6])
+y <- "medv"
+
+set.seed(1234)
+bostonDL <- h2o.deeplearning(x,
+                             y,
+                             as.h2o(Boston1)
+)
+
+
+pdpPairsH2O(Boston1, bostonDL, "medv", convexHull = T)
+
+
 
 # iris --------------------------------------------------------------------
 
