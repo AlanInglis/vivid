@@ -25,7 +25,7 @@ cervical <- dplyr::select(cervical, -Dx.Cancer, -Dx.HPV, -Dx.CIN, -Dx, -Horm_Con
 
 
 # taking the log(x+1)
-cervical <- log(cervical[,-25] + 1)
+cervical <- log(cervical[,-24] + 1)
 
 
 
@@ -65,7 +65,7 @@ yTest <- cervicalTest$Biopsy
 
 # data
 y <- "Biopsy"
-x <- names(cervical[,-25])
+x <- names(cervical[,-24])
 
 
 h2o.init()
