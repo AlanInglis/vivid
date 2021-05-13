@@ -43,11 +43,9 @@ if(!is.null(nIce)){
 message("Generating ice/pdp fits... waiting...")
 
 
-
+# getting predicitons from h2o object
 pData <- as.data.frame(predData) # ADD
 data$predData <- pData$predict # ADD
-
-
 
 
 pdplist1 <- vector("list", length = length(vars))
