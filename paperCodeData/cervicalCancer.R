@@ -8,10 +8,10 @@
 library(vivid)
 library(ranger)
 library(imbalance) # to balance data
-
+library(ranger)
 
 # get data
-cervicalReal <- read.csv("/Users/alaninglis/Desktop/cervicalCancer.csv", sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+cervicalReal <- read.csv("/Users/alaninglis/Desktop/cervicalCancerCopy.csv", sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
 
 
 
@@ -43,27 +43,51 @@ cervical <- oversample(cervical, ratio = 0.9, method = "SMOTE",  classAttr = "Bi
 imbalanceRatio(cervical, classAttr = "Biopsy") # check imbalance ratio again
 
 
+#training Sample with 500 observations
+set.seed(123)
+trainCervical <- sample(x = 1526, size = 500)
+cervicalTrain <- cervical[trainCervical, ]
+xTrain <- cervicalTrain %>% select(-Biopsy)
+yTrain <- cervicalTrain$Biopsy
+
+
+cervicalTest  <- cervical[-trainCervical, ]
+xTest <-  cervicalTest %>% select(-Biopsy)
+yTest <- cervicalTest$Biopsy
+
 # create random forest & vivi ----------------------------------------------------
 set.seed(12345)
-cervicalRF <- ranger(Biopsy~., data = cervical, probability = TRUE, importance = "impurity")
+cervicalRF <- ranger(Biopsy~., data = cervicalTrain, probability = TRUE, importance = "impurity")
+
 
 # vivi
 set.seed(1701)
-cervicalVIVI <- vivi(fit = cervicalRF, data = cervical, response = "Biopsy", class = "Cancer")
+cervicalVIVI <- vivi(fit = cervicalRF, data = cervical,
+                     response = "Biopsy", class = "Cancer",
+                     reorder = F)
+
+
+cv <- vivid:::vividReorder(cervicalVIVI)
+class(cv) <- c("vivid", class(cv))
+
 
 # visualisations
-viviHeatmap(cervicalVIVI, angle = 45)
-viviNetwork(cervicalVIVI)
+viviHeatmap(cv, angle = 45)
+viviNetwork(cv)
+viviNetwork(cv, intThreshold = 0.01, removeNode = T,
+            cluster = c(1,1,1,1,1,2))
 
 #  top 10 -----------------------------------------------------------------
 cerMat <- cervicalVIVI[1:10, 1:10]
+cerMat <- cv[1:6, 1:6]
+
 # turn into vivid matrix
 class(cerMat) <- c("vivid", class(cerMat))
 
 # visualisations
 viviHeatmap(cerMat, angle = 45)
 viviNetwork(cerMat)
-viviNetwork(cerMat,  cluster = igraph::cluster_louvain)
+viviNetwork(cerMat,  cluster = c(1,1,1,1,2,2))
 
 
 
