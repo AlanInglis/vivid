@@ -48,9 +48,12 @@ aqDL <- h2o.deeplearning(x,
 )
 
 
-pdpPairsH2O(aq, aqDL, "Ozone")
+pdpPairsH2O(aq, aqDL, "Ozone", convexHull = T)
 
 # iris --------------------------------------------------------------------
+
+# DOESNT WORK AT ALL FOR CLASSIFICATION
+
 # data
 y <- "Species"
 x <- names(iris[,-5])

@@ -46,6 +46,8 @@ message("Generating ice/pdp fits... waiting...")
 
 pData <- as.data.frame(predData) # ADD
 data$predData <- pData$predict # ADD
+predCol <- pData$predict # ADD
+
 
 
 pdplist1 <- vector("list", length = length(vars))
@@ -111,6 +113,13 @@ if (fitlims[1] == "all") {
 }
 
 
+pdTest <- data$predData # ADD
+data <- select(data, - predData) # ADD
+data$predData <- pdTest # ADD
+
+
+
+
 pdpnn <- function(data, mapping, ...) {
   vars <- c(quo_name(mapping$x), quo_name(mapping$y))
   pdp <- pdplist[[paste(vars[1], vars[2], sep = "pp")]]
@@ -136,7 +145,7 @@ ice <- function(data, mapping, ...) {
 
   filter(pdp, .data[[".id"]] %in% sice) %>%
     ggplot(aes(x = .data[[var]], y = fit)) +
-    geom_line(aes(color = predData, group = .data[[".id"]])) +
+    geom_line(aes(color = data$predData, group = .data[[".id"]])) + # ADD data$predData
     scale_color_gradientn(
       name = "y-hat", colors = pal, limits = limits, oob = scales::squish,
       guide = guide_colorbar(
@@ -151,7 +160,7 @@ dplotn <- function(data, mapping) {
   x <- eval_data_col(data, mapping$x)
   y <- eval_data_col(data, mapping$y)
   df <- data.frame(x = x, y = y)
-  ggplot(df, aes(x = x, y = y, color = "blue")) + # ADD blue
+  ggplot(df, aes(x = x, y = y, color = data$predData)) + # ADD data$predData
     geom_point(shape = 16, size = 1, show.legend = FALSE) +
     scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
 }
@@ -163,7 +172,7 @@ dplotm <- function(data, mapping) {
   jitterx <- if (is.factor(df$x)) .25 else 0
   jittery <- if (is.factor(df$y)) .25 else 0
 
-  ggplot(df, aes(x = x, y = y, color = "blue")) +
+  ggplot(df, aes(x = x, y = y, color = data$predData)) + # ADD data$predData
     geom_jitter(shape = 16, size = 1, show.legend = FALSE, width = jitterx, height = jittery) +
     scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
 }
