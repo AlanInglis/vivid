@@ -52,13 +52,13 @@ imbalanceRatio(cervical, classAttr = "Biopsy") # check imbalance ratio again
 set.seed(123)
 trainCervical <- sample(x = 1526, size = 500)
 cervicalTrain <- cervical[trainCervical, ]
-xTrain <- cervicalTrain %>% select(-Biopsy)
-yTrain <- cervicalTrain$Biopsy
+#xTrain <- cervicalTrain %>% select(-Biopsy)
+#yTrain <- cervicalTrain$Biopsy
 
 
 cervicalTest  <- cervical[-trainCervical, ]
-xTest <-  cervicalTest %>% select(-Biopsy)
-yTest <- cervicalTest$Biopsy
+#xTest <-  cervicalTest %>% select(-Biopsy)
+#yTest <- cervicalTest$Biopsy
 
 
 # create h2o deep learner -------------------------------------------------
@@ -99,6 +99,11 @@ plot(cv_models[[1]],
      timestep = "epochs",
      metric = "classification_error")
 
+
+
+varNames <- c("Horm_Cont_yrs", "No_sex_par", "First_sex_inter" , "No_preg" , "Age")
+pdpPairsH2O(cervical, fit_NN_1, "Biopsy", class = 2, className = "Cancer",
+            convexHull = T, vars = varNames, nmax = length(cervical$Age))
 
 
 # create vivi matrix
