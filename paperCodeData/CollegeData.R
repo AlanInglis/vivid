@@ -1,22 +1,26 @@
 #==============================================================================
-# College enrollment visualisations
+# College enrollment script
+#==============================================================================
+# This script is used for creating the models and visualisations in:
+# Section 2:  VISUALISING VARIABLE IMPORTANCE AND INTERACTION
+# Section 3:  VISUALISING PARTIAL DEPENDENCE AND CONDITIONAL EXPECTATION
 #==============================================================================
 
-library("vivid")
+# Load relevent packages:
+library("vivid") # for visualisations
 library("ISLR") # for data
 library("mlr3") # to create model
 library("mlr3learners") # to create model
 library("randomForest") # to create model
-
+library("condvis2") # for predict function
 
 
 # Data --------------------------------------------------------------------
 
-# load data
+# Load data:
 myData <- as.data.frame(College)
 
-
-# taking log values of skewed data
+# Taking log values of skewed data:
 myData$Accept <- log(myData$Accept)
 myData$Apps <- log(myData$Apps)
 myData$Enroll <- log(myData$Enroll)
@@ -27,73 +31,119 @@ myData$Room.Board <- log(myData$Room.Board)
 myData$Books <- log(myData$Books)
 myData$Personal <- log(myData$Personal)
 
-
+# Split data into train and test
+set.seed(123)
+train <- sample(x = 777, size = 544) # split 70-30
+collegeTrain <- myData[train, ]
+collegeTest  <- myData[-train, ]
 
 # Model fits --------------------------------------------------------------
 
-# fit a randomforest model
+# Fit a random forest model
+# Used throughout Section 2:
 set.seed(101)
-rf <- randomForest(Enroll~., data = myData)
+rf <- randomForest(Enroll~., data = collegeTrain)
 
-# create sorted vivid matrix
-set.seed(101)
-myMatrix1 <- vivi(myData, rf, "Enroll",  gridSize = 100)
-# unsorted matrix
-set.seed(101)
-myMatrixUnsorted <- vivi(myData, rf, "Enroll",  gridSize = 100, reorder = F)
-# with agnostic Vimp
-set.seed(101)
-myMatrixAg <- vivi(myData, rf, "Enroll", gridSize = 50, importanceType = "agnostic")
-
-# visualisations
-viviHeatmap(myMatrix1, angle = 45) # sorted heatmap
-viviHeatmap(myMatrixUnsorted, angle = 45) # unsorted heatmap
-viviHeatmap(myMatrixAg, angle = 45) # sorted heatmap
-viviNetwork(myMatrix1) # full network
-viviNetwork(myMatrix1, intThreshold = 0.01, removeNode = T) # thresholded network
-
-# -------------------------------------------------------------------------
-# GPDP on filtered college data
-
-nam <- colnames(myMatrix1) # get names
-nam <- nam[1:7] # filter names
-
-
-# create GPDP
-set.seed(1701)
-pdpPairs(myData, rf, "Enroll", gridSize = 20, vars = nam, convexHull = T)
-
-
-# -------------------------------------------------------------------------
-# zenplot
-
-zpath <- zPath(myMatrix1, 0.01) # calc zpath
-
-# create ZPDP using zpath
-set.seed(1701)
-pdpZen(myData, rf, "Enroll", gridSize = 20, zpath = zpath, convexHull = T)
-
-
-
-# -------------------------------------------------------------------------
-
-## mlr3 knn
-
-myData1 <- myData
+# Fit an mlr3 knn model
+# Used in Section 2.3:
+myData1 <- collegeTrain
 myData1$Private <- as.numeric(myData1$Private)
 
 set.seed(11)
-exT <- TaskRegr$new(id = "myData1", backend = myData1, target = "Enroll")
+knnT <- TaskRegr$new(id = "myData1", backend = myData1, target = "Enroll")
 set.seed(11)
-exL <- lrn("regr.kknn")
+knnL <- lrn("regr.kknn")
 set.seed(11)
-exMod <- exL$train(exT)
+knnMod <- knnL$train(knnT)
 
+
+# Create vivid matrix -----------------------------------------------------
+
+# Create unsorted vivid matrix for random forest fit:
+# Used for Figure 1(a):
 set.seed(101)
-exMat <- vivi(fit = exMod, data = myData1, response = "Enroll", gridSize = 100, nmax = 100, importanceType = "agnostic")
+myMatrix <- vivi(collegeTrain, rf, "Enroll",  gridSize = 40, reorder = FALSE)
 
-# create visulisations
-viviHeatmap(exMat, angle = 45)
-# setting same same limits as agnostic plot
-viviHeatmap(exMat, angle = 45, impLims = c(0, 0.5))
+# Sort and turn the matrix into vivid matrix:
+# Used for Figure 1(b):
+myMatrixSorted <- vividReorder(myMatrix)
+class(myMatrixSorted) <- c("vivid", class(myMatrixSorted))
 
+# Get agnostic VImp values instead of using random forests embedded VImps
+# Used for Figure 2(b):
+collegeVImps <- vivid:::vividImportance.default(rf,
+                                                collegeTrain,
+                                                "Enroll",
+                                                importanceType = "agnostic",
+                                                predictFun = CVpredict)
+
+# Update the matrix with the new VImp values and sort:
+myMatrixSorted_1 <- viviUpdate(myMatrixSorted, collegeVImps)
+myMatrixSorted_1 <- vividReorder(myMatrixSorted_1)
+class(myMatrixSorted_1) <- c("vivid", class(myMatrixSorted_1))
+
+# Create vivid matix for mlr3 knn fit using agnostic VImp
+# Used for figure 2(a):
+set.seed(101)
+knnMat <- vivi(fit = knnMod,
+               data = myData1,
+               response = "Enroll",
+               gridSize = 40,
+               importanceType = "agnostic")
+
+
+#==============================================================================
+# Visualisations
+#==============================================================================
+
+# Visualisations for Section 2 --------------------------------------------
+
+# Figure 1(a):
+viviHeatmap(myMatrix, angle = 45) # unsorted heatmap
+# Figure 1(b):
+viviHeatmap(myMatrixSorted, angle = 45) # sorted heatmap
+
+# Figure 2(a):
+viviHeatmap(knnMat, angle = 45, impLims = c(0, 0.5)) # setting same VImp limits as Figure 2(b)
+# Figure 2(b)
+viviHeatmap(myMatrixSorted_1, angle = 45) # agnostic VImp measures
+
+# Figure 3(a)
+viviNetwork(myMatrixSorted)
+# Figure 3(b)
+viviNetwork(myMatrixSorted, intThreshold = 0.01, removeNode = T)
+
+
+# Visualisation for Section 3.2 ---------------------------------------------
+
+# Filter matrix:
+nam <- colnames(myMatrixSorted) # get names
+nam <- nam[1:7] # filter names
+
+# Create GPDP for Figure 4:
+set.seed(1701)
+pdpPairs(collegeTrain,
+         rf, "Enroll",
+         gridSize = 20,
+         vars = nam,
+         convexHull = T)
+
+
+# Visualisation for Section 3.3 ---------------------------------------------
+
+# Calculate the zpath using same threshold as Figure 3(b):
+zpath <- zPath(myMatrixSorted, 0.01)
+
+# Create ZPDP using zpath for Figure 5:
+set.seed(1701)
+pdpZen(collegeTrain,
+       rf,
+       "Enroll",
+       gridSize = 20,
+       zpath = zpath,
+       convexHull = T)
+
+
+
+# -------------------------------------------------------------------------
+# -------------------------------------------------------------------------
