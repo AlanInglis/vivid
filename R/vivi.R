@@ -201,7 +201,12 @@ vividImportance.default <- function(fit,
   suppressWarnings(
     imp <- light_importance(fl, m_repetitions = 4)
   )
+
   importance <- imp$data[, 3:4]
+  if (any(is.nan(importance$value))) {
+    importance$value <- 1
+    message("Flashlight importance works for numeric and numeric binary response only; setting importance to 1.")
+  }
   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
 
   return(importance)
