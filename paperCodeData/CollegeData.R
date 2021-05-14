@@ -1,10 +1,10 @@
-#==============================================================================
+# ==============================================================================
 # College enrollment script
-#==============================================================================
+# ==============================================================================
 # This script is used for creating the models and visualisations in:
 # Section 2:  VISUALISING VARIABLE IMPORTANCE AND INTERACTION
 # Section 3:  VISUALISING PARTIAL DEPENDENCE AND CONDITIONAL EXPECTATION
-#==============================================================================
+# ==============================================================================
 
 # Load relevent packages:
 library("vivid") # for visualisations
@@ -35,14 +35,14 @@ myData$Personal <- log(myData$Personal)
 set.seed(123)
 train <- sample(x = 777, size = 544) # split 70-30
 collegeTrain <- myData[train, ]
-collegeTest  <- myData[-train, ]
+collegeTest <- myData[-train, ]
 
 # Model fits --------------------------------------------------------------
 
 # Fit a random forest model
 # Used throughout Section 2:
 set.seed(101)
-rf <- randomForest(Enroll~., data = collegeTrain)
+rf <- randomForest(Enroll ~ ., data = collegeTrain)
 
 # Fit an mlr3 knn model
 # Used in Section 2.3:
@@ -62,7 +62,7 @@ knnMod <- knnL$train(knnT)
 # Create unsorted vivid matrix for random forest fit:
 # Used for Figure 1(a):
 set.seed(101)
-myMatrix <- vivi(collegeTrain, rf, "Enroll",  gridSize = 40, reorder = FALSE)
+myMatrix <- vivi(collegeTrain, rf, "Enroll", gridSize = 40, reorder = FALSE)
 
 # Sort and turn the matrix into vivid matrix:
 # Used for Figure 1(b):
@@ -72,10 +72,11 @@ class(myMatrixSorted) <- c("vivid", class(myMatrixSorted))
 # Get agnostic VImp values instead of using random forests embedded VImps
 # Used for Figure 2(b):
 collegeVImps <- vivid:::vividImportance.default(rf,
-                                                collegeTrain,
-                                                "Enroll",
-                                                importanceType = "agnostic",
-                                                predictFun = CVpredict)
+  collegeTrain,
+  "Enroll",
+  importanceType = "agnostic",
+  predictFun = CVpredict
+)
 
 # Update the matrix with the new VImp values and sort:
 myMatrixSorted_1 <- viviUpdate(myMatrixSorted, collegeVImps)
@@ -85,16 +86,18 @@ class(myMatrixSorted_1) <- c("vivid", class(myMatrixSorted_1))
 # Create vivid matix for mlr3 knn fit using agnostic VImp
 # Used for figure 2(a):
 set.seed(101)
-knnMat <- vivi(fit = knnMod,
-               data = myData1,
-               response = "Enroll",
-               gridSize = 40,
-               importanceType = "agnostic")
+knnMat <- vivi(
+  fit = knnMod,
+  data = myData1,
+  response = "Enroll",
+  gridSize = 40,
+  importanceType = "agnostic"
+)
 
 
-#==============================================================================
+# ==============================================================================
 # Visualisations
-#==============================================================================
+# ==============================================================================
 
 # Visualisations for Section 2 --------------------------------------------
 
@@ -123,10 +126,11 @@ nam <- nam[1:7] # filter names
 # Create GPDP for Figure 4:
 set.seed(1701)
 pdpPairs(collegeTrain,
-         rf, "Enroll",
-         gridSize = 20,
-         vars = nam,
-         convexHull = T)
+  rf, "Enroll",
+  gridSize = 20,
+  vars = nam,
+  convexHull = T
+)
 
 
 # Visualisation for Section 3.3 ---------------------------------------------
@@ -137,11 +141,12 @@ zpath <- zPath(myMatrixSorted, 0.01)
 # Create ZPDP using zpath for Figure 5:
 set.seed(1701)
 pdpZen(collegeTrain,
-       rf,
-       "Enroll",
-       gridSize = 20,
-       zpath = zpath,
-       convexHull = T)
+  rf,
+  "Enroll",
+  gridSize = 20,
+  zpath = zpath,
+  convexHull = T
+)
 
 
 
