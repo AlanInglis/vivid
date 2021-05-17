@@ -44,10 +44,10 @@ cervical$STDs_No <- log(cervical$STDs_No + 1)
 cervical$Biopsy <- factor(cervical$Biopsy, levels = c(0, 1), labels=c('Healthy', 'Cancer'))
 
 # Impute NAs by mode:
-imputer <- mlr::imputeMode()
-cervical_impute <- mlr::impute(cervical, classes = list(numeric = mlr::imputeMode()))
+imputer <- imputeMode()
+cervical_impute <- impute(cervical, classes = list(numeric = imputeMode()))
 cervical <- cervical_impute$data
-cervical_impute_1 <-  mlr::impute(cervical, classes = list(integer = mlr::imputeMode()))
+cervical_impute_1 <-  impute(cervical, classes = list(integer = imputeMode()))
 cervical <- cervical_impute_1$data
 
 # Turn dummy variables into factors:
@@ -71,7 +71,7 @@ canTask <- makeClassifTask(data = cervicalTrain, target = "Biopsy")
 # check if data is imbalanced
 table(getTaskTargets(canTask))
 
-# Balance the data
+# Balance the data using SMOTE
 set.seed(11)
 taskSmote <- smote(canTask, rate = 14, nn = 10)
 table(getTaskTargets(taskSmote))
