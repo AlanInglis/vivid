@@ -60,7 +60,7 @@ pdpZen <- function(data,
                    comboImage = FALSE,
                    rug = TRUE,
                    predictFun = NULL,
-                  convexHull = FALSE,
+                   convexHull = FALSE,
                    ...) {
   if (!(requireNamespace("zenplots", quietly = TRUE))) {
     message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")

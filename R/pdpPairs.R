@@ -78,7 +78,7 @@ pdpPairs <- function(data,
                      gridSize = 10,
                      nmax = 500,
                      class = 1,
-                     nIce = NULL,
+                     nIce = 30,
                      comboImage = FALSE,
                      predictFun = NULL,
                      convexHull = FALSE) {
@@ -100,13 +100,13 @@ pdpPairs <- function(data,
   vars <- vars[vars %in% vars0]
   if (is.null(vars)) vars <- vars0
 
-  if(!is.null(nIce)){
-    sice <- c(NA, min(nIce):max(nIce))
-  }else{
-  nIce <- 30
-  nIce <- min(nIce, nrow(data))
-  sice <- c(NA, sample(nrow(data), nIce)) # for use with iceplots
-  }
+  if(length(nIce) > 1){
+    sice <- c(NA, nIce)
+    }else{
+      nIce <- 30
+      nIce <- min(nIce, nrow(data))
+      sice <- c(NA, sample(nrow(data), nIce)) # for use with iceplots
+      }
 
   # loop through vars and create a list of pdps
 

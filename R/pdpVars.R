@@ -46,10 +46,19 @@
 #'}
 #' @export
 
-pdpVars <- function(data, fit, response,
-                    vars = NULL, pal = rev(RColorBrewer::brewer.pal(11, "RdYlBu")),
-                    gridSize = 10, nmax = 500, class = 1,
-                    nIce = NULL, predictFun = NULL, limits = NULL, colorVar = NULL, draw = TRUE) {
+pdpVars <- function(data,
+                    fit,
+                    response,
+                    vars = NULL,
+                    pal = rev(RColorBrewer::brewer.pal(11, "RdYlBu")),
+                    gridSize = 10,
+                    nmax = 500,
+                    class = 1,
+                    nIce = 30,
+                    predictFun = NULL,
+                    limits = NULL,
+                    colorVar = NULL,
+                    draw = TRUE) {
 
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
@@ -70,8 +79,8 @@ pdpVars <- function(data, fit, response,
   vars <- vars[vars %in% vars0]
   if (is.null(vars)) vars <- vars0
 
-  if(!is.null(nIce)){
-    sice <- c(NA, min(nIce):max(nIce))
+  if(length(nIce) > 1){
+    sice <- c(NA, nIce)
   }else{
     nIce <- 30
     nIce <- min(nIce, nrow(data))
