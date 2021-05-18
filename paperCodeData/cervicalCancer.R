@@ -103,7 +103,7 @@ performance(pred1, measures = list(acc, mmce, auc), model = canMod)
 # False and true positive rates and mean misclassification error
 predAnalysis <- generateThreshVsPerfData(pred1, measures = list(fpr, tpr, mmce))
 plotROCCurves(predAnalysis)
-plotThreshVsPerf(predAnalysis)
+
 
 # Create vivid matrix -----------------------------------------------------
 
@@ -169,7 +169,5 @@ pdpZen(cervical,
        fitlims = c(0, 0.7))
 
 
-
-
-
-
+# -------------------------------------------------------------------------
+# -------------------------------------------------------------------------
