@@ -47,11 +47,11 @@ rf <- randomForest(Enroll ~ ., data = collegeTrain)
 
 # Fit an mlr3 knn model
 # Used in Section 2.3:
-myData1 <- collegeTrain
-myData1$Private <- as.numeric(myData1$Private)
+# myData1 <- collegeTrain
+# myData1$Private <- as.numeric(myData1$Private)
 
 set.seed(11)
-knnT <- TaskRegr$new(id = "myData1", backend = myData1, target = "Enroll")
+knnT <- TaskRegr$new(id = "knn", backend = collegeTrain, target = "Enroll")
 set.seed(11)
 knnL <- lrn("regr.kknn")
 set.seed(11)
@@ -87,7 +87,7 @@ myMatrixSorted_1 <- vividReorder(myMatrixSorted_1)
 set.seed(101)
 knnMat <- vivi(
   fit = knnMod,
-  data = myData1,
+  data = collegeTrain,
   response = "Enroll",
   gridSize = 40,
   importanceType = "agnostic"
