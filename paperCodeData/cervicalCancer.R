@@ -132,7 +132,6 @@ cervicalImp <- cervicalImp[-2]
 # Add VImps into canVIVI and turn into vivid matrix
 canVIVI <- viviUpdate(canVIVI, cervicalImp)
 canVIVI <- vividReorder(canVIVI)
-class(canVIVI) <- c("vivid", class(canVIVI))
 
 
 # ==============================================================================
