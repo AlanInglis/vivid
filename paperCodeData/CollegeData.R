@@ -34,7 +34,7 @@ myData$Personal <- log(myData$Personal)
 
 # Split data into train and test
 set.seed(123)
-train <- sample(x = 777, size = 544) # split 70-30
+train <- sample(nrow(myData), round(.7*nrow(myData))) # split 70-30
 collegeTrain <- myData[train, ]
 collegeTest <- myData[-train, ]
 
