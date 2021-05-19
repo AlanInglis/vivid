@@ -163,6 +163,7 @@ vividReorder <- function(d) {
   score <- apply(as.matrix(vInt), 1, max) + vImp
   o <- DendSer::dser(-vInt, -score, cost = DendSer::costLS)
   res <- d[o, o]
+  class(res)<- class(d)
   res
 }
 
