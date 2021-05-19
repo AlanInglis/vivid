@@ -68,7 +68,6 @@ myMatrix <- vivi(collegeTrain, rf, "Enroll", gridSize = 40, reorder = FALSE)
 # Sort and turn the matrix into vivid matrix:
 # Used for Figure 1(b):
 myMatrixSorted <- vividReorder(myMatrix)
-class(myMatrixSorted) <- c("vivid", class(myMatrixSorted))
 
 # Get agnostic VImp values instead of using random forests embedded VImps
 # Used for Figure 2(b):
@@ -82,7 +81,6 @@ collegeVImps <- vivid:::vividImportance.default(rf,
 # Update the matrix with the new VImp values and sort:
 myMatrixSorted_1 <- viviUpdate(myMatrixSorted, collegeVImps)
 myMatrixSorted_1 <- vividReorder(myMatrixSorted_1)
-class(myMatrixSorted_1) <- c("vivid", class(myMatrixSorted_1))
 
 # Create vivid matix for mlr3 knn fit using agnostic VImp
 # Used for figure 2(a):
