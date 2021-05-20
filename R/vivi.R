@@ -72,16 +72,16 @@ vivi <- function(data,
 
 
   # Call the importance function
-  if (!is.null(importanceType)) {
-    if (importanceType == "agnostic") {
-      vImp <- vividImportance.default(
-        data = data,
-        fit = fit,
-        response = response,
-        importanceType = importanceType,
-        predictFun = predictFun
-      )
-    } else {
+  if (importanceType == "agnostic") {
+    vImp <- vividImportance.default(
+      data = data,
+      fit = fit,
+      response = response,
+      importanceType = importanceType,
+      predictFun = predictFun
+    )
+  }
+  else {
       vImp <- vividImportance(
         data = data,
         fit = fit,
@@ -90,15 +90,7 @@ vivi <- function(data,
         predictFun = predictFun
       )
     }
-  } else {
-    vImp <- vividImportance(
-      data = data,
-      fit = fit,
-      response = response,
-      importanceType = importanceType,
-      predictFun = predictFun
-    )
-  }
+
 
 
   # Call the interaction function
