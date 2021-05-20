@@ -11,6 +11,7 @@
 
 # Load relevent packages:
 library("vivid") # for visualistions and measuring VIVI
+library("h2o") # to create model
 library("mlr") # to create model
 
 # Data --------------------------------------------------------------------
@@ -59,41 +60,32 @@ factorNames <- c("STDs_condy", "STDs_vag_condy",
 cervical[factorNames] <- lapply(cervical[factorNames], factor)
 
 #  Split data into train and test
-set.seed(11)
+set.seed(101)
 trainCervical <- sample(x = 858, size = 600)
 cervicalTrain <- cervical[trainCervical, ]
 cervicalTest  <- cervical[-trainCervical, ]
 
 # Create Deep Learner -----------------------------------------------------
-set.seed(11)
+set.seed(101)
 canTask <- makeClassifTask(data = cervicalTrain, target = "Biopsy")
 
 # check if data is imbalanced
 table(getTaskTargets(canTask))
 
 # Balance the data using SMOTE
-set.seed(11)
+set.seed(101)
 taskSmote <- smote(canTask, rate = 14, nn = 10)
 table(getTaskTargets(taskSmote))
 
 # Create learner
-set.seed(11)
-canLrn <- makeLearner("classif.h2o.deeplearning", predict.type = "prob")
+set.seed(101)
+canLrn <- makeLearner("classif.h2o.deeplearning", predict.type = "prob",
+                      par.vals = list(epochs = 20,
+                                      score_interval = 1,
+                                      stopping_tolerance = 1e-3,
+                                      stopping_metric = "misclassification"))
 
-# Tune model
-param_set <- makeParamSet(
-  makeNumericParam("epochs", default = 50, lower = 1, upper = Inf),
-  makeNumericParam("score_interval", default = 1),
-  makeDiscreteParam("stopping_metric", default = "misclassification",
-                    values = "misclassification"),
-  makeNumericParam("stopping_tolerance", default = 1e-3)
-)
-canLrn$par.set$pars$epochs <- param_set$pars$epochs
-canLrn$par.set$pars$score_interval <- param_set$pars$score_interval
-canLrn$par.set$pars$stopping_metric <- param_set$pars$stopping_metric
-canLrn$par.set$pars$stopping_tolerance<- param_set$pars$stopping_tolerance
-
-set.seed(11)
+set.seed(101)
 canMod <- train(canLrn, taskSmote)
 
 # Test predictions
@@ -108,10 +100,23 @@ plotROCCurves(predAnalysis)
 # Create vivid matrix -----------------------------------------------------
 
 # vivid matrix
-set.seed(11)
+set.seed(101)
 canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
                 gridSize = 10)
 
+
+
+
+# -------------------------------------------------------------------------
+# Using h2o's var imp
+vImp <- getFeatureImportance(canMod)
+vImps <- with(vImp$res, setNames(importance, variable))
+sort(vImps, decreasing = TRUE)
+
+# Add VImps into canVIVI and turn into vivid matrix
+# canVIVI <- viviUpdate(canVIVI, vImps)
+# canVIVI <- vividReorder(canVIVI)
+# class(canVIVI) <- c("vivid", class(canVIVI))
 
 # Calc importance ---------------------------------------------------------
 
@@ -122,7 +127,7 @@ predFun_Imp <- function(mod, data){
   return(out$data[,2])
 }
 
-set.seed(12)
+set.seed(101)
 cervicalImp <- vivid:::vividImportance.default(canMod, cervicalTrain, "DUMMYcancer",
                                 predictFun = function(mod, data) predFun_Imp(mod = mod, data = data))
 
@@ -143,13 +148,16 @@ class(canVIVI) <- c("vivid", class(canVIVI))
 viviHeatmap(canVIVI, angle = 50)
 
 # Figure 7:
-set.seed(11)
-viviNetwork(canVIVI, intThreshold = 0.008, removeNode = TRUE,
+set.seed(101)
+viviNetwork(canVIVI, intThreshold = 0.015, removeNode = TRUE,
             cluster = igraph::cluster_fast_greedy)
 
 # Figure 8:
-varNames <- colnames(canVIVI[,1:5]) # Using the vars from cluster in Figure 7
-set.seed(11)
+varNames <- colnames(canVIVI[,1:9]) # Using the vars from cluster in Figure 7
+varNames <- c("STDs_No", "Horm_Cont_yrs",
+              "First_sex_inter", "No_sex_par" ,
+              "No_preg",  "Smokes_pcks_yr", "Age")
+set.seed(101)
 canGPDP <- pdpPairs(cervical,
          canMod,
          "Biopsy",
@@ -160,11 +168,11 @@ canGPDP <- pdpPairs(cervical,
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.015)
+zpath <- zPath(canVIVI, cutoff = 0.001)
 pdpZen(cervical,
        canMod,
        "Biopsy",
-       zpath,
+       varNames,
        convexHull = TRUE,
        fitlims = c(0, 0.7))
 

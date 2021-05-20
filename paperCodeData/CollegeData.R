@@ -12,31 +12,34 @@ library("ISLR") # for data
 library("mlr3") # to create model
 library("mlr3learners") # to create model
 library("randomForest") # to create model
+library("knn") # to create model
+library("caret")
 library("condvis2") # for predict function
 library("Metrics") # to get metrics
+
 
 
 # Data --------------------------------------------------------------------
 
 # Load data:
-myData <- as.data.frame(College)
+collegeData <- as.data.frame(College)
 
 # Taking log values of skewed data:
-myData$Accept <- log(myData$Accept)
-myData$Apps <- log(myData$Apps)
-myData$Enroll <- log(myData$Enroll)
-myData$F.Undergrad <- log(myData$F.Undergrad)
-myData$P.Undergrad <- log(myData$P.Undergrad)
-myData$Outstate <- log(myData$Outstate)
-myData$Room.Board <- log(myData$Room.Board)
-myData$Books <- log(myData$Books)
-myData$Personal <- log(myData$Personal)
+collegeData$Accept <- log(collegeData$Accept)
+collegeData$Apps <- log(collegeData$Apps)
+collegeData$Enroll <- log(collegeData$Enroll)
+collegeData$F.Undergrad <- log(collegeData$F.Undergrad)
+collegeData$P.Undergrad <- log(collegeData$P.Undergrad)
+collegeData$Outstate <- log(collegeData$Outstate)
+collegeData$Room.Board <- log(collegeData$Room.Board)
+collegeData$Books <- log(collegeData$Books)
+collegeData$Personal <- log(collegeData$Personal)
 
 # Split data into train and test
-set.seed(123)
-train <- sample(nrow(myData), round(.7*nrow(myData))) # split 70-30
-collegeTrain <- myData[train, ]
-collegeTest <- myData[-train, ]
+set.seed(101)
+train <- sample(nrow(collegeData), round(.7*nrow(collegeData))) # split 70-30
+collegeTrain <- collegeData[train, ]
+collegeTest <- collegeData[-train, ]
 
 # Model fits --------------------------------------------------------------
 
@@ -47,14 +50,12 @@ rf <- randomForest(Enroll ~ ., data = collegeTrain)
 
 # Fit an mlr3 knn model
 # Used in Section 2.3:
-# myData1 <- collegeTrain
-# myData1$Private <- as.numeric(myData1$Private)
 
-set.seed(11)
+set.seed(101)
 knnT <- TaskRegr$new(id = "knn", backend = collegeTrain, target = "Enroll")
-set.seed(11)
+set.seed(101)
 knnL <- lrn("regr.kknn")
-set.seed(11)
+set.seed(101)
 knnMod <- knnL$train(knnT)
 
 
@@ -63,11 +64,11 @@ knnMod <- knnL$train(knnT)
 # Create unsorted vivid matrix for random forest fit:
 # Used for Figure 1(a):
 set.seed(101)
-myMatrix <- vivi(collegeTrain, rf, "Enroll", gridSize = 40, reorder = FALSE)
+vividMatrixRF <- vivi(collegeTrain, rf, "Enroll", gridSize = 40, reorder = FALSE)
 
 # Sort and turn the matrix into vivid matrix:
 # Used for Figure 1(b):
-myMatrixSorted <- vividReorder(myMatrix)
+vividMatrixRFSorted <- vividReorder(vividMatrixRF)
 
 # Get agnostic VImp values instead of using random forests embedded VImps
 # Used for Figure 2(b):
@@ -79,8 +80,8 @@ collegeVImps <- vivid:::vividImportance.default(rf,
 )
 
 # Update the matrix with the new VImp values and sort:
-myMatrixSorted_1 <- viviUpdate(myMatrixSorted, collegeVImps)
-myMatrixSorted_1 <- vividReorder(myMatrixSorted_1)
+vividMatrixRFSorted_1 <- viviUpdate(vividMatrixRFSorted, collegeVImps)
+vividMatrixRFSorted_1 <- vividReorder(vividMatrixRFSorted_1)
 
 # Create vivid matix for mlr3 knn fit using agnostic VImp
 # Used for figure 2(a):
@@ -101,29 +102,29 @@ knnMat <- vivi(
 # Visualisations for Section 2 --------------------------------------------
 
 # Figure 1(a):
-viviHeatmap(myMatrix, angle = 45) # unsorted heatmap
+viviHeatmap(vividMatrixRF, angle = 45) # unsorted heatmap
 # Figure 1(b):
-viviHeatmap(myMatrixSorted, angle = 45) # sorted heatmap
+viviHeatmap(vividMatrixRFSorted, angle = 45) # sorted heatmap
 
 # Figure 2(a):
 viviHeatmap(knnMat, angle = 45, impLims = c(0, 0.5)) # setting same VImp limits as Figure 2(b)
 # Figure 2(b)
-viviHeatmap(myMatrixSorted_1, angle = 45) # agnostic VImp measures
+viviHeatmap(vividMatrixRFSorted_1, angle = 45) # agnostic VImp measures
 
 # Figure 3(a)
-viviNetwork(myMatrixSorted)
+viviNetwork(vividMatrixRFSorted)
 # Figure 3(b)
-viviNetwork(myMatrixSorted, intThreshold = 0.01, removeNode = T)
+viviNetwork(vividMatrixRFSorted, intThreshold = 0.01, removeNode = T)
 
 
 # Visualisation for Section 3.2 ---------------------------------------------
 
 # Filter matrix:
-nam <- colnames(myMatrixSorted) # get names
+nam <- colnames(vividMatrixRFSorted) # get names
 nam <- nam[1:7] # filter names
 
 # Create GPDP for Figure 4:
-set.seed(1701)
+set.seed(101)
 pdpPairs(collegeTrain,
   rf, "Enroll",
   gridSize = 20,
@@ -135,10 +136,10 @@ pdpPairs(collegeTrain,
 # Visualisation for Section 3.3 ---------------------------------------------
 
 # Calculate the zpath using same threshold as Figure 3(b):
-zpath <- zPath(myMatrixSorted, 0.01)
+zpath <- zPath(vividMatrixRFSorted, 0.01)
 
 # Create ZPDP using zpath for Figure 5:
-set.seed(1701)
+set.seed(101)
 pdpZen(collegeTrain,
   rf,
   "Enroll",
