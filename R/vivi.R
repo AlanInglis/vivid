@@ -80,8 +80,6 @@ vivi <- function(data,
       data1 <- data
       pFun1 <- pFun
     }
-    data1xx <<- data1
-    pFun1xx <<- pFun1
     vImp <- vividImportance.default(
       data = data1,
       fit = fit,
