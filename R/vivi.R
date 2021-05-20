@@ -474,7 +474,7 @@ vividInteraction.default <- function(fit,
   # calculate interactions
   res <- light_interaction(fl,
     pairwise = TRUE, type = "H", grid_size = gridSize,
-    normalize = F, n_max = nmax
+    normalize = F, n_max = nmax, sqrt=TRUE
   )$data
 
   # reorder

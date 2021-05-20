@@ -109,8 +109,8 @@ plotROCCurves(predAnalysis)
 
 # vivid matrix
 set.seed(11)
-canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
-                gridSize = 10)
+system.time(canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
+                gridSize = 10))
 
 
 # Calc importance ---------------------------------------------------------
