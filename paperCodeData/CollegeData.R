@@ -14,7 +14,8 @@ library("mlr3learners") # to create model
 library("randomForest") # to create model
 library("condvis2") # for predict function
 library("Metrics") # to get metrics
-
+library("kknn") # to get knn model
+library("caret") # for resampling
 
 # Data --------------------------------------------------------------------
 
@@ -128,7 +129,7 @@ pdpPairs(collegeTrain,
   rf, "Enroll",
   gridSize = 20,
   vars = nam,
-  convexHull = T
+  convexHull = TRUE
 )
 
 
