@@ -16,16 +16,16 @@
 #' @export
 
 viviUpdate <- function(mat, newImp, reorder=TRUE) {
-  orderNames <- names(newImp)
-  viviMatrix <- mat[orderNames, orderNames] # make sure the order of vImp & vInt match
-  diag(viviMatrix) <- newImp # set diagonal to equal vImps
+  if (!is.null(names(newImp)))
+    newImp <- newImp[rownames(mat)]
+  diag(mat) <- newImp # set diagonal to equal vImps
 
-  if (reorder) viviMatrix <- vividReorder(viviMatrix)
+  if (reorder) mat <- vividReorder(mat)
 
-  if(class(viviMatrix)[1] != "vivid"){
-  class(viviMatrix) <- c("vivid", class(viviMatrix))
+  if(class(mat)[1] != "vivid"){
+  class(mat) <- c("vivid", class(mat))
   }
 
-  return(viviMatrix)
+  return(mat)
 
 }
