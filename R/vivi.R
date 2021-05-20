@@ -396,7 +396,10 @@ vividImportance.WrappedModel <- function(fit,
       } else {
         importance <- fit$learner.model$importance[, 1]
       }
-    } else {
+    } else if (fit$learner$package == "h2o") {
+     imp <-  mlr::getFeatureImportance(fit)
+     importance <- with(imp$res, setNames(importance, variable))
+    }else {
       importance <- vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
     }
   }

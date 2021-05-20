@@ -184,15 +184,16 @@ pdpZen <- function(data,
     if (!is.null(pdp)) {
       if (!comboImage && is.factor(pdp[[vars[1]]]) + is.factor(pdp[[vars[2]]]) == 1) {
         if (is.factor(pdp[[vars[1]]])) vars <- rev(vars)
-
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = fit, color = .data[[vars[2]]])) +
           geom_line() +
           geom_rug(data = data, sides = "b", aes(y = .data[["pred"]]))
       } else {
         if (is.factor(pdp[[vars[1]]])) posx <- "jitter" else posx <- "identity"
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
+
+        num2d <- zargs$num/2
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
-          geom_tile(aes(fill = fit)) +
+          geom_tile(aes(fill = fit), show.legend = num2d == 1) +
           scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         if (rug) {
           p <- p +
@@ -201,10 +202,13 @@ pdpZen <- function(data,
             scale_color_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         }
       }
+
       p <- p +
-        guides(fill = FALSE, color = FALSE) +
+        #guides(fill = FALSE,  color = FALSE) +
         theme_bw() +
         theme(
+          legend.position = "left",
+          legend.key.size = unit(14, 'pt'),
           axis.line = element_blank(),
           axis.ticks = element_blank(),
           axis.text.x = element_blank(),
@@ -213,6 +217,8 @@ pdpZen <- function(data,
           axis.title.y = element_blank(),
           panel.border = element_rect(colour = "gray", fill = NA, size = 1.5)
         )
+
+
     } else {
       p <- ggplot() +
         theme(panel.background = element_blank())
