@@ -110,28 +110,32 @@ plotROCCurves(predAnalysis)
 # vivid matrix
 set.seed(11)
 canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
-                gridSize = 10)
+                gridSize = 10,importanceType="agnostic")  # CH fix, now commented out code below not needed
 
 
-# Calc importance ---------------------------------------------------------
-
-cervicalTrain$DUMMYcancer <-  cervicalTrain$Biopsy == "Cancer"
-
-predFun_Imp <- function(mod, data){
-  out <- predict(mod, newdata = data)
-  return(out$data[,2])
-}
-
-set.seed(12)
-cervicalImp <- vivid:::vividImportance.default(canMod, cervicalTrain, "DUMMYcancer",
-                                predictFun = function(mod, data) predFun_Imp(mod = mod, data = data))
-
-# Remove biopsy column
-cervicalImp <- cervicalImp[-2]
-
-# Add VImps into canVIVI and turn into vivid matrix
-canVIVI <- viviUpdate(canVIVI, cervicalImp)
-canVIVI <- vividReorder(canVIVI)
+# canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
+#                 gridSize = 10)
+#
+#
+# # Calc importance ---------------------------------------------------------
+#
+# cervicalTrain$DUMMYcancer <-  cervicalTrain$Biopsy == "Cancer"
+#
+# predFun_Imp <- function(mod, data){
+#   out <- predict(mod, newdata = data)
+#   return(out$data[,2])
+# }
+#
+# set.seed(12)
+# cervicalImp <- vivid:::vividImportance.default(canMod, cervicalTrain, "DUMMYcancer",
+#                                 predictFun = function(mod, data) predFun_Imp(mod = mod, data = data))
+#
+# # Remove biopsy column
+# cervicalImp <- cervicalImp[-2]
+#
+# # Add VImps into canVIVI and turn into vivid matrix
+# canVIVI <- viviUpdate(canVIVI, cervicalImp)
+# canVIVI <- vividReorder(canVIVI)
 
 
 # ==============================================================================

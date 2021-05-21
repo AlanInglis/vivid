@@ -80,9 +80,9 @@ pdpVars <- function(data,
   if (is.null(vars)) vars <- vars0
 
   if(length(nIce) > 1){
+    nIce <- nIce[nIce <= nrow(data)]
     sice <- c(NA, nIce)
-  }else{
-    nIce <- 30
+  } else {
     nIce <- min(nIce, nrow(data))
     sice <- c(NA, sample(nrow(data), nIce)) # for use with iceplots
   }

@@ -65,40 +65,39 @@ vivi <- function(data,
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) {
-    predictFun <- CVpredictfun(classif, class)
+    pFun <- CVpredictfun(classif, class)
   }
-
-
-
+  else pFun <- predictFun
 
   # Call the importance function
-  if (!is.null(importanceType)) {
-    if (importanceType == "agnostic") {
-      vImp <- vividImportance.default(
-        data = data,
-        fit = fit,
-        response = response,
-        importanceType = importanceType,
-        predictFun = predictFun
-      )
+  if (importanceType == "agnostic") {
+    if (is.null(predictFun) & classif) {
+      data1 <- data
+      if (is.factor(data[[response]]) & is.numeric(class)) class <- levels(data[[response]])[class]
+      data1[[response]] <- as.numeric(data1[[response]] == class)
+      pFun1 <- CVpredictfun(TRUE, class)
     } else {
+      data1 <- data
+      pFun1 <- pFun
+    }
+    vImp <- vividImportance.default(
+      data = data1,
+      fit = fit,
+      response = response,
+      importanceType = importanceType,
+      predictFun = pFun1
+    )
+  }
+  else {
       vImp <- vividImportance(
         data = data,
         fit = fit,
         response = response,
         importanceType = importanceType,
-        predictFun = predictFun
+        predictFun = pFun
       )
     }
-  } else {
-    vImp <- vividImportance(
-      data = data,
-      fit = fit,
-      response = response,
-      importanceType = importanceType,
-      predictFun = predictFun
-    )
-  }
+
 
 
   # Call the interaction function
@@ -109,7 +108,7 @@ vivi <- function(data,
     interactionType = NULL,
     nmax = nmax,
     gridSize = gridSize,
-    predictFun = predictFun
+    predictFun = pFun
   )
 
   # perserve original data order

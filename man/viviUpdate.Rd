@@ -4,12 +4,14 @@
 \alias{viviUpdate}
 \title{viviUpdate}
 \usage{
-viviUpdate(mat, newImp)
+viviUpdate(mat, newImp, reorder = TRUE)
 }
 \arguments{
 \item{mat}{A matrix, such as that returned by \code{vivi}.}
 
 \item{newImp}{A named vector of variable importances.}
+
+\item{reorder}{If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.}
 }
 \value{
 A matrix of values, of class vivid, with updated variable importances.
