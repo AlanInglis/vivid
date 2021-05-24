@@ -137,7 +137,7 @@ canGPDP <- pdpPairs(data = cervicalTrain,
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.01)
+zpath <- zPath(canVIVI, cutoff = 0.011)
 set.seed(1701)
 pdpZen(data = cervicalTrain,
        fit = canMod,
