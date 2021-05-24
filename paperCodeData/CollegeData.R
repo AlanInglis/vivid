@@ -13,10 +13,11 @@ library("mlr3") # to create model
 library("mlr3learners") # to create model
 library("randomForest") # to create model
 library("knn") # to create model
-library("caret")
 library("condvis2") # for predict function
 library("Metrics") # to get metrics
-
+library("kknn") # to get knn model
+library("caret") # for resampling
+library("dplyr")
 
 
 # Data --------------------------------------------------------------------
@@ -25,38 +26,35 @@ library("Metrics") # to get metrics
 collegeData <- as.data.frame(College)
 
 # Taking log values of skewed data:
-collegeData$Accept <- log(collegeData$Accept)
-collegeData$Apps <- log(collegeData$Apps)
-collegeData$Enroll <- log(collegeData$Enroll)
-collegeData$F.Undergrad <- log(collegeData$F.Undergrad)
-collegeData$P.Undergrad <- log(collegeData$P.Undergrad)
-collegeData$Outstate <- log(collegeData$Outstate)
-collegeData$Room.Board <- log(collegeData$Room.Board)
-collegeData$Books <- log(collegeData$Books)
-collegeData$Personal <- log(collegeData$Personal)
+collegeData <- collegeData %>%
+  mutate(log(collegeData[,c(2:4,7:12)]))
+
 
 # Split data into train and test
 set.seed(101)
 train <- sample(nrow(collegeData), round(.7*nrow(collegeData))) # split 70-30
 collegeTrain <- collegeData[train, ]
 collegeTest <- collegeData[-train, ]
+xTest <- collegeTest[,-4]
+yTest <- collegeTest$Enroll
 
 # Model fits --------------------------------------------------------------
 
 # Fit a random forest model
 # Used throughout Section 2:
 set.seed(101)
-rf <- randomForest(Enroll ~ ., data = collegeTrain)
+rf <- randomForest(Enroll ~ ., data = collegeTrain, xtest = xTest, ytest = yTest)
 
 # Fit an mlr3 knn model
 # Used in Section 2.3:
-
-set.seed(101)
 knnT <- TaskRegr$new(id = "knn", backend = collegeTrain, target = "Enroll")
-set.seed(101)
 knnL <- lrn("regr.kknn")
-set.seed(101)
 knnMod <- knnL$train(knnT)
+
+
+# Check mse for knn model:
+pred <- predict(knnMod, newdata = collegeTest)
+mspe <- mean((yTest - pred)^2)
 
 
 # Create vivid matrix -----------------------------------------------------
@@ -129,7 +127,7 @@ pdpPairs(collegeTrain,
   rf, "Enroll",
   gridSize = 20,
   vars = nam,
-  convexHull = T
+  convexHull = TRUE
 )
 
 
