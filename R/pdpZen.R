@@ -205,7 +205,7 @@ pdpZen <- function(data,
       }
 
       p <- p +
-        #guides(fill = FALSE,  color = FALSE) +
+        guides(fill = FALSE,  color = FALSE) +
         theme_bw() +
         theme(
           #legend.position = "left",
