@@ -65,40 +65,39 @@ vivi <- function(data,
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) {
-    predictFun <- CVpredictfun(classif, class)
+    pFun <- CVpredictfun(classif, class)
   }
-
-
-
+  else pFun <- predictFun
 
   # Call the importance function
-  if (!is.null(importanceType)) {
-    if (importanceType == "agnostic") {
-      vImp <- vividImportance.default(
-        data = data,
-        fit = fit,
-        response = response,
-        importanceType = importanceType,
-        predictFun = predictFun
-      )
+  if (importanceType == "agnostic") {
+    if (is.null(predictFun) & classif) {
+      data1 <- data
+      if (is.factor(data[[response]]) & is.numeric(class)) class <- levels(data[[response]])[class]
+      data1[[response]] <- as.numeric(data1[[response]] == class)
+      pFun1 <- CVpredictfun(TRUE, class)
     } else {
-      vImp <- vividImportance(
-        data = data,
-        fit = fit,
-        response = response,
-        importanceType = importanceType,
-        predictFun = predictFun
-      )
+      data1 <- data
+      pFun1 <- pFun
     }
-  } else {
+    vImp <- vividImportance.default(
+      data = data1,
+      fit = fit,
+      response = response,
+      importanceType = importanceType,
+      predictFun = pFun1
+    )
+  }
+  else {
     vImp <- vividImportance(
       data = data,
       fit = fit,
       response = response,
       importanceType = importanceType,
-      predictFun = predictFun
+      predictFun = pFun
     )
   }
+
 
 
   # Call the interaction function
@@ -109,7 +108,7 @@ vivi <- function(data,
     interactionType = NULL,
     nmax = nmax,
     gridSize = gridSize,
-    predictFun = predictFun
+    predictFun = pFun
   )
 
   # perserve original data order
@@ -396,10 +395,7 @@ vividImportance.WrappedModel <- function(fit,
       } else {
         importance <- fit$learner.model$importance[, 1]
       }
-    } else if (fit$learner$package == "h2o") {
-     imp <-  mlr::getFeatureImportance(fit)
-     importance <- with(imp$res, setNames(importance, variable))
-    }else {
+    } else {
       importance <- vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
     }
   }
@@ -410,10 +406,10 @@ vividImportance.WrappedModel <- function(fit,
 # tidyModels --------------------------------------------------------------
 
 vividImportance.model_fit <- function(fit,
-                                 data,
-                                 response = NULL,
-                                 importanceType = NULL,
-                                 predictFun = NULL) {
+                                      data,
+                                      response = NULL,
+                                      importanceType = NULL,
+                                      predictFun = NULL) {
 
   vImp <- vip::vi_model(fit)
   vImp <- vImp[, 1:2]
@@ -476,8 +472,8 @@ vividInteraction.default <- function(fit,
   }
   # calculate interactions
   res <- light_interaction(fl,
-    pairwise = TRUE, type = "H", grid_size = gridSize,
-    normalize = F, n_max = nmax
+                           pairwise = TRUE, type = "H", grid_size = gridSize,
+                           normalize = F, n_max = nmax
   )$data
 
   # reorder
