@@ -193,7 +193,8 @@ pdpZen <- function(data,
 
         num2d <- zargs$num/2
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
-          geom_tile(aes(fill = fit), show.legend = num2d == 1) +
+          #geom_tile(aes(fill = fit), show.legend = num2d == 1) +
+          geom_tile(aes(fill = fit)) +
           scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         if (rug) {
           p <- p +
@@ -207,8 +208,8 @@ pdpZen <- function(data,
         #guides(fill = FALSE,  color = FALSE) +
         theme_bw() +
         theme(
-          legend.position = "left",
-          legend.key.size = unit(14, 'pt'),
+          #legend.position = "left",
+          #legend.key.size = unit(14, 'pt'),
           axis.line = element_blank(),
           axis.ticks = element_blank(),
           axis.text.x = element_blank(),
