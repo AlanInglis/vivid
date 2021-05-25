@@ -12,11 +12,8 @@ library("ISLR") # for data
 library("mlr3") # to create model
 library("mlr3learners") # to create model
 library("randomForest") # to create model
-library("knn") # to create model
 library("condvis2") # for predict function
-library("Metrics") # to get metrics
 library("kknn") # to get knn model
-library("caret") # for resampling
 library("dplyr")
 
 
@@ -148,18 +145,3 @@ pdpZen(collegeTrain,
 
 
 
-# -------------------------------------------------------------------------
-# Check random forest fit
-# -------------------------------------------------------------------------
-
-yTrain <- collegeTrain$Enroll
-yTest <- collegeTest$Enroll
-
-# Make prediction
-predictions <- predict(rf, collegeTest)
-
-
-# Get some metrics
-print(paste0("MAE: ", mae(yTest, predictions)))
-print(paste0("MSE: ", caret::postResample(predictions, yTest)["RMSE"]^2))
-print(paste0("R2: ", caret::postResample(predictions, yTest)["Rsquared"]))

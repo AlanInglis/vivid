@@ -108,12 +108,9 @@ canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
 viviHeatmap(canVIVI, angle = 50)
 
 # Figure 7:
-viviNetwork(canVIVI,  intThreshold = 0.011, removeNode = TRUE,
-            cluster = igraph::cluster_fast_greedy)
 set.seed(1701)
-viviNetwork(canVIVI, intThreshold = 0.011, removeNode = TRUE,
-            cluster = igraph::cluster_fast_greedy,
-            layout = igraph::layout.gem)
+viviNetwork(canVIVI, intThreshold = 0.004, removeNode = TRUE,
+            cluster = igraph::cluster_louvain)
 
 # Figure 8:
 # Subsetting the variables that are most important & have strongest interactions
@@ -122,7 +119,6 @@ varNames <- c( "First_sex_inter", "Horm_Cont_yrs",
                "IUD_yrs" ,        "Age",
                "STDs_vp_condy",   "STDs_No",
                "Smokes_pcks_yr")
-
 
 
 set.seed(1701)
@@ -137,7 +133,7 @@ canGPDP <- pdpPairs(data = cervicalTrain,
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.011)
+zpath <- zPath(canVIVI, cutoff = 0.004) # same cutoff as Figure 7.
 set.seed(1701)
 pdpZen(data = cervicalTrain,
        fit = canMod,
