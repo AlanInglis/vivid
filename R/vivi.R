@@ -70,7 +70,7 @@ vivi <- function(data,
   else pFun <- predictFun
 
   # Call the importance function
-  if (importanceType == "agnostic") {
+  if (!is.null(importanceType) && importanceType == "agnostic") {
     if (is.null(predictFun) & classif) {
       data1 <- data
       if (is.factor(data[[response]]) & is.numeric(class)) class <- levels(data[[response]])[class]
