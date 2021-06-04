@@ -13,6 +13,7 @@
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
+#' @param normalized Should Friedman's H-statistic be normalized or not. Default is FALSE.
 #' @return A matrix of interaction values, with importance on the diagonal.
 #'
 #' @importFrom flashlight flashlight
@@ -60,7 +61,8 @@ vivi <- function(data,
                  nmax = NULL,
                  reorder = TRUE,
                  class = 1,
-                 predictFun = NULL) {
+                 predictFun = NULL,
+                 normalized = FALSE) {
 
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
@@ -108,7 +110,8 @@ vivi <- function(data,
     interactionType = NULL,
     nmax = nmax,
     gridSize = gridSize,
-    predictFun = pFun
+    predictFun = pFun,
+    normalized = normalized
   )
 
   # perserve original data order
@@ -451,7 +454,8 @@ vividInteraction.default <- function(fit,
                                      interactionType = NULL,
                                      nmax = NULL,
                                      gridSize = 50,
-                                     predictFun = NULL) {
+                                     predictFun = NULL,
+                                     normalized = FALSE) {
   message("Calculating interactions...")
 
   # remove response column
@@ -473,7 +477,7 @@ vividInteraction.default <- function(fit,
   # calculate interactions
   res <- light_interaction(fl,
                            pairwise = TRUE, type = "H", grid_size = gridSize,
-                           normalize = F, n_max = nmax
+                           normalize = normalized, n_max = nmax
   )$data
 
   # reorder
