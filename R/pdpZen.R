@@ -77,7 +77,21 @@ pdpZen <- function(data,
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
+
   predData <- predictFun(fit, data)
+
+
+  prob2Logit <- function(x) {
+    x[(x == 0)] <- 0.001
+    x[(x == 1)] <- 0.999
+    out <- log(x / (1 - x))
+    return(out)
+  }
+
+  if(classif){
+    predData <- prob2Logit(predData)
+  }
+
 
   vars <- names(data)
   vars <- vars[-match(response, vars)]
@@ -136,7 +150,8 @@ pdpZen <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  pdplist$fit <- predictFun(fit, pdplist)
+  #pdplist$fit <- predictFun(fit, pdplist)
+  pdplist$fit <- prob2Logit(predictFun(fit, pdplist))
   pdplist <- split(pdplist, pdplist$.pid)
 
   pdplist0 <- vector("list", nrow(zpairs))

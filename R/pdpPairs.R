@@ -95,6 +95,17 @@ pdpPairs <- function(data,
 
   predData <- predictFun(fit, data)
 
+  prob2Logit <- function(x) {
+    x[(x == 0)] <- 0.001
+    x[(x == 1)] <- 0.999
+    out <- log(x / (1 - x))
+    return(out)
+  }
+
+  if(classif){
+    predData <- prob2Logit(predData)
+  }
+
   vars0 <- names(data)
   vars0 <- vars0[-match(response, vars0)]
   vars <- vars[vars %in% vars0]
@@ -120,7 +131,8 @@ pdpPairs <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  pdplist1$fit <- predictFun(fit, pdplist1)
+  #pdplist1$fit <- predictFun(fit, pdplist1)
+  pdplist1$fit <- prob2Logit(predictFun(fit, pdplist1))
   pdplist1 <- split(pdplist1, pdplist1$.pid)
 
   names(pdplist1) <- vars
@@ -142,7 +154,8 @@ pdpPairs <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  pdplist$fit <- predictFun(fit, pdplist)
+  #pdplist$fit <- predictFun(fit, pdplist)
+  pdplist$fit <- prob2Logit(predictFun(fit, pdplist))
   pdplist <- split(pdplist, pdplist$.pid)
 
   for (i in 1:nrow(xyvarn)) {
