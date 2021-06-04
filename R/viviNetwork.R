@@ -57,7 +57,7 @@ viviNetwork <- function(mat,
     layout <- igraph::layout_in_circle
   }
 
-  df <- as.data.frame(mat)
+  df <- as.data.frame.vivid(mat)
 
   dfImp <- df[df$Measure == "Vimp", ]
 

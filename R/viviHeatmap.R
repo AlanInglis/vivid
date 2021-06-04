@@ -69,7 +69,7 @@ viviHeatmap <- function(mat,
   # Set up plot -------------------------------------------------------
 
 
-  df <- as.data.frame(mat)
+  df <- as.data.frame.vivid(mat)
 
 
 
