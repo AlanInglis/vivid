@@ -6,6 +6,10 @@
 # Section 3:  VISUALISING PARTIAL DEPENDENCE AND CONDITIONAL EXPECTATION
 # ==============================================================================
 
+# install the development version of vivid:
+devtools::install_github("AlanInglis/vivid")
+
+
 # Load relevent packages:
 library("vivid") # for visualisations
 library("ISLR") # for data
@@ -40,7 +44,11 @@ yTest <- collegeTest$Enroll
 # Fit a random forest model
 # Used throughout Section 2:
 set.seed(101)
-rf <- randomForest(Enroll ~ ., data = collegeTrain, xtest = xTest, ytest = yTest)
+rf <- randomForest(Enroll ~ ., data = collegeTrain)
+
+# Check mse for rf model:
+predRf <- predict(rf, newdata = collegeTest)
+mspeRf <- mean((yTest - predRf)^2)
 
 # Fit an mlr3 knn model
 # Used in Section 2.3:
@@ -61,7 +69,7 @@ mspe <- mean((yTest - pred)^2)
 set.seed(101)
 vividMatrixRF <- vivi(collegeTrain, rf, "Enroll", gridSize = 40, reorder = FALSE)
 
-# Sort and turn the matrix into vivid matrix:
+# Sort matrix:
 # Used for Figure 1(b):
 vividMatrixRFSorted <- vividReorder(vividMatrixRF)
 
