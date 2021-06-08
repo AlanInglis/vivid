@@ -17,6 +17,8 @@
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
+#' @param probability if TRUE, then returns the partial dependence for classification on the probability scale. If
+#' FALSE (default), then the partial dependence is returned on a near logit scale.
 #' @return A pairs plot
 #'
 #' @importFrom condvis2 CVpredict
@@ -81,7 +83,9 @@ pdpPairs <- function(data,
                      nIce = 30,
                      comboImage = FALSE,
                      predictFun = NULL,
-                     convexHull = FALSE) {
+                     convexHull = FALSE,
+                     probability = FALSE) {
+
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5, nmax)
@@ -95,16 +99,14 @@ pdpPairs <- function(data,
 
   predData <- predictFun(fit, data)
 
-  prob2Logit <- function(x) {
-    x[(x == 0)] <- 0.001
-    x[(x == 1)] <- 0.999
-    out <- log(x / (1 - x))
-    return(out)
+  if(!classif && probability){
+    warning("Probability scale is for classification only and will be ignored")
   }
 
-  if(classif){
-    predData <- prob2Logit(predData)
+  if(classif && !probability){
+    predData <- convertScale(predData)
   }
+
 
   vars0 <- names(data)
   vars0 <- vars0[-match(response, vars0)]
@@ -131,8 +133,12 @@ pdpPairs <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  #pdplist1$fit <- predictFun(fit, pdplist1)
-  pdplist1$fit <- prob2Logit(predictFun(fit, pdplist1))
+  if(classif && !probability){
+    pdplist1$fit <- convertScale(predictFun(fit, pdplist1))
+    }else{
+      pdplist1$fit <- predictFun(fit, pdplist1)
+    }
+
   pdplist1 <- split(pdplist1, pdplist1$.pid)
 
   names(pdplist1) <- vars
@@ -154,8 +160,12 @@ pdpPairs <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
+  if(classif && !probability){
+    pdplist$fit <- convertScale( predictFun(fit, pdplist))
+  }else{
+    pdplist$fit <- predictFun(fit, pdplist)
+  }
   #pdplist$fit <- predictFun(fit, pdplist)
-  pdplist$fit <- prob2Logit(predictFun(fit, pdplist))
   pdplist <- split(pdplist, pdplist$.pid)
 
   for (i in 1:nrow(xyvarn)) {
@@ -344,4 +354,11 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
   dnew$.id <- 1:nrow(d)
   rownames(dnew) <- NULL
   dnew
+}
+
+convertScale <- function(x) {
+  mEpsilon <- .Machine$double.eps
+  log(ifelse(x > 0, x, mEpsilon)) -
+    mean(log(ifelse(x > 0, x, mEpsilon))
+    )
 }

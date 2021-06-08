@@ -16,6 +16,8 @@
 #' @param limits A vector determining the limits of the predicted values.
 #' @param colorVar Which variable to colour the predictions by.
 #' @param draw If FALSE, then the plot will not be drawn. Default is TRUE.
+#' @param probability if TRUE, then returns the partial dependence for classification on the probability scale. If
+#' FALSE (default), then the partial dependence is returned on a near logit scale.
 #' @return A grid displaying ICE curves and univariate partial dependence.
 #'
 #' @importFrom condvis2 CVpredict
@@ -58,7 +60,8 @@ pdpVars <- function(data,
                     predictFun = NULL,
                     limits = NULL,
                     colorVar = NULL,
-                    draw = TRUE) {
+                    draw = TRUE,
+                    probability = FALSE) {
 
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
@@ -73,6 +76,14 @@ pdpVars <- function(data,
 
 
   predData <- predictFun(fit, data)
+
+  if(!classif && probability){
+    warning("Probability scale is for classification only and will be ignored")
+  }
+
+  if(classif && !probability){
+    predData <- convertScale(predData)
+  }
 
   vars0 <- names(data)
   vars0 <- vars0[-match(response, vars0)]
@@ -97,7 +108,11 @@ pdpVars <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  pdplist1$fit <- predictFun(fit, pdplist1)
+  if(classif && !probability){
+    pdplist1$fit <- convertScale(predictFun(fit, pdplist1))
+  }else{
+    pdplist1$fit <- predictFun(fit, pdplist1)
+  }
   pdplist1 <- split(pdplist1, pdplist1$.pid)
 
   names(pdplist1) <- vars

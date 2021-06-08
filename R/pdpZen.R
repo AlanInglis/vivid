@@ -18,6 +18,8 @@
 #' @param rug If TRUE adds rugs for the data to the pdp plots
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
+#' @param probability if TRUE, then returns the partial dependence for classification on the probability scale. If
+#' FALSE (default), then the partial dependence is returned on a near logit scale.
 #' @param ... passed on to zenplot
 #' @return A zenplot of partial dependence values.
 #'
@@ -61,6 +63,7 @@ pdpZen <- function(data,
                    rug = TRUE,
                    predictFun = NULL,
                    convexHull = FALSE,
+                   probability = FALSE,
                    ...) {
   if (!(requireNamespace("zenplots", quietly = TRUE))) {
     message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
@@ -81,15 +84,12 @@ pdpZen <- function(data,
   predData <- predictFun(fit, data)
 
 
-  prob2Logit <- function(x) {
-    x[(x == 0)] <- 0.001
-    x[(x == 1)] <- 0.999
-    out <- log(x / (1 - x))
-    return(out)
+  if(!classif && probability){
+    warning("Probability scale is for classification only and will be ignored")
   }
 
-  if(classif){
-    predData <- prob2Logit(predData)
+  if(classif && !probability){
+    predData <- convertScale(predData)
   }
 
 
@@ -150,8 +150,11 @@ pdpZen <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  #pdplist$fit <- predictFun(fit, pdplist)
-  pdplist$fit <- prob2Logit(predictFun(fit, pdplist))
+  if(classif && !probability){
+    pdplist$fit <- convertScale(predictFun(fit, pdplist))
+  }else{
+    pdplist$fit <- predictFun(fit, pdplist)
+  }
   pdplist <- split(pdplist, pdplist$.pid)
 
   pdplist0 <- vector("list", nrow(zpairs))
