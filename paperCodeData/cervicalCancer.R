@@ -61,8 +61,7 @@ cervical[factorNames] <- lapply(cervical[factorNames], factor)
 
 #  Split data into train and test
 set.seed(1701)
-trainCervical <- sample(x = 668, size = 468)
-#trainCervical <- sample(x = 858, size = 600)
+trainCervical <- sample(x = 858, size = 600)
 cervicalTrain <- cervical[trainCervical, ]
 cervicalTest  <- cervical[-trainCervical, ]
 
@@ -82,9 +81,9 @@ canLrn <- makeLearner("classif.h2o.gbm",
                       predict.type = "prob",
                       par.vals = list(
                          max_depth = 25,
-                         ntrees = 500,
+                         ntrees = 100,
                          nbins = 100,
-                         learn_rate = 0.001,
+                         learn_rate = 0.1,
                          seed = 1
                       ))
 
@@ -114,13 +113,13 @@ viviHeatmap(canVIVI, angle = 50)
 
 # Figure 7:
 set.seed(1701)
-viviNetwork(canVIVI, intThreshold = 0.01, removeNode = TRUE,
-            cluster = igraph::cluster_fast_greedy,
-            layout = igraph::layout.fruchterman.reingold)
+viviNetwork(canVIVI, intThreshold = 0.014, removeNode = TRUE,
+            cluster = igraph::cluster_fast_greedy)
+
 
 # Figure 8:
 # Subsetting the variables that are most important:
-varNames <- colnames(canVIVI)[1:6]
+varNames <- colnames(canVIVI)[1:7]
 
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
 yesRows <- sample(which(cervicalTrain$Biopsy == "Cancer"), 25)
@@ -138,7 +137,7 @@ canGPDP <- pdpPairs(data = cervicalTrain,
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.01) # same cutoff as Figure 7.
+zpath <- zPath(canVIVI, cutoff = 0.014) # same cutoff as Figure 7.
 set.seed(1701)
 pdpZen(data = cervicalTrain,
        fit = canMod,
