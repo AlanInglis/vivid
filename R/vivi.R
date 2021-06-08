@@ -440,7 +440,9 @@ vividInteraction <- function(fit,
                              interactionType = NULL,
                              nmax = 500,
                              gridSize = 10,
-                             predictFun = NULL, ...) {
+                             predictFun = NULL,
+                             normalized = FALSE,
+                             ...) {
   UseMethod("vividInteraction")
 }
 
