@@ -46,16 +46,18 @@ biopsy <- cervical$Biopsy
 
 
 # Impute using mice
-cImp <- mice(cervical[,-16], seed = 1701, method = "pmm")
+cImp <- mice(cervical[,-16], seed = 1701, method = "cart")
 cervical <- complete(cImp)
 cervical$Biopsy <- biopsy
 
 
 # Turn dummy variables into factors:
 factorNames <- c("STDs_condy",
-                 "STDs_vp_condy", "STDs_syph",
+                 "STDs_vp_condy",
+                 "STDs_syph",
                  "STDs_HIV",
-                 "Dx.HPV", "Dx.Cancer")
+                 "Dx.HPV",
+                 "Dx.Cancer")
 
 cervical[factorNames] <- lapply(cervical[factorNames], factor)
 
@@ -96,6 +98,7 @@ pred1 <- predict(canMod, newdata = cervicalTest)
 # # Evaluate performance accuracy, area under curve and mean misclassification error
 performance(pred1, measures = list(acc, auc))
 
+
 # Create vivid matrix -----------------------------------------------------
 
 # vivid matrix
@@ -113,13 +116,13 @@ viviHeatmap(canVIVI, angle = 50)
 
 # Figure 7:
 set.seed(1701)
-viviNetwork(canVIVI, intThreshold = 0.014, removeNode = TRUE,
+viviNetwork(canVIVI, intThreshold = 0.01, removeNode = TRUE,
             cluster = igraph::cluster_fast_greedy)
 
 
 # Figure 8:
-# Subsetting the variables that are most important:
-varNames <- colnames(canVIVI)[1:7]
+# Subsetting the variables that appear in the cluster in Figure 7:
+varNames <- colnames(canVIVI)[1:5]
 
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
 yesRows <- sample(which(cervicalTrain$Biopsy == "Cancer"), 25)
@@ -137,7 +140,7 @@ canGPDP <- pdpPairs(data = cervicalTrain,
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.014) # same cutoff as Figure 7.
+zpath <- zPath(canVIVI, cutoff = 0.01) # same cutoff as Figure 7.
 set.seed(1701)
 pdpZen(data = cervicalTrain,
        fit = canMod,
