@@ -72,18 +72,28 @@ pdpVars <- function(data,
   gridSize <- min(gridSize, nmax)
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+  if(classif){
+    if(probability){
+      legendName <- "y-hat\nprobability"
+    } else{
+      legendName <- "y-hat\nlogit"
+    }
+  } else{
+    legendName <- "y-hat"
+  }
+
+
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
 
-  predData <- predictFun(fit, data)
 
-  if(!classif && probability){
-    warning("Probability scale is for classification only and will be ignored")
+
+  if(classif){
+    predData <- predictFun(fit, data, prob = probability)
+  }else{
+    predData <- predictFun(fit, data)
   }
 
-  if(classif && !probability){
-    predData <- convertScale(predData)
-  }
 
   vars0 <- names(data)
   vars0 <- vars0[-match(response, vars0)]
@@ -108,11 +118,12 @@ pdpVars <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  if(classif && !probability){
-    pdplist1$fit <- convertScale(predictFun(fit, pdplist1))
+  if(classif){
+    pdplist1$fit <- predictFun(fit, pdplist1,  prob = probability)
   }else{
     pdplist1$fit <- predictFun(fit, pdplist1)
   }
+
   pdplist1 <- split(pdplist1, pdplist1$.pid)
 
   names(pdplist1) <- vars
@@ -135,7 +146,7 @@ pdpVars <- function(data,
         ggplot(aes(x = .data[[var]], y = fit)) +
         geom_line(aes(color = predData, group = .data[[".id"]])) +
         scale_color_gradientn(
-          name = "yhat", colors = pal, limits = limits, oob = scales::squish
+          name = legendName, colors = pal, limits = limits, oob = scales::squish
         )
     } else {
       p <- pdp1 %>%

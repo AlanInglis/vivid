@@ -95,16 +95,24 @@ pdpPairs <- function(data,
   gridSize <- min(gridSize, nmax)
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
-  if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
-  predData <- predictFun(fit, data)
-
-  if(!classif && probability){
-    warning("Probability scale is for classification only and will be ignored")
+  if(classif){
+    if(probability){
+      legendName <- "y-hat\nprobability"
+    } else{
+      legendName <- "y-hat\nlogit"
+    }
+  } else{
+    legendName <- "y-hat"
   }
 
-  if(classif && !probability){
-    predData <- convertScale(predData)
+
+  if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
+
+  if(classif){
+  predData <- predictFun(fit, data, prob = probability)
+  }else{
+    predData <- predictFun(fit, data)
   }
 
 
@@ -133,11 +141,12 @@ pdpPairs <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  if(classif && !probability){
-    pdplist1$fit <- convertScale(predictFun(fit, pdplist1))
-    }else{
-      pdplist1$fit <- predictFun(fit, pdplist1)
-    }
+  if(classif){
+      pdplist1$fit <- predictFun(fit, pdplist1, prob = probability)
+  }else{
+    pdplist1$fit <- predictFun(fit, pdplist1)
+  }
+
 
   pdplist1 <- split(pdplist1, pdplist1$.pid)
 
@@ -160,12 +169,12 @@ pdpPairs <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  if(classif && !probability){
-    pdplist$fit <- convertScale( predictFun(fit, pdplist))
+
+  if(classif){
+    pdplist$fit <- predictFun(fit, pdplist, prob = probability)
   }else{
     pdplist$fit <- predictFun(fit, pdplist)
   }
-  #pdplist$fit <- predictFun(fit, pdplist)
   pdplist <- split(pdplist, pdplist$.pid)
 
   for (i in 1:nrow(xyvarn)) {
@@ -196,7 +205,7 @@ pdpPairs <- function(data,
     pdp <- pdplist[[paste(vars[1], vars[2], sep = "pp")]]
     ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
       geom_tile(aes(fill = fit)) +
-      scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
+      scale_fill_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
   }
 
   pdpc <- function(data, mapping, ...) {
@@ -218,7 +227,7 @@ pdpPairs <- function(data,
       ggplot(aes(x = .data[[var]], y = fit)) +
       geom_line(aes(color = predData, group = .data[[".id"]])) +
       scale_color_gradientn(
-        name = "y-hat", colors = pal, limits = limits, oob = scales::squish,
+        name = legendName, colors = pal, limits = limits, oob = scales::squish,
         guide = guide_colorbar(
           frame.colour = "black",
           ticks.colour = "black"
@@ -233,7 +242,7 @@ pdpPairs <- function(data,
     df <- data.frame(x = x, y = y)
     ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_point(shape = 16, size = 1, show.legend = FALSE) +
-      scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
+      scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
   }
 
   dplotm <- function(data, mapping) {
@@ -245,7 +254,7 @@ pdpPairs <- function(data,
 
     ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_jitter(shape = 16, size = 1, show.legend = FALSE, width = jitterx, height = jittery) +
-      scale_colour_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
+      scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
   }
 
 
@@ -356,9 +365,9 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
   dnew
 }
 
-convertScale <- function(x) {
-  mEpsilon <- .Machine$double.eps
-  log(ifelse(x > 0, x, mEpsilon)) -
-    mean(log(ifelse(x > 0, x, mEpsilon))
-    )
-}
+# convertScale <- function(x) {
+#   mEpsilon <- .Machine$double.eps
+#   log(ifelse(x > 0, x, mEpsilon)) -
+#     mean(log(ifelse(x > 0, x, mEpsilon))
+#     )
+# }

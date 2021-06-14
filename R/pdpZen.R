@@ -79,18 +79,22 @@ pdpZen <- function(data,
   gridSize <- min(gridSize, nmax)
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+
+
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
-  predData <- predictFun(fit, data)
+  if(classif){
+    predData <- predictFun(fit, data, prob = probability)
+  }else{
+    predData <- predictFun(fit, data)
+  }
+
 
 
   if(!classif && probability){
     warning("Probability scale is for classification only and will be ignored")
   }
 
-  if(classif && !probability){
-    predData <- convertScale(predData)
-  }
 
 
   vars <- names(data)
@@ -150,8 +154,8 @@ pdpZen <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  if(classif && !probability){
-    pdplist$fit <- convertScale(predictFun(fit, pdplist))
+  if(classif){
+    pdplist$fit <- predictFun(fit, pdplist, prob = probability)
   }else{
     pdplist$fit <- predictFun(fit, pdplist)
   }
