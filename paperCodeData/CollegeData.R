@@ -153,3 +153,26 @@ pdpZen(collegeTrain,
 
 
 
+# looking at correlated variables -----------------------------------------
+cor(collegeTrain[c(2,3,7)]) # Apps & Accept are highly correlated
+
+set.seed(101)
+# random forest with all
+rfBoth <- randomForest(Enroll ~ ., data = collegeTrain)
+# random forest with accept removed
+rfAccept <- randomForest(Enroll~ Private + Apps + Top10perc + Top25perc + F.Undergrad + P.Undergrad +
+                           Outstate + Room.Board + Books + Personal + PhD + Terminal +
+                           S.F.Ratio + perc.alumni + Expend + Grad.Rate,
+                         data = collegeTrain)
+# random forest with Apps removed
+rfApps <- randomForest(Enroll~ Private + Accept + Top10perc + Top25perc + F.Undergrad + P.Undergrad +
+                         Outstate + Room.Board + Books + Personal + PhD + Terminal +
+                         S.F.Ratio + perc.alumni + Expend + Grad.Rate
+                       , data = collegeTrain)
+
+# visualisations
+pdpVars(collegeTrain, rfBoth,   "Enroll", nIce = 0, vars = c("Accept"), limits = c(5, 7))
+pdpVars(collegeTrain, rfBoth,   "Enroll", nIce = 0, vars = c("Apps"),   limits = c(5, 7))
+pdpVars(collegeTrain, rfAccept, "Enroll", nIce = 0, vars = c("Apps"),   limits = c(5, 7))
+pdpVars(collegeTrain, rfApps,   "Enroll", nIce = 0, vars = c("Accept"), limits = c(5, 7))
+

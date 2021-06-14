@@ -17,7 +17,7 @@ library("vivid") # for visualistions and measuring VIVI
 library("h2o") # to create model
 library("mlr") # to create model
 library("dplyr")
-library("mice")
+library("mice") # for imputation
 # Data --------------------------------------------------------------------
 
 # Get data:
@@ -116,13 +116,13 @@ viviHeatmap(canVIVI, angle = 50)
 
 # Figure 7:
 set.seed(1701)
-viviNetwork(canVIVI, intThreshold = 0.01, removeNode = TRUE,
+viviNetwork(canVIVI, intThreshold = 0.1, removeNode = TRUE,
             cluster = igraph::cluster_fast_greedy)
 
 
 # Figure 8:
-# Subsetting the variables that appear in the cluster in Figure 7:
-varNames <- colnames(canVIVI)[1:5]
+# Subsetting the variables from Figure 7:
+varNames <- colnames(canVIVI)[1:7]
 
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
 yesRows <- sample(which(cervicalTrain$Biopsy == "Cancer"), 25)
@@ -136,18 +136,20 @@ canGPDP <- pdpPairs(data = cervicalTrain,
                     nmax = length(cervical$Age),
                     nIce = c(yesRows, noRows),
                     vars = varNames,
-                    convexHull = TRUE)
+                    convexHull = TRUE,
+                    probability = TRUE)
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.01) # same cutoff as Figure 7.
+zpath <- zPath(canVIVI, cutoff = 0.1) # same cutoff as Figure 7.
 set.seed(1701)
 pdpZen(data = cervicalTrain,
        fit = canMod,
        response = "Biopsy",
        class = "Cancer",
        zpath = zpath,
-       convexHull = TRUE
+       convexHull = TRUE,
+       probability = FALSE
       )
 
 
