@@ -45,7 +45,7 @@
 #' }
 #'\donttest{
 #' library(ranger)
-#' rf <- ranger(Species ~ ., data = iris, importance = "impurity")
+#' rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 #' vivi(fit = rf, data = iris, response = "Species")
 #' }
 #' @export
@@ -194,11 +194,18 @@ vividImportance.default <- function(fit,
 
   message("Agnostic variable importance method used.")
 
-  # create flashlight
-  fl <- flashlight(
-    model = fit, data = data, y = response, label = "",
-    predict_function = function(fit, data) predictFun(fit, data)
-  )
+
+  classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+
+
+    # create flashlight
+    fl <- flashlight(
+      model = fit, data = data, y = response, label = "",
+      predict_function = function(fit, data) predictFun(fit, data, prob = TRUE)
+    )
+
+
+
 
   # extract importance
   suppressWarnings(
@@ -206,6 +213,7 @@ vividImportance.default <- function(fit,
   )
 
   importance <- imp$data[, 3:4]
+
   if (any(is.nan(importance$value))) {
     importance$value <- 1
     message("Flashlight importance works for numeric and numeric binary response only; setting importance to 1.")
@@ -460,6 +468,8 @@ vividInteraction.default <- function(fit,
                                      normalized = FALSE) {
   message("Calculating interactions...")
 
+  classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
+
   # remove response column
   ovars <- data[, !(names(data) %in% response)]
   ovars <- colnames(ovars)
@@ -470,8 +480,11 @@ vividInteraction.default <- function(fit,
   # create flashlight
   fl <- flashlight(
     model = fit, data = data, y = response, label = "",
-    predict_function = function(fit, data) predictFun(fit, as.data.frame(data))
+    predict_function = function(fit, data) predictFun(fit, as.data.frame(data), prob = normalized)
   )
+
+
+
 
   if (is.null(nmax)) {
     nmax <- nrow(data)
