@@ -20,7 +20,8 @@ CVpredictfun <- function(classif = FALSE, class = 1) {
         pred[, class]
       } else {
         mEpsilon <- .Machine$double.eps
-        pred_1 <- log(ifelse(pred > 0, pred, mEpsilon))
+        # pred_1 <- log(ifelse(pred > 0, pred, mEpsilon))
+        pred_1 <- log(pmax(pred, .Machine$double.eps))
         predLogit <- pred_1[, class] - rowMeans(pred_1)
         predLogit
       }
