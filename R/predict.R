@@ -3,7 +3,7 @@ CVpredictfun <- function(classif = FALSE, class = 1) {
   if (classif) {
     function(fit, data, prob = FALSE) {
       pred <- tryCatch(CVpredict(fit, data, ptype = "probmatrix"),
-        error = function(e) NULL, warning = function(w) {}
+                       error = function(e) NULL, warning = function(w) {}
       )
       if (is.null(pred)) {
         predNullMarker <- TRUE
@@ -21,7 +21,14 @@ CVpredictfun <- function(classif = FALSE, class = 1) {
       } else {
         mEpsilon <- .Machine$double.eps
         pred_1 <- log(ifelse(pred > 0, pred, mEpsilon))
-        predLogit <- pred_1[, class] - rowMeans(pred_1)
+        if (ncol(pred)== 2) {
+          if (inherits(fit, "glm") && fit$family$family == "binomial")
+            predLogit <- predict(fit, data)
+          else  predLogit <- pred_1[, 1] - pred_1[, 2]
+          if (identical(pred_1[, class],  pred_1[, 2]))
+            predLogit <- -predLogit
+        } else
+          predLogit <- pred_1[, class] - rowMeans(pred_1)
         predLogit
       }
     }
