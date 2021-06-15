@@ -330,40 +330,40 @@ vividImportance.Learner <- function(fit,
 
 
 # LDA ---------------------------------------------------------------------
-
-vividImportance.lda <- function(fit,
-                                data,
-                                response = NULL,
-                                importanceType = NULL,
-                                predictFun = NULL) {
-
-
-  fl <- flashlight(
-    model = fit, data = data, y = response, label = "",
-    predict_function = function(fit, data) predictFun(fit, data)
-  )
-
-  suppressWarnings(
-    imp <- light_importance(fl, m_repetitions = 4)
-  )
-  importance <- imp$data[, 3:4]
-  importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
-
-  # if flashlight cant handle the response. return a vector of 1s instead of NaNs
-  suppressWarnings(
-    if(any(is.nan(importance))){
-      message("
-Response type not supported.
-Returning a vector of 1's for importance values.
-              ")
-      importance <- replace(importance, is.nan(importance), 1)
-    } else {
-      message("Agnostic variable importance method used.")
-      vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
-    }
-  )
-  return(importance)
-}
+#
+# vividImportance.lda <- function(fit,
+#                                 data,
+#                                 response = NULL,
+#                                 importanceType = NULL,
+#                                 predictFun = NULL) {
+#
+#
+#   fl <- flashlight(
+#     model = fit, data = data, y = response, label = "",
+#     predict_function = function(fit, data) predictFun(fit, data)
+#   )
+#
+#   suppressWarnings(
+#     imp <- light_importance(fl, m_repetitions = 4)
+#   )
+#   importance <- imp$data[, 3:4]
+#   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
+#
+#   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
+#   suppressWarnings(
+#     if(any(is.nan(importance))){
+#       message("
+# Response type not supported.
+# Returning a vector of 1's for importance values.
+#               ")
+#       importance <- replace(importance, is.nan(importance), 1)
+#     } else {
+#       message("Agnostic variable importance method used.")
+#       vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
+#     }
+#   )
+#   return(importance)
+# }
 
 
 

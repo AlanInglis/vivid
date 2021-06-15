@@ -11,7 +11,7 @@ CVpredictfun <- function(classif = FALSE, class = 1) {
         if (is.numeric(class) & is.factor(pred)) class <- levels(pred)[class]
         pred <- as.numeric(pred == class)
       }else{
-        predNullMarker = FALSE
+        predNullMarker <- FALSE
       }
 
       if (predNullMarker) {
