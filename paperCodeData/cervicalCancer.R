@@ -22,44 +22,8 @@ library("mice") # for imputation
 
 # Get data:
 cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",
-                         sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+                     sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
 
-
-
-# Remove cancer tests, similar and constant variables:
-cervical <- dplyr::select(cervical, -Citology, -Schiller, -Hinselmann,
-                          -Dx.CIN, -Dx, -Horm_Cont,
-                          -Smokes, -IUD, -STDs, -STDs_No_diag, -STDs_AIDS,
-                          -STDs.Hep_B, -STDs_cerv_condy, -STDs_Time_first_diag,
-                          -STDs_Time_last_diag, -STDs_pel_inf,
-                          -STDs_gen_h, -STDs_m_c,
-                          -STDs.HPV, -STDs_vag_condy)
-
-
-# Taking the log(x+1) of skewed variables:
-cervical <- cervical %>%
-   mutate(log(cervical[,1:8] + 1))
-
-# Adding biopsy as a factor with labels:
-cervical$Biopsy <- factor(cervical$Biopsy, levels = c(0, 1), labels=c('Healthy', 'Cancer'))
-biopsy <- cervical$Biopsy
-
-
-# Impute using mice
-cImp <- mice(cervical[,-16], seed = 1701, method = "cart")
-cervical <- complete(cImp)
-cervical$Biopsy <- biopsy
-
-
-# Turn dummy variables into factors:
-factorNames <- c("STDs_condy",
-                 "STDs_vp_condy",
-                 "STDs_syph",
-                 "STDs_HIV",
-                 "Dx.HPV",
-                 "Dx.Cancer")
-
-cervical[factorNames] <- lapply(cervical[factorNames], factor)
 
 #  Split data into train and test
 set.seed(1701)
@@ -67,7 +31,90 @@ trainCervical <- sample(x = 858, size = 600)
 cervicalTrain <- cervical[trainCervical, ]
 cervicalTest  <- cervical[-trainCervical, ]
 
-# Create Deep Learner -----------------------------------------------------
+
+
+# Remove cancer tests, similar and constant variables:
+cervicalTrain <- dplyr::select(cervicalTrain, -Citology, -Schiller, -Hinselmann,
+                               -Dx.CIN, -Dx, -Horm_Cont,
+                               -Smokes, -IUD, -STDs, -STDs_No_diag, -STDs_AIDS,
+                               -STDs.Hep_B, -STDs_cerv_condy, -STDs_Time_first_diag,
+                               -STDs_Time_last_diag, -STDs_pel_inf,
+                               -STDs_gen_h, -STDs_m_c,
+                               -STDs.HPV, -STDs_vag_condy, -STDs_vp_condy)
+
+
+
+
+# Taking the log(x+1) of skewed variables:
+cervicalTrain <- cervicalTrain %>%
+   mutate(log(cervicalTrain[,1:8] + 1))
+
+# Adding biopsy as a factor with labels:
+cervicalTrain$Biopsy <- factor(cervicalTrain$Biopsy, levels = c(0, 1), labels=c('Healthy', 'Cancer'))
+biopsy <- cervicalTrain$Biopsy
+
+
+
+# Turn dummy variables into factors:
+factorNames <- c("STDs_condy",
+                 "STDs_syph",
+                 "STDs_HIV",
+                 "Dx.HPV",
+                 "Dx.Cancer")
+
+cervicalTrain[factorNames] <- lapply(cervicalTrain[factorNames], factor)
+
+
+# Impute using mice
+cImp <- mice(cervicalTrain[,-15], seed = 1701, method = "pmm")
+cervicalTrain <- complete(cImp)
+cervicalTrain$Biopsy <- biopsy
+
+
+# Test data ---------------------------------------------------------------
+
+# Remove cancer tests, similar and constant variables:
+cervicalTest <- dplyr::select(cervicalTest, -Citology, -Schiller, -Hinselmann,
+                              -Dx.CIN, -Dx, -Horm_Cont,
+                              -Smokes, -IUD, -STDs, -STDs_No_diag, -STDs_AIDS,
+                              -STDs.Hep_B, -STDs_cerv_condy, -STDs_Time_first_diag,
+                              -STDs_Time_last_diag, -STDs_pel_inf,
+                              -STDs_gen_h, -STDs_m_c,
+                              -STDs.HPV, -STDs_vag_condy, -STDs_vp_condy)
+
+
+
+
+# Taking the log(x+1) of skewed variables:
+cervicalTest <- cervicalTest %>%
+   mutate(log(cervicalTest[,1:8] + 1))
+
+# Adding biopsy as a factor with labels:
+cervicalTest$Biopsy <- factor(cervicalTest$Biopsy, levels = c(0, 1), labels=c('Healthy', 'Cancer'))
+biopsy <- cervicalTest$Biopsy
+
+
+
+# Turn dummy variables into factors:
+factorNames <- c("STDs_condy",
+                 "STDs_syph",
+                 "STDs_HIV",
+                 "Dx.HPV",
+                 "Dx.Cancer")
+
+cervicalTest[factorNames] <- lapply(cervicalTest[factorNames], factor)
+
+# Use same imputation as on training (load mice.reuse function):
+source("https://raw.githubusercontent.com/prockenschaub/Misc/master/R/mice.reuse/mice.reuse.R")
+
+# impute test data based on train imputation model
+testImp <- mice.reuse(cImp, cervicalTest[,-15], seed = 1701)
+cervicalTest <- as.data.frame(testImp[1])
+cervicalTest$Biopsy <- biopsy
+colnames(cervicalTest) <- colnames(cervicalTrain)
+
+
+# Create model -----------------------------------------------------
 canTask <- makeClassifTask(data = cervicalTrain, target = "Biopsy")
 
 # check if data is imbalanced
@@ -82,9 +129,9 @@ table(getTaskTargets(taskSmote))
 canLrn <- makeLearner("classif.h2o.gbm",
                       predict.type = "prob",
                       par.vals = list(
-                         max_depth = 25,
+                         max_depth = 30,
                          ntrees = 100,
-                         nbins = 100,
+                         nbins = 70,
                          learn_rate = 0.1,
                          seed = 1
                       ))
@@ -150,7 +197,7 @@ pdpZen(data = cervicalTrain,
        zpath = zpath,
        convexHull = TRUE,
        probability = FALSE
-      )
+)
 
 
 # -------------------------------------------------------------------------
