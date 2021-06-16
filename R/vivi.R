@@ -461,6 +461,10 @@ vividInteraction.default <- function(fit,
   ovars <- data[, !(names(data) %in% response)]
   ovars <- colnames(ovars)
 
+  if (is.null(nmax)) nmax <- nrow(data)
+  nmax <- max(5, nmax)
+  gridSize <- min(gridSize, nmax)
+
   ### Interaction Matrix:
   res <- NULL
 
