@@ -44,8 +44,6 @@
 #' }
 #' @export
 
-
-
 zPath <- function(viv,
                   cutoff = NULL,
                   method = c("greedy.weighted", "strictly.weighted"),
@@ -71,7 +69,7 @@ zPath <- function(viv,
   # form an eulerian path with these pairs of variables
   if (method == "greedy.weighted") {
     zpath <- tryCatch(zpath <- zenplots::zenpath(zinfo[, 1], pairs = zinfo[, -1], method = "greedy.weighted"),
-      error = function(e) NULL, warning = function(w) {}
+                      error = function(e) NULL, warning = function(w) {}
     )
   }
   if (method == "strictly.weighted" | is.null(zpath) | length(zpath) == 0) {

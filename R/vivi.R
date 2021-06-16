@@ -58,7 +58,7 @@ vivi <- function(data,
                  response,
                  gridSize = 50,
                  importanceType = NULL,
-                 nmax = NULL,
+                 nmax = 500,
                  reorder = TRUE,
                  class = 1,
                  predictFun = NULL,
@@ -263,23 +263,48 @@ vividImportance.randomForest <- function(fit,
                                          importanceType = NULL,
                                          predictFun = NULL) {
 
-  # check the dimension of importance. If importance = T, then there will be 2 columns
-  fitImp <- dim(fit$importance)
+ fitImp <- dim(fit$importance)
+ importanceData <- randomForest::importance(fit)
 
-  if (!is.null(importanceType) && fitImp[2] == 2) {
-    if (importanceType == "%IncMSE") {
-      message("%IncMSE variable importance method used.")
-      importance <- fit$importance[, 1]
-    } else if (importanceType == "IncNodePurity") {
-      message("IncNodePurity variable importance method used.")
-      importance <- fit$importance[, 2]
+ if (fit$type == "classification") {
+   if (!is.null(importanceType)) {
+     if (importanceType == "MeanDecreaseAccuracy") {
+       message("MeanDecreaseAccuracy variable importance method used.")
+       importance <- importanceData[, 4]
+     } else if (importanceType == "MeanDecreaseGini") {
+       message("MeanDecreaseGini variable importance method used.")
+       importance <- importanceData[, 5]
+     } else if (is.numeric(importanceType)) {
+       message(colnames(importanceData)[importanceType], " importance selected.")
+       importance <- importanceData[, importanceType]
+     }
+   } else if (is.null(importanceType) && fitImp[2] != 1) {
+     message("No importanceType selected. Returning MeanDecreaseGini importance values")
+     importance <- importanceData[, 5]
+   } else {
+     message("No importanceType selected. Returning MeanDecreaseGini importance values")
+     importance <- importanceData[, 1]
+   }
+ }
+
+
+  if (fit$type == "regression") {
+    if (!is.null(importanceType)) {
+      if (importanceType == "%IncMSE") {
+        message("%IncMSE variable importance method used.")
+        importance <- importanceData[, 1]
+      } else if (importanceType == "IncNodePurity") {
+        message("IncNodePurity variable importance method used.")
+        importance <- importanceData[, 2]
+      }
+    } else if (is.null(importanceType) && fitImp[2] != 1) {
+      message("No importanceType selected. Returning IncNodePurity importance values")
+      importance <- importanceData[, 2]
+    } else {
+      message("No importanceType selected. Returning IncNodePurity importance values")
+      importance <- importanceData[, 1]
     }
-  } else if (is.null(importanceType) && fitImp[2] == 2) {
-    message("No importanceType selected. Returning %IncMSE importance values")
-    importance <- fit$importance[, 1]
-  } else {
-    importance <- fit$importance[, 1]
-  }
+}
 
   return(importance)
 }
@@ -326,44 +351,6 @@ vividImportance.Learner <- function(fit,
     }
   }
 }
-
-
-
-# LDA ---------------------------------------------------------------------
-#
-# vividImportance.lda <- function(fit,
-#                                 data,
-#                                 response = NULL,
-#                                 importanceType = NULL,
-#                                 predictFun = NULL) {
-#
-#
-#   fl <- flashlight(
-#     model = fit, data = data, y = response, label = "",
-#     predict_function = function(fit, data) predictFun(fit, data)
-#   )
-#
-#   suppressWarnings(
-#     imp <- light_importance(fl, m_repetitions = 4)
-#   )
-#   importance <- imp$data[, 3:4]
-#   importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
-#
-#   # if flashlight cant handle the response. return a vector of 1s instead of NaNs
-#   suppressWarnings(
-#     if(any(is.nan(importance))){
-#       message("
-# Response type not supported.
-# Returning a vector of 1's for importance values.
-#               ")
-#       importance <- replace(importance, is.nan(importance), 1)
-#     } else {
-#       message("Agnostic variable importance method used.")
-#       vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
-#     }
-#   )
-#   return(importance)
-# }
 
 
 
@@ -462,7 +449,7 @@ vividInteraction.default <- function(fit,
                                      data,
                                      response = NULL,
                                      interactionType = NULL,
-                                     nmax = NULL,
+                                     nmax = 500,
                                      gridSize = 50,
                                      predictFun = NULL,
                                      normalized = FALSE) {
@@ -486,9 +473,9 @@ vividInteraction.default <- function(fit,
 
 
 
-  if (is.null(nmax)) {
-    nmax <- nrow(data)
-  }
+  # if (is.null(nmax)) {
+  #   nmax <- nrow(data)
+  # }
   # calculate interactions
   res <- light_interaction(fl,
                            pairwise = TRUE, type = "H", grid_size = gridSize,
