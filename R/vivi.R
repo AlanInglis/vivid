@@ -471,11 +471,6 @@ vividInteraction.default <- function(fit,
   )
 
 
-
-
-  # if (is.null(nmax)) {
-  #   nmax <- nrow(data)
-  # }
   # calculate interactions
   res <- light_interaction(fl,
                            pairwise = TRUE, type = "H", grid_size = gridSize,
