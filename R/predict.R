@@ -6,6 +6,9 @@ CVpredictfun <- function(classif = FALSE, class = 1) {
                        error = function(e) NULL, warning = function(w) {}
       )
       if (is.null(pred)) {
+        if(prob == FALSE){
+          message("logits not available, as probabilites are not available.")
+        }
         predNullMarker <- TRUE
         pred <- CVpredict(fit, data)
         if (is.numeric(class) & is.factor(pred)) class <- levels(pred)[class]
