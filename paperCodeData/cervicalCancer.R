@@ -18,6 +18,7 @@ library("h2o") # to create model
 library("mlr") # to create model
 library("dplyr")
 library("mice") # for imputation
+
 # Data --------------------------------------------------------------------
 
 # Get data:
@@ -32,6 +33,7 @@ cervicalTrain <- cervical[trainCervical, ]
 cervicalTest  <- cervical[-trainCervical, ]
 
 
+# Train set preprocessing -------------------------------------------------
 
 # Remove cancer tests, similar and constant variables:
 cervicalTrain <- dplyr::select(cervicalTrain, -Citology, -Schiller, -Hinselmann,
@@ -71,7 +73,7 @@ cervicalTrain <- complete(cImp)
 cervicalTrain$Biopsy <- biopsy
 
 
-# Test data ---------------------------------------------------------------
+# Test data preprocessing ---------------------------------------------------------------
 
 # Remove cancer tests, similar and constant variables:
 cervicalTest <- dplyr::select(cervicalTest, -Citology, -Schiller, -Hinselmann,
@@ -161,15 +163,16 @@ canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
 # Figure 6:
 viviHeatmap(canVIVI, angle = 50)
 
+
 # Figure 7:
 set.seed(1701)
-viviNetwork(canVIVI, intThreshold = 0.1, removeNode = TRUE,
+viviNetwork(canVIVI, intThreshold = 0.09, removeNode = TRUE,
             cluster = igraph::cluster_fast_greedy)
 
 
 # Figure 8:
-# Subsetting the variables from Figure 7:
-varNames <- colnames(canVIVI)[1:7]
+# Subsetting top 5 variables:
+varNames <- colnames(canVIVI)[1:5]
 
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
 yesRows <- sample(which(cervicalTrain$Biopsy == "Cancer"), 25)
@@ -184,11 +187,12 @@ canGPDP <- pdpPairs(data = cervicalTrain,
                     nIce = c(yesRows, noRows),
                     vars = varNames,
                     convexHull = TRUE,
-                    probability = TRUE)
+                    probability = FALSE,
+                    fitlims = c(-10, 10))
 
 
 # Figure 9:
-zpath <- zPath(canVIVI, cutoff = 0.1) # same cutoff as Figure 7.
+zpath <- zPath(canVIVI, cutoff = 0.09) # same cutoff as Figure 7.
 set.seed(1701)
 pdpZen(data = cervicalTrain,
        fit = canMod,
@@ -196,7 +200,8 @@ pdpZen(data = cervicalTrain,
        class = "Cancer",
        zpath = zpath,
        convexHull = TRUE,
-       probability = FALSE
+       probability = FALSE,
+       fitlims = c(-10, 10)
 )
 
 
