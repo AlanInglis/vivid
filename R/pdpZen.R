@@ -66,7 +66,7 @@ pdpZen <- function(data,
                    probability = FALSE,
                    ...) {
   if (!(requireNamespace("zenplots", quietly = TRUE))) {
-    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see help for zenplots for instructions.")
     return(invisible(NULL))
   }
 
