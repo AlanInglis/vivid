@@ -207,3 +207,29 @@ pdpZen(data = cervicalTrain,
 
 # -------------------------------------------------------------------------
 # -------------------------------------------------------------------------
+
+# alternative figure 7
+
+sv <- which(diag(canVIVI) > .07 | apply(canVIVI, 1,max) > .1)
+
+
+h <- hclust(-as.dist(canVIVI[sv,sv]), method="single")
+
+
+viviNetwork(canVIVI[sv,sv], intThreshold = 0.1, removeNode = F,
+            cluster = cutree(h,4))
+
+
+
+# Figure 9 alternative
+zpath <- zPath(canVIVI[sv,sv], cutoff = 0.1) # same cutoff as Figure 7.
+set.seed(1701)
+pdpZen(data = cervicalTrain,
+       fit = canMod,
+       response = "Biopsy",
+       class = "Cancer",
+       zpath = zpath,
+       convexHull = TRUE,
+       probability = FALSE,
+       fitlims = c(-10, 10)
+)
