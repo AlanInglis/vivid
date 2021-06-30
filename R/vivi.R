@@ -9,7 +9,7 @@
 #' @param gridSize The size of the grid for evaluating the predictions.
 #' @param importanceType  One of either "%IncMSE" or "IncNodePurity" for use with randomForest. Or set to equal "agnostic" to override
 #' embedded importance measures and return agnostic importance values.
-#' @param nmax Maximum number of data rows to consider.
+#' @param nmax Maximum number of data rows to consider. Default is 500. Use all rows if NULL.
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
@@ -265,22 +265,23 @@ vividImportance.randomForest <- function(fit,
 
  fitImp <- dim(fit$importance)
  importanceData <- randomForest::importance(fit)
+ lengthImp <- length(colnames(importanceData))
 
  if (fit$type == "classification") {
    if (!is.null(importanceType)) {
      if (importanceType == "MeanDecreaseAccuracy") {
        message("MeanDecreaseAccuracy variable importance method used.")
-       importance <- importanceData[, 4]
+       importance <- importanceData[, lengthImp - 1]
      } else if (importanceType == "MeanDecreaseGini") {
        message("MeanDecreaseGini variable importance method used.")
-       importance <- importanceData[, 5]
+       importance <- importanceData[, lengthImp]
      } else if (is.numeric(importanceType)) {
        message(colnames(importanceData)[importanceType], " importance selected.")
        importance <- importanceData[, importanceType]
      }
    } else if (is.null(importanceType) && fitImp[2] != 1) {
      message("No importanceType selected. Returning MeanDecreaseGini importance values")
-     importance <- importanceData[, 5]
+     importance <- importanceData[, lengthImp]
    } else {
      message("No importanceType selected. Returning MeanDecreaseGini importance values")
      importance <- importanceData[, 1]
