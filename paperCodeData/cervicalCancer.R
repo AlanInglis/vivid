@@ -161,13 +161,13 @@ canVIVI <- vivi(cervicalTrain, canMod, response = "Biopsy", class = "Cancer",
 # ==============================================================================
 
 # Figure 6:
-viviHeatmap(canVIVI, angle = 50)
+viviHeatmap(canVIVI, angle = 50, impLims = c(0, 0.151))
 
 
 # Figure 7:
 set.seed(1701)
 viviNetwork(canVIVI, intThreshold = 0.09, removeNode = TRUE,
-            cluster = igraph::cluster_fast_greedy)
+            cluster = igraph::cluster_fast_greedy, impLims = c(0, 0.151))
 
 
 # Figure 8:
