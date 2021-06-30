@@ -66,7 +66,7 @@ pdpZen <- function(data,
                    probability = FALSE,
                    ...) {
   if (!(requireNamespace("zenplots", quietly = TRUE))) {
-    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, help for this function.")
+    message("Please install package zenplots to use this function. Note zenplots requires packge graph from Bioconductor, see help for zenplots for instructions.")
     return(invisible(NULL))
   }
 
@@ -205,10 +205,13 @@ pdpZen <- function(data,
     pdp <- pdplist[[z2index]]
     if (!is.null(pdp)) {
       if (!comboImage && is.factor(pdp[[vars[1]]]) + is.factor(pdp[[vars[2]]]) == 1) {
-        if (is.factor(pdp[[vars[1]]])) vars <- rev(vars)
+         flip <-  is.factor(pdp[[vars[1]]])
+         if (flip) vars <- rev(vars)
+
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = fit, color = .data[[vars[2]]])) +
           geom_line() +
           geom_rug(data = data, sides = "b", aes(y = .data[["pred"]]))
+        # if (flip) p <- p+ coord_flip()
       } else {
         if (is.factor(pdp[[vars[1]]])) posx <- "jitter" else posx <- "identity"
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
