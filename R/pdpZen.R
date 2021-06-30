@@ -211,7 +211,7 @@ pdpZen <- function(data,
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = fit, color = .data[[vars[2]]])) +
           geom_line() +
           geom_rug(data = data, sides = "b", aes(y = .data[["pred"]]))
-        if (flip) p <- p+ coord_flip()
+        # if (flip) p <- p+ coord_flip()
       } else {
         if (is.factor(pdp[[vars[1]]])) posx <- "jitter" else posx <- "identity"
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
