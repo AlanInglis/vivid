@@ -9,7 +9,7 @@
 #' @param vars The variables to plot (and their order), defaults to all variables other than response.
 #' @param pal A vector of colors to show predictions, for use with scale_fill_gradientn
 #' @param gridSize The size of the grid for evaluating the predictions.
-#' @param nmax Uses sample of nmax data rows for the pdp. Use all rows if NULL.
+#' @param nmax Uses sample of nmax data rows for the pdp.  Default is 500. Use all rows if NULL.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param nIce Number of ice curves to be plotted, defaults to 30.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.

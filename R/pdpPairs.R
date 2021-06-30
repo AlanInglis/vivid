@@ -11,7 +11,7 @@
 #'  "pdp" (default), in which cases limits are calculated from the pdp, or "all", when limits are calculated from the observations and pdp.
 #'  Predictions outside fitlims are squished on the color scale.
 #' @param gridSize The size of the grid for evaluating the predictions.
-#' @param nmax Uses sample of nmax data rows for the pdp. Use all rows if NULL.
+#' @param nmax Uses sample of nmax data rows for the pdp.  Default is 500. Use all rows if NULL.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param nIce Number of ice curves to be plotted, defaults to 30.
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
