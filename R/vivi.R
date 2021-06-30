@@ -265,47 +265,33 @@ vividImportance.randomForest <- function(fit,
 
  fitImp <- dim(fit$importance)
  importanceData <- randomForest::importance(fit)
- lengthImp <- length(colnames(importanceData))
 
- if (fit$type == "classification") {
+
+if (fit$type == "classification") {
+  if (!is.null(importanceType)) {
+    importance <- importanceData[, importanceType]
+    message(importanceType, " importance selected.")
+  } else if (is.null(importanceType) && fitImp[2] != 1) {
+    message("No importanceType selected. Returning MeanDecreaseGini importance values")
+    importance <- importanceData[, "MeanDecreaseGini"]
+  } else {
+    message("No importanceType selected. Returning MeanDecreaseGini importance values")
+    importance <- importanceData[, "MeanDecreaseGini"]
+  }
+}
+
+ if (fit$type == "regression") {
    if (!is.null(importanceType)) {
-     if (importanceType == "MeanDecreaseAccuracy") {
-       message("MeanDecreaseAccuracy variable importance method used.")
-       importance <- importanceData[, lengthImp - 1]
-     } else if (importanceType == "MeanDecreaseGini") {
-       message("MeanDecreaseGini variable importance method used.")
-       importance <- importanceData[, lengthImp]
-     } else if (is.numeric(importanceType)) {
-       message(colnames(importanceData)[importanceType], " importance selected.")
-       importance <- importanceData[, importanceType]
-     }
+     importance <- importanceData[, importanceType]
+     message(importanceType, " importance selected.")
    } else if (is.null(importanceType) && fitImp[2] != 1) {
-     message("No importanceType selected. Returning MeanDecreaseGini importance values")
-     importance <- importanceData[, lengthImp]
+     message("No importanceType selected. Returning IncNodePurity importance values")
+     importance <- importanceData[, "IncNodePurity"]
    } else {
-     message("No importanceType selected. Returning MeanDecreaseGini importance values")
-     importance <- importanceData[, 1]
+     message("No importanceType selected. Returning IncNodePurity importance values")
+     importance <- importanceData[, "IncNodePurity"]
    }
  }
-
-
-  if (fit$type == "regression") {
-    if (!is.null(importanceType)) {
-      if (importanceType == "%IncMSE") {
-        message("%IncMSE variable importance method used.")
-        importance <- importanceData[, 1]
-      } else if (importanceType == "IncNodePurity") {
-        message("IncNodePurity variable importance method used.")
-        importance <- importanceData[, 2]
-      }
-    } else if (is.null(importanceType) && fitImp[2] != 1) {
-      message("No importanceType selected. Returning IncNodePurity importance values")
-      importance <- importanceData[, 2]
-    } else {
-      message("No importanceType selected. Returning IncNodePurity importance values")
-      importance <- importanceData[, 1]
-    }
-}
 
   return(importance)
 }
