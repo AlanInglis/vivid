@@ -156,7 +156,7 @@ pdpVars <- function(data,
 
     p <- p +
       geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1) +
-      theme_bw() + guides(fill = FALSE, color = FALSE) + ylab("   ") + ylim(limits)
+      theme_bw() + guides(fill = "none", color = "none") + ylab("   ") + ylim(limits)
     if (var == vars[[1]]) p <- p + ylab("pdp/ice")
     p
   }
