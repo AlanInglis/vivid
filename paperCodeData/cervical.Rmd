@@ -17,12 +17,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width=
 ```{r}
 # devtools::install_github("AlanInglis/vivid")
 # devtools::install_github("cbhurley/condvis2")
-
 library(mlr)
 library(vivid)
 library(dplyr)
 RNGkind(kind="Mersenne-Twister", normal.kind="Inversion", sample.kind="Rejection" ) # defaults
-
 ```
 
 ## Read in and setup data.
@@ -30,16 +28,9 @@ RNGkind(kind="Mersenne-Twister", normal.kind="Inversion", sample.kind="Rejection
 ```{r}
 cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",
                      sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
-
-
-
-
-
 # Remove cancer tests, similar and constant variables:
 # take logs of skewed variables
 # Turn dummy variables into factors:
-
-
 cervical <- dplyr::select(cervical, -Citology, -Schiller, -Hinselmann,
                           -Dx.CIN, -Dx, -Horm_Cont,
                           -Smokes, -IUD, -STDs, -STDs_No_diag, -STDs_AIDS,
@@ -51,21 +42,17 @@ cervical <- dplyr::select(cervical, -Citology, -Schiller, -Hinselmann,
    mutate(Biopsy = factor(Biopsy, levels=0:1,labels=c('Healthy', 'Cancer') )) %>%
    mutate(across(.cols=c("STDs_condy", "STDs_syph", "STDs_HIV",
                          "Dx.HPV", "Dx.Cancer"),   factor))
-
-
 # set up training and testing, making sure Biopsy is proportionally sampled
 set.seed(1701)
 split <- rsample::initial_split(cervical, prop=.7, strata = Biopsy)
 cTrain <- rsample::training(split)
 cTest <- rsample::testing(split)
-
 ```
 
 ## Model fitting
 
 ```{r}
 cTask <- makeClassifTask(data = cTrain, target = "Biopsy")
-
 cLrn <- makeLearner("classif.gbm",
                     predict.type = "prob",
                     par.vals = list(
@@ -74,11 +61,8 @@ cLrn <- makeLearner("classif.gbm",
                        shrinkage = 0.15,
                        n.minobsinnode=5
                     ))
-
 set.seed(1701)
-
 cfit <- train(cLrn, cTask)
-
 # # Test predictions
 pred1 <- predict(cfit, newdata = cTest)
 # # Evaluate performance accuracy, area under curve and mean misclassification error
@@ -88,18 +72,15 @@ performance(pred1, measures = list(acc, auc))
 
 ## Create vivid matrix 
 ```{r}
-
 set.seed(1701)
 viv <- vivi(cTrain, cfit, response = "Biopsy", class = "Cancer",
                 gridSize = 30, importanceType = "agnostic")
-
 ```
 
 ## Heatmap
 
 ```{r heatmap, fig.width=6, fig.height=6}
 viviHeatmap(viv, angle = 50)
-
 ```
 
 - The first 7 variables have the highest vimp/vint scores.  
@@ -112,13 +93,10 @@ viviHeatmap(viv, angle = 50)
 
 ```{r pdp, fig.width=6, fig.height=5}
 # Subsetting top 5 variables:
-
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
-
 set.seed(1701)
 yesRows <- sample(which(cTrain$Biopsy == "Cancer"), 25)
 noRows <- sample(which(cTrain$Biopsy == "Healthy"), 25)
-
 pdpPairs(data = cTrain,
          fit = cfit,
          response = "Biopsy",
@@ -150,9 +128,6 @@ viviNetwork(viv, intThreshold = 0.08, removeNode = T,
             # cluster = cutree(h,4),
             layout = igraph::layout_with_lgl
             )
-
-
-
 ```
 
 - In this plot we check out pairs of variables with h-index over 0.08
