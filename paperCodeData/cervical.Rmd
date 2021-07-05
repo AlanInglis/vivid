@@ -28,8 +28,7 @@ sessionInfo()
 ## Read in and setup data.
 
 ```{r}
-cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",
-                     sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
 
 
 
