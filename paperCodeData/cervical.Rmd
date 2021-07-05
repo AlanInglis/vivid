@@ -21,13 +21,26 @@ library(mlr)
 library(vivid)
 library(dplyr)
 RNGkind(kind="Mersenne-Twister", normal.kind="Inversion", sample.kind="Rejection" ) # defaults
+<<<<<<< HEAD
+=======
+sessionInfo()
+>>>>>>> 68c6324b1f48683bfe66681d36d556bfe5cb7147
 ```
 
 ## Read in and setup data.
 
 ```{r}
+<<<<<<< HEAD
 cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",
                      sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+=======
+cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+
+
+
+
+
+>>>>>>> 68c6324b1f48683bfe66681d36d556bfe5cb7147
 # Remove cancer tests, similar and constant variables:
 # take logs of skewed variables
 # Turn dummy variables into factors:
