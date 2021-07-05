@@ -22,7 +22,7 @@ library(mlr)
 library(vivid)
 library(dplyr)
 RNGkind(kind="Mersenne-Twister", normal.kind="Inversion", sample.kind="Rejection" ) # defaults
-
+sessionInfo()
 ```
 
 ## Read in and setup data.
