@@ -172,7 +172,7 @@ viviNetwork <- function(mat,
         guide = guide_colorbar(
           frame.colour = "black",
           ticks.colour = "black"
-        )
+        ), oob = scales::squish
       ) +
       new_scale_fill() +
       geom_point(aes(x = 0, y = 0, fill = dfImp$Value), size = -1) +
@@ -181,7 +181,7 @@ viviNetwork <- function(mat,
         guide = guide_colorbar(
           frame.colour = "black",
           ticks.colour = "black"
-        )
+        ), oob = scales::squish
       ) +
       theme_void() + theme(aspect.ratio = 1)
   )
