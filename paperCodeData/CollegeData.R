@@ -117,7 +117,14 @@ viviHeatmap(vividMatrixRFSorted_1, angle = 45) # agnostic VImp measures
 # Figure 3(a)
 viviNetwork(vividMatrixRFSorted)
 # Figure 3(b)
-viviNetwork(vividMatrixRFSorted, intThreshold = 0.01, removeNode = T)
+intVals <- as.dist(vividMatrixRFSorted)
+intVals <- as.matrix(intVals)
+sv <- which(diag(vividMatrixRFSorted) > 50 |apply(intVals, 1,max) > .01)
+h <- hclust(-as.dist(vividMatrixRFSorted[sv,sv]), method="single")
+viviNetwork(vividMatrixRFSorted[sv,sv], intThreshold = 0.01, removeNode = T,
+            cluster = cutree(h,3))
+
+
 
 
 # Visualisation for Section 3.2 ---------------------------------------------
