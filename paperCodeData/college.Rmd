@@ -1,0 +1,189 @@
+---
+title: "College Data"
+author: "Alan n. Inglis"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width = 5, fig.height = 5, fig.align = "center", fig.path = "collegeFigs/", fig.show='hold')
+```
+
+
+## Packages:
+
+```{r}
+# install the development version of vivid:
+#devtools::install_github("AlanInglis/vivid")
+
+# Load relevant packages:
+library("vivid") # for visualisations
+library("ISLR") # for data
+library("mlr3") # to create model
+library("mlr3learners") # to create model
+library("randomForest") # to create model
+library("condvis2") # for predict function
+library("kknn") # to get knn model
+library("dplyr")
+```
+
+## Read in and setup data:
+
+```{r}
+# Load data:
+collegeData <- as.data.frame(College)
+
+# Taking log values of skewed data:
+collegeData <- collegeData %>%
+  mutate(log(collegeData[,c(2:4,7:12)]))
+
+
+# Split data into train and test
+set.seed(101)
+train <- sample(nrow(collegeData), round(.7*nrow(collegeData))) # split 70-30
+collegeTrain <- collegeData[train, ]
+collegeTest <- collegeData[-train, ]
+xTest <- collegeTest[,-4]
+yTest <- collegeTest$Enroll
+```
+
+## Model fitting:
+
+Fit a random forest an k-nearest neighbor models
+```{r}
+# Fit a random forest model
+# Used throughout Section 2:
+set.seed(101)
+rf <- randomForest(Enroll ~ ., data = collegeTrain)
+
+# Check mse for rf model:
+predRf <- predict(rf, newdata = collegeTest)
+mspeRf <- mean((yTest - predRf)^2)
+mspeRf
+
+# Fit an mlr3 knn model
+# Used in Section 2.3:
+knnT <- TaskRegr$new(id = "knn", backend = collegeTrain, target = "Enroll")
+knnL <- lrn("regr.kknn")
+knnMod <- knnL$train(knnT)
+
+
+# Check mse for knn model:
+pred <- predict(knnMod, newdata = collegeTest)
+mspe <- mean((yTest - pred)^2)
+mspe
+```
+
+
+## Create vivid matrix 
+
+```{r}
+# Create unsorted vivid matrix for random forest fit:
+# Used for Figure 1(a):
+set.seed(101)
+vividMatrixRF <- vivi(collegeTrain, 
+                      rf, "Enroll",
+                      gridSize = 20, 
+                      reorder = FALSE)
+
+# Sort matrix:
+# Used for Figure 1(b):
+vividMatrixRFSorted <- vividReorder(vividMatrixRF)
+
+# Get agnostic VImp values instead of using random forests embedded VImps
+# Used for Figure 2(b):
+collegeVImps <- vivid:::vividImportance.default(rf,
+  collegeTrain,
+  "Enroll",
+  importanceType = "agnostic",
+  predictFun = CVpredict
+)
+
+# Update the matrix with the new VImp values and sort:
+vividMatrixRFSorted_1 <- viviUpdate(vividMatrixRFSorted, collegeVImps)
+vividMatrixRFSorted_1 <- vividReorder(vividMatrixRFSorted_1)
+
+# Create vivid matrix for mlr3 knn fit using agnostic VImp
+# Used for Figure 2(a):
+set.seed(101)
+knnMat <- vivi(
+  fit = knnMod,
+  data = collegeTrain,
+  response = "Enroll",
+  gridSize = 20,
+  importanceType = "agnostic"
+)
+```
+
+
+
+# Visualisations for Section 2 --------------------------------------------
+
+## Figure 1(a) & 1(b):
+```{r unsortedHeatmap,  fig.width = 5, fig.height = 5}
+# Figure 1(a):
+viviHeatmap(vividMatrixRF, angle = 45) # unsorted heatmap
+# Figure 1(b):
+viviHeatmap(vividMatrixRFSorted, angle = 45) # sorted heatmap
+```
+
+## Figure 2(a) & 2(b):
+```{r heatmap, fig.width = 5, fig.height = 5}
+# Figure 2(a):
+viviHeatmap(knnMat, angle = 45, impLims = c(0, 0.5)) # setting same VImp limits as Figure 2(b)
+# Figure 2(b)
+viviHeatmap(vividMatrixRFSorted_1, angle = 45) # agnostic VImp measures
+```
+
+## Figure 3(a) & 3(b):
+```{r, network, fig.width = 5, fig.height = 5}
+# Figure 3(a)
+viviNetwork(vividMatrixRFSorted)
+# Figure 3(b)
+intVals <- as.dist(vividMatrixRFSorted)
+intVals <- as.matrix(intVals)
+sv <- which(diag(vividMatrixRFSorted) > 50 |apply(intVals, 1,max) > .01)
+h <- hclust(-as.dist(vividMatrixRFSorted[sv,sv]), method="single")
+viviNetwork(vividMatrixRFSorted[sv,sv], 
+            intThreshold = 0.01, 
+            removeNode = T, 
+            cluster = cutree(h,3))
+```
+
+# Visualisation for Section 3.2 ---------------------------------------------
+
+## Figure 4:
+```{r, GPDP, fig.width=6, fig.height=5}
+# Filter matrix:
+nam <- colnames(vividMatrixRFSorted) # get names
+nam <- nam[1:7] # filter names
+
+# Create GPDP for Figure 4:
+set.seed(101)
+pdpPairs(collegeTrain,
+  rf, "Enroll",
+  gridSize = 20,
+  vars = nam,
+  convexHull = TRUE
+)
+```
+
+# Visualisation for Section 3.3 ---------------------------------------------
+
+```{r, ZPDP, fig.width=6, fig.height=6}
+# Calculate the zpath using same threshold as Figure 3(b):
+zpath <- zPath(vividMatrixRFSorted, 0.01)
+
+# Create ZPDP using zpath for Figure 5:
+set.seed(101)
+pdpZen(collegeTrain,
+  rf,
+  "Enroll",
+  gridSize = 20,
+  zpath = zpath,
+  convexHull = T
+)
+
