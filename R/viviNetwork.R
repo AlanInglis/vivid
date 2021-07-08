@@ -170,6 +170,7 @@ viviNetwork <- function(mat,
       scale_fill_gradientn(
         name = "Vimp", colors = impPal, limits = impLimits,
         guide = guide_colorbar(
+          order = 2,
           frame.colour = "black",
           ticks.colour = "black"
         ), oob = scales::squish
@@ -179,6 +180,7 @@ viviNetwork <- function(mat,
       scale_fill_gradientn(
         name = "Vint", colors = intPal, limits = intLimits,
         guide = guide_colorbar(
+          order = 1,
           frame.colour = "black",
           ticks.colour = "black"
         ), oob = scales::squish
