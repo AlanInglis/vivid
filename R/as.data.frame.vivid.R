@@ -31,7 +31,7 @@ as.data.frame.vivid <- function(x, row.names = NULL, optional = FALSE, ...) {
   matrix <- x
   df <- cbind(expand.grid(dimnames(matrix), stringsAsFactors = FALSE), value = as.vector(matrix) )
 
-  # get the row and colum index
+  # get the row and column index
   Row <- as.vector(row(matrix))
   Col <- as.vector(col(matrix))
 
