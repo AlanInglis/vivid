@@ -9,7 +9,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width = 5, fig.height = 5, fig.align = "center", fig.path = "collegeFigs/", fig.show='hold')
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width = 7, fig.height = 7, fig.align = "center", fig.path = "collegeFigs/", fig.show='hold')
 ```
 
 
@@ -123,7 +123,7 @@ knnMat <- vivi(
 # Visualisations for Section 2 --------------------------------------------
 
 ## Figure 1(a) & 1(b):
-```{r unsortedHeatmap,  fig.width = 5, fig.height = 5}
+```{r unsortedHeatmap,  fig.width = 7, fig.height = 7}
 # Figure 1(a):
 viviHeatmap(vividMatrixRF, angle = 45) # unsorted heatmap
 # Figure 1(b):
@@ -131,15 +131,15 @@ viviHeatmap(vividMatrixRFSorted, angle = 45) # sorted heatmap
 ```
 
 ## Figure 2(a) & 2(b):
-```{r heatmap, fig.width = 5, fig.height = 5}
+```{r heatmap, fig.width = 7, fig.height = 7}
 # Figure 2(a):
-viviHeatmap(knnMat, angle = 45, impLims = c(0, 0.5)) # setting same VImp limits as Figure 2(b)
+viviHeatmap(knnMat, angle = 45, impLims = c(0, 0.6), intLims = c(0, 0.08)) # setting same VImp limits as Figure 2(b)
 # Figure 2(b)
-viviHeatmap(vividMatrixRFSorted_1, angle = 45) # agnostic VImp measures
+viviHeatmap(vividMatrixRFSorted_1, angle = 45, impLims = c(0, 0.6), intLims = c(0, 0.08)) # agnostic VImp measures
 ```
 
 ## Figure 3(a) & 3(b):
-```{r, network, fig.width = 5, fig.height = 5}
+```{r, network, fig.width = 7, fig.height = 7}
 # Figure 3(a)
 viviNetwork(vividMatrixRFSorted)
 # Figure 3(b)
@@ -156,7 +156,7 @@ viviNetwork(vividMatrixRFSorted[sv,sv],
 # Visualisation for Section 3.2 ---------------------------------------------
 
 ## Figure 4:
-```{r, GPDP, fig.width=6, fig.height=5}
+```{r, GPDP, fig.width = 8, fig.height = 7}
 # Filter matrix:
 nam <- colnames(vividMatrixRFSorted) # get names
 nam <- nam[1:7] # filter names
@@ -173,7 +173,7 @@ pdpPairs(collegeTrain,
 
 # Visualisation for Section 3.3 ---------------------------------------------
 
-```{r, ZPDP, fig.width=6, fig.height=6}
+```{r, ZPDP, fig.width = 7, fig.height = 7}
 # Calculate the zpath using same threshold as Figure 3(b):
 zpath <- zPath(vividMatrixRFSorted, 0.01)
 

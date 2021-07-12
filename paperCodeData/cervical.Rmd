@@ -82,6 +82,7 @@ viv <- vivi(cTrain, cfit, response = "Biopsy", class = "Cancer",
 
 ## Heatmap
 
+# Figure 6
 ```{r heatmap, fig.width=6, fig.height=6}
 viviHeatmap(viv, angle = 50)
 ```
@@ -94,6 +95,7 @@ viviHeatmap(viv, angle = 50)
 
 ## pdp
 
+# Figure 7
 ```{r pdp, fig.width=6, fig.height=5}
 # Subsetting top 5 variables:
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
@@ -126,7 +128,9 @@ pdpPairs(data = cTrain,
 
 ## Network plot
 
+# Figure 8
 ```{r net, fig.width=6, fig.height=5}
+set.seed(1701)
 viviNetwork(viv, intThreshold = 0.08, removeNode = T,
             # cluster = cutree(h,4),
             layout = igraph::layout_with_lgl
@@ -139,7 +143,7 @@ viviNetwork(viv, intThreshold = 0.08, removeNode = T,
 
 ## Zen plot
 
-
+# Figure 9
 ```{r zen, fig.width=6, fig.height=6}
 zpath <- zPath(viv, cutoff = 0.08) # same as network
 set.seed(1701)
