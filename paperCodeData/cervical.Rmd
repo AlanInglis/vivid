@@ -14,23 +14,26 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width=
 
 
 ## Packages
-
 ```{r}
-# install the development version of vivid & condvis2:
 # devtools::install_github("AlanInglis/vivid")
 # devtools::install_github("cbhurley/condvis2")
 library(mlr)
-library(condvis2)
 library(vivid)
 library(dplyr)
 RNGkind(kind="Mersenne-Twister", normal.kind="Inversion", sample.kind="Rejection" ) # defaults
-sessionInfo()
+
 ```
 
 ## Read in and setup data.
 
 ```{r}
+
+
 cervical <- read.csv("https://raw.githubusercontent.com/AlanInglis/vivid/master/paperCodeData/cervicalCancer.csv",sep=",",  na.strings = c('?'), stringsAsFactors = FALSE)
+
+
+
+
 # Remove cancer tests, similar and constant variables:
 # take logs of skewed variables
 # Turn dummy variables into factors:
@@ -82,7 +85,6 @@ viv <- vivi(cTrain, cfit, response = "Biopsy", class = "Cancer",
 
 ## Heatmap
 
-# Figure 6
 ```{r heatmap, fig.width=6, fig.height=6}
 viviHeatmap(viv, angle = 50)
 ```
@@ -95,7 +97,6 @@ viviHeatmap(viv, angle = 50)
 
 ## pdp
 
-# Figure 7
 ```{r pdp, fig.width=6, fig.height=5}
 # Subsetting top 5 variables:
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
@@ -128,9 +129,7 @@ pdpPairs(data = cTrain,
 
 ## Network plot
 
-# Figure 8
 ```{r net, fig.width=6, fig.height=5}
-set.seed(1701)
 viviNetwork(viv, intThreshold = 0.08, removeNode = T,
             # cluster = cutree(h,4),
             layout = igraph::layout_with_lgl
@@ -143,7 +142,7 @@ viviNetwork(viv, intThreshold = 0.08, removeNode = T,
 
 ## Zen plot
 
-# Figure 9
+
 ```{r zen, fig.width=6, fig.height=6}
 zpath <- zPath(viv, cutoff = 0.08) # same as network
 set.seed(1701)
