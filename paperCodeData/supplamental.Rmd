@@ -7,10 +7,6 @@ output:
     latex_engine: xelatex
 ---
 
-output:
-  pdf_document: default
-editor_options:
-  chunk_output_type: console
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width = 10, fig.height = 10, fig.align = "center", fig.path = "supplamentalFigs/", fig.show = 'hold')
@@ -25,7 +21,6 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width 
 # Load relevant packages:
 library("vivid") # for visualisations
 library("ranger") # to create model
-library("MASS") # to create model
 library("ggplot2") # for visualisations
 ```
 
@@ -61,6 +56,7 @@ genFriedman <- function(noFeatures = 10,
   # y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε
 
   xValues <- matrix(runif(n*p, 0, 1), nrow = n)
+  colnames(xValues)<- paste0("x",1:p)
   yTrue <- 10 * sin(pi * xValues[, 1] * xValues[, 2]) + 20 * (xValues[, 3] - 0.5)^2 + 10 * xValues[, 4] + 5 * xValues[, 5]
   y <- yTrue + e
 
@@ -111,144 +107,152 @@ fNormalF <- vivi(fit = fFit, data = fData, response = "y", normalized = FALSE)
 # Figure 10 (a) & (b)
 ```{r, heatmap, fig.width = 8, fig.height = 8}
 # Visualisations:
-viviHeatmap(fNormalT)
-viviHeatmap(fNormalF)
+viviHeatmap(fNormalT, intLims = c(0, 0.6), impLims = c(0, 20))
+viviHeatmap(fNormalF, intLims = c(0, 0.6), impLims = c(0, 20))
 ```
 
-Now we introduce a correlation between X4 and X5 and refit our model:
+Now we simulate data with a correlation between x4 and x5 and refit our model:
 
-```{r, fig.width = 5, fig.height = 5}
-# Correlated Variables Example --------------------------------------------
+```{r, fig.width = 4, fig.height = 4}
 set.seed(1701)
+# Function to create correlated uniform -----------------------------------
+rbvunif <- function(n, rho) {
+  x <- runif(n)
+  if ((rho > 1.0) || (rho < -1.0)) {
+    stop("rbvunif::rho not in [-1,+1]")
+  }
+  else if (rho == 1.0) {
+    xy <- cbind(x, x)
+  } else if (rho == -1.0) {
+    xy <- cbind(x, 1 - x)
+  } else if (rho == 0.0) {
+    xy <- cbind(x, runif(n))
+  } else {
+    a <- (sqrt((49 + rho) / (1 + rho)) - 5) / 2
+    u <- rbeta(n, a, 1.0)
+    y <- runif(n)
+    y <- ifelse(y < 0.5, abs(u - x), 1 - abs(1 - u - x))
+    xy <- cbind(x, y)
+  }
+  return(xy)
+}
+
+z <- rbvunif(1000, 0.9)
+print(cor(z[, 1], z[, 2]))
+
+# Create data -----------------------------------------------------------
 samples <- 1000
-r <- 0.9 # correlation of 2 variabless will be this value
-e <- rnorm(samples)
+e <- rnorm(samples, 0, 1)
 
-# Create correlated values:
-corVals <- mvrnorm(n = samples, mu = c(0, 0), Sigma = matrix(c(1, r, r, 1), nrow = 2), empirical = TRUE)
-
-# Create dataframe:
-mvnData <- data.frame(
-  X1 = runif(samples, 0 ,1),
-  X2 = runif(samples, 0 ,1),
-  X3 = runif(samples, 0, 1),
-  X4 = corVals[, 1],
-  X5 = corVals[, 2],
-  X6 = runif(samples, 0 ,1),
-  X7 = runif(samples, 0 ,1),
-  X8 = runif(samples, 0, 1),
-  X9 = runif(samples, 0 ,1),
-  X10 = runif(samples, 0 ,1)
+dfCorr <- data.frame(
+  x1 = runif(samples, 0, 1),
+  x2 = runif(samples, 0, 1),
+  x3 = runif(samples, 0, 1),
+  x4 = z[, 1],
+  x5 = z[, 2],
+  x6 = runif(samples, 0, 1),
+  x7 = runif(samples, 0, 1),
+  x8 = runif(samples, 0, 1),
+  x9 = runif(samples, 0, 1),
+  x10 = runif(samples, 0, 1)
 )
 
-# Check correlations
-corrplot::corrplot(cor(mvnData), type = "lower")
+# y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε
+y <- (10*sin(pi*dfCorr$x1*dfCorr$x2) +
+        20 * (dfCorr$x3-0.5)^2 + 10 * dfCorr$x4 + 5 * dfCorr$x5 + e)
 
-# Equation:
-y = (10*sin(pi*mvnData$X1*mvnData$X2) + 20 * (mvnData$X3-0.5)^2 + 10 * mvnData$X4 + 5 * mvnData$X5 + e)
+# Adding y to df
+dfCorr$y <- y
 
-mvnData$y <- y
+# checking correlation
+corrplot::corrplot(cor(dfCorr), type = "lower")
 
-# Fit:
-fFitCorr <- ranger(y ~ ., data = mvnData, importance = "permutation")
+# Create  ranger model ------------------------------------------------
+corrFit <- ranger(y~., data = dfCorr, importance = "permutation")
 ```
 
 # Create VIVI matrix
 ```{r}
 # vivi Normalized & Unnormalized:
 set.seed(1701)
-fNormalTCorr <- vivi(fit = fFitCorr, data = mvnData, response = "y", normalized = TRUE)
-fNormalFCorr <- vivi(fit = fFitCorr, data = mvnData, response = "y", normalized = FALSE)
+corrNormF <- vivi(fit = corrFit, data = dfCorr, response = "y", normalize = FALSE)
+corrNormT <- vivi(fit = corrFit, data = dfCorr, response = "y", normalize = TRUE)
 ```
 
 
 # Figure 11 (a) & (b)
 ```{r, corrHeatmap, fig.width = 8, fig.height = 8}
 # Heatmap:
-viviHeatmap(fNormalTCorr)
-viviHeatmap(fNormalFCorr)
+viviHeatmap(corrNormF, intLims = c(0, 0.6), impLims = c(0, 20))
+viviHeatmap(corrNormT, intLims = c(0, 0.6), impLims = c(0, 20))
 ```
 
 # Look at individual PDPs -------------------------------------------------
 
+# Visualise PDPs for each scenario:
+```{r}
+x4CorrF <- pdpVars(fData, fFit, "y", nIce = 0, vars = c("x4"), limits = c(10, 19))
+x4CorrT <- pdpVars(dfCorr, corrFit, "y", nIce = 0, vars = c("x4"), limits = c(10, 19))
+
+x5CorrF <- pdpVars(fData, fFit, "y", nIce = 0, vars = c("x5"), limits = c(12.5, 18))
+x5CorrT <- pdpVars(dfCorr, corrFit, "y", nIce = 0, vars = c("x5"), limits = c(12.5, 18))
+```
+
+# create overlaid plot for X4:
+```{r}
+x4CorrT[[1]]$layers[[2]]$aes_params$colour <- "red"
+ppX4 <- x4CorrT[[1]] + x4CorrF[[1]]$layers
+aaX4 <- annotate("text", x = 0.6, y = 16.5, label = "wt correlated variables", colour = "red")
+aaX4_1 <- annotate("text", x = 0.75, y = 15.5, label = "wtout correlated variables", colour = "black")
+ppX4 + aaX4 + aaX4_1 + ylab("PDP")
+
+# create overlaid plot for X5:
+x5CorrT[[1]]$layers[[2]]$aes_params$colour <- "red"
+ppX5 <- x5CorrT[[1]] + x5CorrF[[1]]$layers
+aaX5 <-  annotate("text", x = 0.65, y = 16.5, label = "wt correlated variables", colour = "red")
+aaX5_1 <- annotate("text", x = 0.75, y = 15, label = "wtout correlated variables", colour = "black")
+ppX5 + aaX5 + aaX5_1 + ylab("PDP")
+```
+
+
+
+# Refitting models
 # Create models with and without the correlated variables:
 ```{r}
 # Create models with & without influence of correlated variables:
 set.seed(1701)
-mvnFit_both <- ranger(y~ X3 + X4 + X5 + X6 + X7 + X8 + X9 + X10, data = mvnData, importance = "permutation")
-mvnFit_X4 <- ranger(y~ X3 + X4 + X6 + X7 + X8 + X9 + X10, data = mvnData, importance = "permutation")
-mvnFit_X5 <- ranger(y~ X3 + X5 + X6 + X7 + X8 + X9 + X10, data = mvnData, importance = "permutation")
+Fit_both <- ranger(y~ x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10, data = dfCorr, importance = "permutation")
+Fit_x4 <- ranger(y~ x3 + x4 + x6 + x7 + x8 + x9 + x10, data = dfCorr, importance = "permutation")
+Fit_x5 <- ranger(y~ x3 + x5 + x6 + x7 + x8 + x9 + x10, data = dfCorr, importance = "permutation")
 ```
 
 # Create PDPs for each scenario
 ```{r, fig.show = 'hide'}
 # Visualise PDPs for each scenario:
 set.seed(1701)
-bothX4 <- pdpVars(mvnData, mvnFit_both, "y", nIce = 0, vars = c("X4"), limits = c(-20, 40))
-bothX5 <- pdpVars(mvnData, mvnFit_both, "y", nIce = 0, vars = c("X5"), limits = c(-20, 40))
-justX4 <- pdpVars(mvnData, mvnFit_X4, "y", nIce = 0,   vars = c("X4"), limits = c(-20, 40))
-justX5 <- pdpVars(mvnData, mvnFit_X5, "y", nIce = 0,   vars = c("X5"), limits = c(-20, 40))
+bothx4 <- pdpVars(dfCorr, Fit_both, "y", nIce = 0, vars = c("x4"), limits = c(7, 22))
+bothx5 <- pdpVars(dfCorr, Fit_both, "y", nIce = 0, vars = c("x5"), limits = c(7, 22))
+justx4 <- pdpVars(dfCorr, Fit_x4, "y", nIce = 0,   vars = c("x4"), limits = c(7, 22))
+justx5 <- pdpVars(dfCorr, Fit_x5, "y", nIce = 0,   vars = c("x5"), limits = c(7, 22))
 ```
 
-# Create overlaid plot for X4:
+# Create overlaid plot for x4:
 ```{r, fig.width = 7, fig.height = 5}
-
-bothX4[[1]]$layers[[2]]$aes_params$colour <- "red"
-pX4 <- bothX4[[1]] + justX4[[1]]$layers
-aX4 <- annotate("text", x = 2.5, y = 16, label = "Model 3", vjust = -2, hjust = 0.2, colour = "red")
-aX4_1 <- annotate("text", x = 2.5, y = 33, label = "Model 1", vjust = -2, hjust = 0.2, colour = "black")
-pX4 + aX4 + aX4_1
+bothx4[[1]]$layers[[2]]$aes_params$colour <- "red"
+px4 <- bothx4[[1]] + justx4[[1]]$layers
+ax4 <- annotate("text", x = 0.75, y = 16, label = "Model 3", colour = "red")
+ax4_1 <- annotate("text", x = 0.6, y = 17.5 , label = "Model 1", colour = "black")
+px4 + ax4 + ax4_1 + ylab("PDP")
 ```
 
-# create overlaid plot for X5:
+# Create overlaid plot for x5:
 ```{r, fig.width = 7, fig.height = 5}
-bothX5[[1]]$layers[[2]]$aes_params$colour <- "red"
-pX5 <- bothX5[[1]] + justX5[[1]]$layers
-aX5 <-  annotate("text", x = 2, y = 10, label = "Model 3", vjust = -2, hjust = 0.2, colour = "red")
-aX5_1 <- annotate("text", x = 2, y = 31, label = "Model 2", vjust = -2, hjust = 0.2, colour = "black")
-pX5 + aX5 + aX5_1
+bothx5[[1]]$layers[[2]]$aes_params$colour <- "red"
+px5 <- bothx5[[1]] + justx5[[1]]$layers
+ax5 <-  annotate("text", x = 0.75, y = 15, label = "Model 3",  colour = "red")
+ax5_1 <- annotate("text", x = 0.6, y = 17, label = "Model 2", colour = "black")
+px5 + ax5 + ax5_1 + ylab("PDP")
 ```
-
-
-# PDPs with interacting variables ----------------------------------
-
-# Create data and fit model:
-```{r}
-set.seed(1701)
-# Set Values
-n <- 1000
-p <- 5
-e <- rnorm(n)
-
-
-
-# Create matrix of values
-xValues <- matrix(runif(n*p, -1, 1), nrow=n)             # Create matrix wt p columns
-colnames(xValues)<- paste0("x",1:p)                      # Name columns
-intDf <- data.frame(xValues)                             # Create dataframe 
-
-
-# Equation: 
-y <- 0.2 * intDf$x1 + 20 * (intDf$x2 * intDf$x3) + e
-intDf$y <- y
-
-fit <- ranger(y ~ ., data = intDf, importance = "permutation")
-```
-
-# Create PDP
-
-```{r, fig.show = 'hide'}
-set.seed(1701)
-p <- pdpVars(intDf, fit, "y", nIce = 1000, vars = c("x2"), colorVar = "x3")
-```
-
-```{r, fig.width = 9, fig.height = 5}
-p[[1]] + scale_color_gradientn(
-  colors = rev(RColorBrewer::brewer.pal(11, "PuOr"))
-)
-```
-
-
 
 
 
