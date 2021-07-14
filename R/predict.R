@@ -3,7 +3,7 @@ CVpredictfun <- function(classif = FALSE, class = 1) {
   if (classif) {
     function(fit, data, prob = FALSE) {
       pred <- tryCatch(CVpredict(fit, data, ptype = "probmatrix"),
-                       error = function(e) NULL, warning = function(w) {}
+                       error = function(e) NULL
       )
       if (is.null(pred)) {
         if(prob == FALSE){
