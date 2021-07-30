@@ -62,6 +62,8 @@ rf <- randomForest(Enroll ~ ., data = collegeTrain)
 # Check mse for rf model:
 predRf <- predict(rf, newdata = collegeTest)
 mspeRf <- mean((yTest - predRf)^2)
+Rsq <- 1 - sum((yTest - predRf)^2)/sum((yTest - mean(yTest))^2)
+Rsq
 mspeRf
 
 # Fit an mlr3 knn model
