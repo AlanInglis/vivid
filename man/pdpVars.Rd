@@ -17,7 +17,8 @@ pdpVars(
   predictFun = NULL,
   limits = NULL,
   colorVar = NULL,
-  draw = TRUE
+  draw = TRUE,
+  probability = FALSE
 )
 }
 \arguments{
@@ -33,7 +34,7 @@ pdpVars(
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{nmax}{Uses sample of nmax data rows for the pdp. Use all rows if NULL.}
+\item{nmax}{Uses sample of nmax data rows for the pdp.  Default is 500. Use all rows if NULL.}
 
 \item{class}{Category for classification, a factor level, or a number indicating which factor level.}
 
@@ -46,6 +47,9 @@ pdpVars(
 \item{colorVar}{Which variable to colour the predictions by.}
 
 \item{draw}{If FALSE, then the plot will not be drawn. Default is TRUE.}
+
+\item{probability}{if TRUE, then returns the partial dependence for classification on the probability scale. If
+FALSE (default), then the partial dependence is returned on a near logit scale.}
 }
 \value{
 A grid displaying ICE curves and univariate partial dependence.

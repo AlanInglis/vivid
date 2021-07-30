@@ -54,7 +54,7 @@ test_that("Changing prediction function works", {
              response = "Ozone",
              gridSize = 10,
              nmax = 10,
-             predictFun = function(fit, data) predict(lmf, aq))
+             predictFun = function(fit, data, prob = TRUE) predict(lmf, aq, prob = TRUE))
 
   expect_s3_class(vi,c("vivid","matrix","array"))
 
@@ -81,16 +81,16 @@ test_that("Works for old mlr models", {
 
 })
 
-test_that("Works for tidymodels", {
-  lm_aq_model <- linear_reg() %>%
-    set_engine("lm")
-
-  lm_fit <- lm_aq_model %>%
-    fit(Ozone ~ ., data = aq)
-
-  expect_s3_class(vivi(fit = lm_fit, data = aq, response = "Ozone", nmax = 10, gridSize = 5),c("vivid","matrix","array"))
-
-})
+# test_that("Works for tidymodels", {
+#   lm_aq_model <- linear_reg() %>%
+#     set_engine("lm")
+#
+#   lm_fit <- lm_aq_model %>%
+#     fit(Ozone ~ ., data = aq)
+#
+#   expect_s3_class(vivi(fit = lm_fit, data = aq, response = "Ozone", nmax = 10, gridSize = 5),c("vivid","matrix","array"))
+#
+# })
 
 
 

@@ -1,4 +1,4 @@
-
+#' @importFrom stats predict
 CVpredictfun <- function(classif = FALSE, class = 1) {
   if (classif) {
     function(fit, data, prob = FALSE) {

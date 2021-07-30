@@ -10,10 +10,11 @@ vivi(
   response,
   gridSize = 50,
   importanceType = NULL,
-  nmax = NULL,
+  nmax = 500,
   reorder = TRUE,
   class = 1,
-  predictFun = NULL
+  predictFun = NULL,
+  normalized = FALSE
 )
 }
 \arguments{
@@ -28,13 +29,15 @@ vivi(
 \item{importanceType}{One of either "\%IncMSE" or "IncNodePurity" for use with randomForest. Or set to equal "agnostic" to override
 embedded importance measures and return agnostic importance values.}
 
-\item{nmax}{Maximum number of data rows to consider.}
+\item{nmax}{Maximum number of data rows to consider. Default is 500. Use all rows if NULL.}
 
 \item{reorder}{If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.}
 
 \item{class}{Category for classification, a factor level, or a number indicating which factor level.}
 
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
+
+\item{normalized}{Should Friedman's H-statistic be normalized or not. Default is FALSE.}
 }
 \value{
 A matrix of interaction values, with importance on the diagonal.
@@ -65,7 +68,7 @@ viviHeatmap(m)
 }
 \donttest{
 library(ranger)
-rf <- ranger(Species ~ ., data = iris, importance = "impurity")
+rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 vivi(fit = rf, data = iris, response = "Species")
 }
 }

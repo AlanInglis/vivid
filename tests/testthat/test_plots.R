@@ -3,6 +3,7 @@
 library(mlr3)
 library(mlr3learners)
 library(ranger)
+library(e1071)
 
 aq <- na.omit(airquality)
 

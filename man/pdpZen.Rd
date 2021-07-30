@@ -18,6 +18,7 @@ pdpZen(
   rug = TRUE,
   predictFun = NULL,
   convexHull = FALSE,
+  probability = FALSE,
   ...
 )
 }
@@ -39,7 +40,7 @@ predictions outside fitlims are squished on the color scale.}
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{nmax}{Uses sample of nmax data rows for the pdp. Use all rows if NULL.}
+\item{nmax}{Uses sample of nmax data rows for the pdp.  Default is 500. Use all rows if NULL.}
 
 \item{class}{Category for classification, a factor level, or a number indicating which factor level.}
 
@@ -50,6 +51,9 @@ predictions outside fitlims are squished on the color scale.}
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 
 \item{convexHull}{If TRUE, then the convex hull is computed and any points outside the convex hull are removed.}
+
+\item{probability}{if TRUE, then returns the partial dependence for classification on the probability scale. If
+FALSE (default), then the partial dependence is returned on a near logit scale.}
 
 \item{...}{passed on to zenplot}
 }
