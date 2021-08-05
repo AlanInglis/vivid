@@ -9,7 +9,7 @@ output:
 
   
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width = 10, fig.height = 10, fig.align = "center", fig.path = "supplementalFigs/", fig.show = 'hold')
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width = 10, fig.height = 10, fig.align = "center", fig.path = "hstatFigs/", fig.show = 'hold')
 ```
 
 ## Packages:
