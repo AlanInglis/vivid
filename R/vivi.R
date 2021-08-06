@@ -113,23 +113,7 @@ vivi <- function(data,
     predictFun = pFun,
     normalized = normalized
   )
-
-  # perserve original data order
-  newimp <- vector("numeric", length = ncol(data)-1)
-  names(newimp) <- names(data)[-match(response, names(data))]
-  newimp[names(vImp)]<- vImp
-  diag(vInt) <- newimp # set diagonal to equal vImps
-
-
-  # reorder
-  if (reorder) {
-    viviMatrix <- vividReorder(vInt)
-  } else {
-    viviMatrix <- vInt
-  }
-
-  class(viviMatrix) <- c("vivid", class(viviMatrix))
-  return(viviMatrix)
+  viviUpdate(vInt, vImp, reorder=reorder)
 }
 
 
@@ -151,6 +135,7 @@ vivi <- function(data,
 #' m <- vivi(fit = f, data = iris[, -5], response = "Sepal.Length")
 #' corimp <- abs(cor(iris[, -5])[1, -1])
 #' viviUpdate(m, corimp) # use correlation as importance and reorder
+#'
 vividReorder <- function(d) {
   vImp <- diag(d)
   rvImp <- range(vImp)
@@ -404,7 +389,7 @@ vividImportance.model_fit <- function(fit,
                                       importanceType = NULL,
                                       predictFun = NULL) {
 
-  vImp <- vip::vi_model(fit)
+  vImp <- vip::vi_model(fit, type=importanceType)
   vImp <- vImp[, 1:2]
   importance <- vImp$Importance
   names(importance) <- vImp$Variable

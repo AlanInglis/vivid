@@ -16,14 +16,22 @@
 #' @export
 
 viviUpdate <- function(mat, newImp, reorder=TRUE) {
-  if (!is.null(names(newImp)))
-    newImp <- newImp[rownames(mat)]
-  diag(mat) <- newImp # set diagonal to equal vImps
+  if (is.null(names(newImp)))
+    names(newImp) <- rownames(mat)[1:length(newImp)]
 
+  newnames <- intersect(rownames(mat), names(newImp))
+  if (length(newnames) != nrow(mat)){
+    n <- setdiff(rownames(mat),newnames)
+    message(paste("Importance values not provided for", paste0(n, collapse=" ")))
+  }
+
+  matdiag <- diag(mat)
+  matdiag[newnames]<- newImp[newnames]
+  diag(mat) <- matdiag
   if (reorder) mat <- vividReorder(mat)
 
   if(class(mat)[1] != "vivid"){
-  class(mat) <- c("vivid", class(mat))
+    class(mat) <- c("vivid", class(mat))
   }
 
   return(mat)
