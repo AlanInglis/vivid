@@ -5,8 +5,8 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 note
 
-* This is a new release. Only note is: checking CRAN incoming feasibility ... NOTE
+* This is an update release.
   Maintainer: 'Alan Inglis <alan.inglis@mu.ie>'
 
