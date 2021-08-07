@@ -84,19 +84,15 @@ viv <- vivi(cTrain, cfit, response = "Biopsy", class = "Cancer",
 ```
 
 ## Heatmap
-
+Figure 6:
 ```{r heatmap, fig.width=6, fig.height=6}
 viviHeatmap(viv, angle = 50)
 ```
 
-- The first 7 variables have the highest vimp/vint scores.  
-- Overall Age has the highest importance and interaction score (with No_preg)
-- There are a few variables with high interaction but not high importance  eg the two variables STDs_No: No_sex_par.
--  No_preg is not highly important but has a highly important interaction (with Age)
 
 
 ## pdp
-
+Figure 7:
 ```{r pdp, fig.width=6, fig.height=5}
 # Subsetting top 5 variables:
 # sample 50 ice curves - 25 from positive class, 25 from negative class:
@@ -114,21 +110,12 @@ pdpPairs(data = cTrain,
          probability = FALSE,fitlims = c(-5,1))
 ```
 
--  First we look at the Age pdp, as it is the most important predictor. The age pdp curve has lower prob in middle age,  the steep incline after that is based on just a few obs with high age, so thissteep incline curve may not be reliable
-
-- Next we investigate No_preg and Age as this pair has the highest h-index. In the bivariate No_preg Age plot, high No_preg is associated with low Cancer prob for middle age groups, but it associated with high Cancer prob for younger ages. This is an interesting interaction.??
-
-
-- In the bivariate pdps the highest cancer prob occurs for this with high Horm_Cont_yrs  and high No_preg.
-
-- Note that in plots of one numeric and one categorical predictor, the numeric variable is always drawn in the x-axis, not withstanding the label is on the y-axis. This is to make the plot easy to read, eg the plot for  STD condy and Age (or No_preg stc.)
-
-- In the plot of STD condy and Age, the bivariate pdp is the same as two pdps for each level of STD_condy (the green curve is for STD_condy=1)  . It does not look in this plot like an interaction is present, though it has a moderately high H-index. 
 
 
 
 ## Network plot
-
+Figure 8: 
+note: layout may differ 
 ```{r net, fig.width=6, fig.height=5}
 viviNetwork(viv, intThreshold = 0.08, removeNode = T,
             # cluster = cutree(h,4),
@@ -136,13 +123,10 @@ viviNetwork(viv, intThreshold = 0.08, removeNode = T,
             )
 ```
 
-- In this plot we check out pairs of variables with h-index over 0.08
-- Clustering does not help here so it is omitted
-- Not all of these vars are in the top 5 shown in pdp. The extra vars are No_sex_par, STD_No, IUD_yrs
+
 
 ## Zen plot
-
-
+Figure 9:
 ```{r zen, fig.width=6, fig.height=6}
 zpath <- zPath(viv, cutoff = 0.08) # same as network
 set.seed(1701)
@@ -156,12 +140,4 @@ pdpZen(data = cTrain,
 )
 ```
 
-- There are 8 interactions identified in the network plot, involving 8 variables.
 
-- This would need an 8 by 8 pdp to display byt the zen version is more compact and just shows the selected pairs
-
-- This plot has the same color scale as the pdp plot
-
-- The STD_no:No_sex_par plot is a flat surface and no evidence of interaction
-
-- The IUD_yrs: No_preg plot has prob increasing with IUD_yrs with a steeper gradient for moderately high No_preg. Does this make sense? 

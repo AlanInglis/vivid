@@ -32,7 +32,7 @@ Here we use Friedman's Benchmark problem 1^[Friedman, Jerome H. (1991) Multivari
 $$y = 10 sin(\pi x1 x2) + 20 (x3 - 0.5)^2 + 10 x4 + 5 x5 + \epsilon$$
 </center>
 
-where, $ x_n \sim  U(0, 1)$ and $\epsilon \sim N(0, 1)$
+where, $x_n \sim  U(0, 1)$ and $\epsilon \sim N(0, 1)$
 We simulate 10 variables and 1000 observations and fit our model. 
 
 ```{r}
