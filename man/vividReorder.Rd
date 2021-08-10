@@ -21,4 +21,5 @@ f <- lm(Sepal.Length ~ ., data = iris[, -5])
 m <- vivi(fit = f, data = iris[, -5], response = "Sepal.Length")
 corimp <- abs(cor(iris[, -5])[1, -1])
 viviUpdate(m, corimp) # use correlation as importance and reorder
+
 }

@@ -1,8 +1,8 @@
-# vivid 0.2.0
+# vivid 0.2.1
 
 # NEWS UPDATES: 
 
 
-* Updated package
+* small update
 
 
