@@ -15,7 +15,8 @@ viviNetwork(
   layout = igraph::layout_in_circle,
   cluster = NULL,
   nudge_x = 0.05,
-  nudge_y = 0.03
+  nudge_y = 0.03,
+  edges = TRUE
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ viviNetwork(
 \item{nudge_x}{Nudge (centered) labels by this amount, outward horizontally}
 
 \item{nudge_y}{Nudge (centered) labels by this amount, outward vertically}
+
+\item{edges}{Logical. If TRUE (default) then encode the edges to have a weight corresponding to the interaction value.
+If FALSE, then edges are of equal weight.}
 }
 \value{
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
