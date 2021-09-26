@@ -14,6 +14,7 @@
 #' @param nmax Uses sample of nmax data rows for the pdp.  Default is 500. Use all rows if NULL.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param nIce Number of ice curves to be plotted, defaults to 30.
+#' @param colorVar Which variable to colour the predictions by.
 #' @param comboImage If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param convexHull If TRUE, then the convex hull is computed and any points outside the convex hull are removed.
@@ -81,6 +82,7 @@ pdpPairs <- function(data,
                      nmax = 500,
                      class = 1,
                      nIce = 30,
+                     colorVar = NULL,
                      comboImage = FALSE,
                      predictFun = NULL,
                      convexHull = FALSE,
@@ -115,7 +117,7 @@ pdpPairs <- function(data,
     predData <- predictFun(fit, data)
   }
 
-
+  testPRED <<- predData
   vars0 <- names(data)
   vars0 <- vars0[-match(response, vars0)]
   vars <- vars[vars %in% vars0]
@@ -223,6 +225,8 @@ pdpPairs <- function(data,
       group_by(.data[[var]]) %>%
       summarise(fit = mean(fit))
 
+
+    if (is.null(colorVar)) {
     filter(pdp, .data[[".id"]] %in% sice) %>%
       ggplot(aes(x = .data[[var]], y = fit)) +
       geom_line(aes(color = predData, group = .data[[".id"]])) +
@@ -234,16 +238,43 @@ pdpPairs <- function(data,
         )
       ) +
       geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
+    }else{
+      filter(pdp, .data[[".id"]] %in% sice) %>%
+        ggplot(aes(x = .data[[var]], y = fit)) +
+         geom_line(aes(color = .data[[colorVar]], group = .data[[".id"]])) +
+        # scale_color_gradientn(
+        #   name = legendName, colors = pal, limits = limits, oob = scales::squish,
+        #   guide = guide_colorbar(
+        #     frame.colour = "black",
+        #     ticks.colour = "black"
+        #   )
+        # ) +
+        geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
+      }
   }
 
+
+
+
+  rep <- data[[response]]
   dplotn <- function(data, mapping) {
     x <- eval_data_col(data, mapping$x)
     y <- eval_data_col(data, mapping$y)
+
+  if (is.null(colorVar)) {
     df <- data.frame(x = x, y = y)
     ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_point(shape = 16, size = 1, show.legend = FALSE) +
       scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
+  } else {
+    data$response <- rep
+    names(data)[names(data) == "response"] <- response
+    colorVar <- data[[colorVar]]
+    df <- data.frame(x = x, y = y, colVar = colorVar)
+    ggplot(df, aes(x = x, y = y)) +
+      geom_point(shape = 16, size = 1, show.legend = FALSE, aes(color = colVar))
   }
+}
 
   dplotm <- function(data, mapping) {
     x <- eval_data_col(data, mapping$x)
@@ -252,7 +283,8 @@ pdpPairs <- function(data,
     jitterx <- if (is.factor(df$x)) .25 else 0
     jittery <- if (is.factor(df$y)) .25 else 0
 
-    ggplot(df, aes(x = x, y = y, color = predData)) +
+
+     ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_jitter(shape = 16, size = 1, show.legend = FALSE, width = jitterx, height = jittery) +
       scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
   }
@@ -262,7 +294,7 @@ pdpPairs <- function(data,
 
   p <- ggpairs(data[vars],
     upper = list(continuous = pdpnn, combo = if (comboImage) pdpnn else pdpc, discrete = pdpnn),
-    diag = list(continuous = ice, discrete = ice),
+    diag  = list(continuous = ice, discrete = ice),
     lower = list(continuous = dplotn, combo = dplotm, discrete = dplotm),
     legend = wlegend,
     cardinality_threshold = NULL
@@ -365,9 +397,4 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
   dnew
 }
 
-# convertScale <- function(x) {
-#   mEpsilon <- .Machine$double.eps
-#   log(ifelse(x > 0, x, mEpsilon)) -
-#     mean(log(ifelse(x > 0, x, mEpsilon))
-#     )
-# }
+

@@ -15,6 +15,7 @@ pdpPairs(
   nmax = 500,
   class = 1,
   nIce = 30,
+  colorVar = NULL,
   comboImage = FALSE,
   predictFun = NULL,
   convexHull = FALSE,
@@ -43,6 +44,8 @@ Predictions outside fitlims are squished on the color scale.}
 \item{class}{Category for classification, a factor level, or a number indicating which factor level.}
 
 \item{nIce}{Number of ice curves to be plotted, defaults to 30.}
+
+\item{colorVar}{Which variable to colour the predictions by.}
 
 \item{comboImage}{If TRUE  draws pdp for mixed variable plots as an image, otherwise an interaction plot.}
 
