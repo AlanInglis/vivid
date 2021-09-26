@@ -12,8 +12,12 @@
 #' @param removeNode If TRUE, then removes nodes with no connecting edges when thresholding interaction values.
 #' @param layout igraph layout function or a numeric matrix with two columns, one row per node. Defaults to igraph::layout_as_circle
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
-#' @param nudge_x Nudge (centered) labels by this amount, outward horizontally
-#' @param nudge_y Nudge (centered) labels by this amount, outward vertically
+#' @param nudge_x Nudge (centered) labels by this amount, outward horizontally.
+#' @param nudge_y Nudge (centered) labels by this amount, outward vertically.
+#' @param edges Logical. If TRUE (default) then encode the edges to have a weight corresponding to the interaction value.
+#' If FALSE, then edges are of equal weight.
+#' @param intQuantiles Logical. If TRUE then print the interaction values quantiles. Can be used to get an estimate
+#' of an appropriate value for intThreshold.
 #'
 #' @return A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 #'
@@ -45,7 +49,9 @@ viviNetwork <- function(mat,
                         layout = igraph::layout_in_circle,
                         cluster = NULL,
                         nudge_x = .05,
-                        nudge_y = .03) {
+                        nudge_y = .03,
+                        edges = TRUE,
+                        intQuantiles = FALSE) {
 
 
 
@@ -85,6 +91,9 @@ viviNetwork <- function(mat,
 
   # Thresholding ------------------------------------------------------------
   dfInt1 <- dfInt
+  if(intQuantiles){
+    print(quantile(dfInt1$Value, probs = c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)/100))
+  }
   if (!is.null(intThreshold)) {
     if (intThreshold > max(dfInt$Value) | intThreshold < min(dfInt$Value)) {
       warning("Interaction threshold value is outside range of interaction values and will be ignored")
@@ -133,7 +142,11 @@ viviNetwork <- function(mat,
   }
 
   edgeCols <- mapinto(dfInt1$Value, intLimits, intPal) # set edge cols
+  if(edges){
   edgeWidthScaled <- mapinto(dfInt1$Value, intLimits, c(1:4)) # scaling for graphic
+  }else{
+    edgeWidthScaled <- 0.1
+  }
   impScaled <- mapinto(dfImp$Value, impLimits, c(1:5)) # scaling for graphic
 
   glayout[abs(glayout) < .0001] <- 0
