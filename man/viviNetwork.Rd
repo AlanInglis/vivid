@@ -9,14 +9,15 @@ viviNetwork(
   intThreshold = NULL,
   intLims = NULL,
   impLims = NULL,
-  intPal = rev(colorspace::sequential_hcl(palette = "Blues 3", n = 100)),
-  impPal = rev(colorspace::sequential_hcl(palette = "Reds 3", n = 100)),
+  intPal = rev(colorspace::sequential_hcl(palette = "Purples 3", n = 100)),
+  impPal = rev(colorspace::sequential_hcl(palette = "Greens 3", n = 100)),
   removeNode = FALSE,
   layout = igraph::layout_in_circle,
   cluster = NULL,
   nudge_x = 0.05,
   nudge_y = 0.03,
-  edges = TRUE
+  edges = TRUE,
+  intQuantiles = FALSE
 )
 }
 \arguments{
@@ -38,12 +39,15 @@ viviNetwork(
 
 \item{cluster}{Either a vector of cluster memberships for nodes or an igraph clustering function.}
 
-\item{nudge_x}{Nudge (centered) labels by this amount, outward horizontally}
+\item{nudge_x}{Nudge (centered) labels by this amount, outward horizontally.}
 
-\item{nudge_y}{Nudge (centered) labels by this amount, outward vertically}
+\item{nudge_y}{Nudge (centered) labels by this amount, outward vertically.}
 
 \item{edges}{Logical. If TRUE (default) then encode the edges to have a weight corresponding to the interaction value.
 If FALSE, then edges are of equal weight.}
+
+\item{intQuantiles}{Logical. If TRUE then print the interaction values quantiles. Can be used to get an estimate
+of an appropriate value for intThreshold.}
 }
 \value{
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
