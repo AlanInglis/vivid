@@ -43,8 +43,8 @@ viviNetwork <- function(mat,
                         intThreshold = NULL,
                         intLims = NULL,
                         impLims = NULL,
-                        intPal = rev(colorspace::sequential_hcl(palette = "Blues 3", n = 100)),
-                        impPal = rev(colorspace::sequential_hcl(palette = "Reds 3", n = 100)),
+                        intPal = rev(colorspace::sequential_hcl(palette = "Purples 3", n = 100)),
+                        impPal = rev(colorspace::sequential_hcl(palette = "Greens 3", n = 100)),
                         removeNode = FALSE,
                         layout = igraph::layout_in_circle,
                         cluster = NULL,
@@ -91,9 +91,13 @@ viviNetwork <- function(mat,
 
   # Thresholding ------------------------------------------------------------
   dfInt1 <- dfInt
+
+  # Show the quantile values for use with thresholding
   if(intQuantiles){
     print(quantile(dfInt1$Value, probs = c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)/100))
   }
+
+  # thresholding
   if (!is.null(intThreshold)) {
     if (intThreshold > max(dfInt$Value) | intThreshold < min(dfInt$Value)) {
       warning("Interaction threshold value is outside range of interaction values and will be ignored")
@@ -145,7 +149,7 @@ viviNetwork <- function(mat,
   if(edges){
   edgeWidthScaled <- mapinto(dfInt1$Value, intLimits, c(1:4)) # scaling for graphic
   }else{
-    edgeWidthScaled <- 0.1
+    edgeWidthScaled <- 0.5
   }
   impScaled <- mapinto(dfImp$Value, impLimits, c(1:5)) # scaling for graphic
 
@@ -178,7 +182,6 @@ viviNetwork <- function(mat,
         hjust = "middle", vjust = "middle",
         label.size = NA
       ) +
-      # theme(legend.text = element_text(size = 10)) +
       geom_point(aes(fill = dfImp$Value), size = impScaled * 2, colour = "transparent", shape = 21) +
       scale_fill_gradientn(
         name = "Vimp", colors = impPal, limits = impLimits,
