@@ -26,10 +26,12 @@
 #' viviHeatmap(myMat)
 #'}
 #' @export
+
+
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,
-                        intPal = rev(colorspace::sequential_hcl(palette = "Blues 3", n = 100)),
-                        impPal = rev(colorspace::sequential_hcl(palette = "Reds 3", n = 100)),
+                        intPal = rev(colorspace::sequential_hcl(palette = "Purples 3", n = 100)),
+                        impPal = rev(colorspace::sequential_hcl(palette = "Greens 3", n = 100)),
                         intLims = NULL,
                         impLims = NULL,
                         angle = NULL) {
@@ -68,10 +70,7 @@ viviHeatmap <- function(mat,
 
   # Set up plot -------------------------------------------------------
 
-
   df <- as.data.frame.vivid(mat)
-
-
 
   # get int vals
   dfInt <- df[which(df$Measure == "Vint"), ]
@@ -86,9 +85,12 @@ viviHeatmap <- function(mat,
   # order factors
   dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
   dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
+  dfTest <<- dfInt
 
+  # Set the geom_point size
+  pointSize <- 1/sqrt(nrow(dfInt))*80
 
-
+  # create plot
   p <- ggplot(dfInt, aes(.data[["Variable_1"]], .data[["Variable_2"]])) +
     geom_tile(aes(fill = .data[["Value"]])) +
     scale_x_discrete(position = "top") +
@@ -102,8 +104,13 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_tile(data = dfImp, aes(fill = .data[["Value"]])) +
-    scale_fill_gradientn(
+    geom_point(data = dfImp,
+               size = pointSize,
+               aes(.data[["Variable_1"]],
+                   .data[["Variable_2"]],
+                   color = .data[["Value"]]
+               )) +
+    scale_color_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
         order = 2,
