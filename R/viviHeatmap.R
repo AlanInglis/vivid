@@ -8,7 +8,7 @@
 #' @param impPal A vector of colours to show importance, for use with scale_fill_gradientn.
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
-#' @param angle The angle to display the x-axis labels.
+#' @param angle The angle to rotate the x-axis labels. Defaults to zero.
 #'
 #' @import ggplot2
 #' @importFrom ggnewscale new_scale_fill
@@ -34,7 +34,7 @@ viviHeatmap <- function(mat,
                         impPal = rev(colorspace::sequential_hcl(palette = "Greens 3", n = 100)),
                         intLims = NULL,
                         impLims = NULL,
-                        angle = NULL) {
+                        angle = 0) {
 
 
 
@@ -43,11 +43,6 @@ viviHeatmap <- function(mat,
 
   # get label names
   labelNames <- colnames(mat)
-
-  # set x-axis text angle
-  if (is.null(angle)) {
-    angle <- 0
-  }
 
   # Limits ------------------------------------------------------------------
 
