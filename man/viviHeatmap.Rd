@@ -10,7 +10,8 @@ viviHeatmap(
   impPal = rev(colorspace::sequential_hcl(palette = "Greens 3", n = 100)),
   intLims = NULL,
   impLims = NULL,
-  angle = NULL
+  angle = NULL,
+  border = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ viviHeatmap(
 \item{impLims}{Specifies the fit range for the color map for importance.}
 
 \item{angle}{The angle to display the x-axis labels.}
+
+\item{border}{Logical. If TRUE then it draws a black border around the diagonal elements.}
 }
 \value{
 A heatmap plot showing variable importance on the diagonal
