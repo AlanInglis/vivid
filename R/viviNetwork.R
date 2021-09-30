@@ -14,10 +14,7 @@
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
 #' @param nudge_x Nudge (centered) labels by this amount, outward horizontally.
 #' @param nudge_y Nudge (centered) labels by this amount, outward vertically.
-#' @param edges Logical. If TRUE (default) then encode the edges to have a weight corresponding to the interaction value.
-#' If FALSE, then edges are of equal weight.
-#' @param intQuantiles Logical. If TRUE then print the interaction values quantiles. Can be used to get an estimate
-#' of an appropriate value for intThreshold.
+#' @param edgeWidths A vector specifying the scaling of the edges for the displayed graph. Both values must be positive.
 #'
 #' @return A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
 #'
@@ -50,8 +47,7 @@ viviNetwork <- function(mat,
                         cluster = NULL,
                         nudge_x = .05,
                         nudge_y = .03,
-                        edges = TRUE,
-                        intQuantiles = FALSE) {
+                        edgeWidths = c(1:4)) {
 
 
 
@@ -91,11 +87,6 @@ viviNetwork <- function(mat,
 
   # Thresholding ------------------------------------------------------------
   dfInt1 <- dfInt
-
-  # Show the quantile values for use with thresholding
-  if(intQuantiles){
-    print(quantile(dfInt1$Value, probs = c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)/100))
-  }
 
   # thresholding
   if (!is.null(intThreshold)) {
@@ -146,11 +137,7 @@ viviNetwork <- function(mat,
   }
 
   edgeCols <- mapinto(dfInt1$Value, intLimits, intPal) # set edge cols
-  if(edges){
-  edgeWidthScaled <- mapinto(dfInt1$Value, intLimits, c(1:4)) # scaling for graphic
-  }else{
-    edgeWidthScaled <- 0.5
-  }
+  edgeWidthScaled <- mapinto(dfInt1$Value, intLimits, edgeWidths) # scaling for graphic
   impScaled <- mapinto(dfImp$Value, impLimits, c(1:5)) # scaling for graphic
 
   glayout[abs(glayout) < .0001] <- 0
