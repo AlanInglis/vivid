@@ -107,7 +107,8 @@ pdpPairs(data = cTrain,
          nIce = c(yesRows, noRows),
          vars = colnames(viv)[1:5],
          convexHull = TRUE,
-         probability = FALSE,fitlims = c(-5,1))
+         probability = FALSE,
+         fitlims = c(-5,1))
 ```
 
 
