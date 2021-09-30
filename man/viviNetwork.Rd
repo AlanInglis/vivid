@@ -16,8 +16,7 @@ viviNetwork(
   cluster = NULL,
   nudge_x = 0.05,
   nudge_y = 0.03,
-  edges = TRUE,
-  intQuantiles = FALSE
+  edgeWidths = c(1:4)
 )
 }
 \arguments{
@@ -43,11 +42,7 @@ viviNetwork(
 
 \item{nudge_y}{Nudge (centered) labels by this amount, outward vertically.}
 
-\item{edges}{Logical. If TRUE (default) then encode the edges to have a weight corresponding to the interaction value.
-If FALSE, then edges are of equal weight.}
-
-\item{intQuantiles}{Logical. If TRUE then print the interaction values quantiles. Can be used to get an estimate
-of an appropriate value for intThreshold.}
+\item{edgeWidths}{A vector specifying the scaling of the edges for the displayed graph. Both values must be positive.}
 }
 \value{
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
