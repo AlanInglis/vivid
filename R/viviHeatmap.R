@@ -9,6 +9,7 @@
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
 #' @param angle The angle to display the x-axis labels.
+#' @param border Logical. If TRUE then it draws a black border around the diagonal elements.
 #'
 #' @import ggplot2
 #' @importFrom ggnewscale new_scale_fill
@@ -26,15 +27,14 @@
 #' viviHeatmap(myMat)
 #'}
 #' @export
-
-
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,
                         intPal = rev(colorspace::sequential_hcl(palette = "Purples 3", n = 100)),
                         impPal = rev(colorspace::sequential_hcl(palette = "Greens 3", n = 100)),
                         intLims = NULL,
                         impLims = NULL,
-                        angle = NULL) {
+                        angle = NULL,
+                        border = FALSE) {
 
 
 
@@ -67,10 +67,19 @@ viviHeatmap <- function(mat,
     limitsInt <- intLims
   }
 
+  if(border){
+    lineSize <- 0.2
+  }else{
+    lineSize <- 0
+  }
+
 
   # Set up plot -------------------------------------------------------
 
+
   df <- as.data.frame.vivid(mat)
+
+
 
   # get int vals
   dfInt <- df[which(df$Measure == "Vint"), ]
@@ -85,12 +94,9 @@ viviHeatmap <- function(mat,
   # order factors
   dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
   dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
-  dfTest <<- dfInt
 
-  # Set the geom_point size
-  pointSize <- 1/sqrt(nrow(dfInt))*80
 
-  # create plot
+
   p <- ggplot(dfInt, aes(.data[["Variable_1"]], .data[["Variable_2"]])) +
     geom_tile(aes(fill = .data[["Value"]])) +
     scale_x_discrete(position = "top") +
@@ -104,13 +110,11 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_point(data = dfImp,
-               size = pointSize,
-               aes(.data[["Variable_1"]],
-                   .data[["Variable_2"]],
-                   color = .data[["Value"]]
-               )) +
-    scale_color_gradientn(
+    geom_tile(data = dfImp,
+              aes(fill = .data[["Value"]]),
+              color = "black",
+              size = lineSize) +
+    scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
         order = 2,
