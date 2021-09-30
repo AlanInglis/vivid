@@ -211,23 +211,18 @@ pdpZen <- function(data,
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = fit, color = .data[[vars[2]]])) +
           geom_line() +
           geom_rug(data = data, sides = "b", aes(y = .data[["pred"]]), color = "black", alpha = 0.1)
-        # if (flip) p <- p+ coord_flip()
       } else {
         if (is.factor(pdp[[vars[1]]])) posx <- "jitter" else posx <- "identity"
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
 
         num2d <- zargs$num/2
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
-          #geom_tile(aes(fill = fit), show.legend = num2d == 1) +
           geom_tile(aes(fill = fit)) +
           scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
         if (rug) {
           p <- p +
-           # geom_rug(data = data, sides = "b", position = posx, alpha = 0.1, color = "black") +
-            geom_rug(data = data, sides = "b", position = posx, aes(color = .data[["pred"]])) +
-            #geom_rug(data = data, sides = "l", position = posy, alpha = 0.1, color = "black")# +
-            geom_rug(data = data, sides = "l", position = posy, aes(color = .data[["pred"]])) +
-            scale_color_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
+            geom_rug(data = data, sides = "b", position = posx, alpha = 0.1, color = "black") +
+            geom_rug(data = data, sides = "l", position = posy, alpha = 0.1, color = "black")
         }
       }
 
@@ -235,8 +230,6 @@ pdpZen <- function(data,
         guides(fill = "none",  color = "none") +
         theme_bw() +
         theme(
-          #legend.position = "left",
-          #legend.key.size = unit(14, 'pt'),
           axis.line = element_blank(),
           axis.ticks = element_blank(),
           axis.text.x = element_blank(),
