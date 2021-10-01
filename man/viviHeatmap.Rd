@@ -25,7 +25,7 @@ viviHeatmap(
 
 \item{impLims}{Specifies the fit range for the color map for importance.}
 
-\item{border}{Logical. If TRUE then it draws a black border around the diagonal elements.}
+\item{border}{Logical. If true then draw a black border around the diagonal elements.}
 
 \item{angle}{The angle to rotate the x-axis labels. Defaults to zero.}
 }
