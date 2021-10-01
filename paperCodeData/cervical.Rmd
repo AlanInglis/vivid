@@ -119,7 +119,6 @@ Figure 8:
 note: layout may differ 
 ```{r net, fig.width=6, fig.height=5}
 viviNetwork(viv, intThreshold = 0.08, removeNode = T,
-            # cluster = cutree(h,4),
             layout = igraph::layout_with_lgl
             )
 ```
