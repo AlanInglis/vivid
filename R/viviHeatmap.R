@@ -9,7 +9,7 @@
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
 #' @param angle The angle to display the x-axis labels.
-#' @param border Logical. If TRUE then it draws a black border around the diagonal elements.
+#' @param border Logical. If true then draw a black border around the diagonal elements.
 #' @param angle The angle to rotate the x-axis labels. Defaults to zero.
 #'
 #' @import ggplot2
@@ -63,11 +63,6 @@ viviHeatmap <- function(mat,
     limitsInt <- intLims
   }
 
-  if(border){
-    lineSize <- 0.2
-  }else{
-    lineSize <- 0
-  }
 
 
   # Set up plot -------------------------------------------------------
@@ -107,9 +102,8 @@ viviHeatmap <- function(mat,
     ) +
     new_scale_fill() +
     geom_tile(data = dfImp,
-              aes(fill = .data[["Value"]]),
-              color = "black",
-              size = lineSize) +
+              aes(fill = .data[["Value"]])
+             ) +
     scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
@@ -128,6 +122,12 @@ viviHeatmap <- function(mat,
     theme(axis.text = element_text(size = 10)) +
     theme(axis.text.x = element_text(angle = angle, hjust = 0)) +
     theme(aspect.ratio = 1)
+
+    if(border){
+         p$layers[[2]]$aes_params$colour = 'black'
+         p$layers[[2]]$aes_params$size = 0.2
+    }
+
 
   return(p)
 }
