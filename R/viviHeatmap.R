@@ -9,7 +9,7 @@
 #' @param intLims Specifies the fit range for the color map for interaction strength.
 #' @param impLims Specifies the fit range for the color map for importance.
 #' @param angle The angle to display the x-axis labels.
-#' @param border Logical. If true then draw a black border around the diagonal elements.
+#' @param border Logical. If TRUE then draw a black border around the diagonal elements.
 #' @param angle The angle to rotate the x-axis labels. Defaults to zero.
 #'
 #' @import ggplot2
