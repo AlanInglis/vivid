@@ -28,6 +28,8 @@ library("randomForest") # to create model
 library("condvis2") # for predict function
 library("kknn") # to get knn model
 library("dplyr")
+library("sp")
+library("network")
 ```
 
 ## Read in and setup data:

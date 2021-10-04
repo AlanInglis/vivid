@@ -20,6 +20,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width=
 library(mlr)
 library(vivid)
 library(dplyr)
+library(sp)
+library(network)
+library(gbm)
 RNGkind(kind="Mersenne-Twister", normal.kind="Inversion", sample.kind="Rejection" ) # defaults
 
 ```
