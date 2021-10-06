@@ -19,11 +19,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width=
 # devtools::install_github("cbhurley/condvis2")
 if(!require(network)){
     install.packages("network")
-    library("network")
 }
 if(!require(sp)){
     install.packages("sp")
-    library("sp")
 }
 
 library(mlr)

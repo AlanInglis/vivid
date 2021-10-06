@@ -22,11 +22,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width 
 # Load relevant packages:
 if(!require(network)){
     install.packages("network")
-    library("network")
 }
 if(!require(sp)){
     install.packages("sp")
-    library("sp")
 }
 library("vivid") # for visualisations
 library("ISLR") # for data
