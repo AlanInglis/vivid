@@ -20,6 +20,14 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,  fig.width 
 #devtools::install_github("AlanInglis/vivid")
 
 # Load relevant packages:
+if(!require(network)){
+    install.packages("network")
+    library("network")
+}
+if(!require(sp)){
+    install.packages("sp")
+    library("sp")
+}
 library("vivid") # for visualisations
 library("ISLR") # for data
 library("mlr3") # to create model
@@ -28,8 +36,6 @@ library("randomForest") # to create model
 library("condvis2") # for predict function
 library("kknn") # to get knn model
 library("dplyr")
-library("sp")
-library("network")
 ```
 
 ## Read in and setup data:
