@@ -117,7 +117,7 @@ pdpPairs <- function(data,
     predData <- predictFun(fit, data)
   }
 
-  testPRED <<- predData
+
   vars0 <- names(data)
   vars0 <- vars0[-match(response, vars0)]
   vars <- vars[vars %in% vars0]
@@ -242,13 +242,6 @@ pdpPairs <- function(data,
       filter(pdp, .data[[".id"]] %in% sice) %>%
         ggplot(aes(x = .data[[var]], y = fit)) +
          geom_line(aes(color = .data[[colorVar]], group = .data[[".id"]])) +
-        # scale_color_gradientn(
-        #   name = legendName, colors = pal, limits = limits, oob = scales::squish,
-        #   guide = guide_colorbar(
-        #     frame.colour = "black",
-        #     ticks.colour = "black"
-        #   )
-        # ) +
         geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
       }
   }
