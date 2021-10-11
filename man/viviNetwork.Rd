@@ -16,7 +16,7 @@ viviNetwork(
   cluster = NULL,
   nudge_x = 0.05,
   nudge_y = 0.03,
-  edgeWidths = c(1:4)
+  edgeWidths = 1:4
 )
 }
 \arguments{
@@ -42,7 +42,7 @@ viviNetwork(
 
 \item{nudge_y}{Nudge (centered) labels by this amount, outward vertically.}
 
-\item{edgeWidths}{A vector specifying the scaling of the edges for the displayed graph. Both values must be positive.}
+\item{edgeWidths}{A vector specifying the scaling of the edges for the displayed graph. Values must be positive.}
 }
 \value{
 A plot displaying interaction strength between variables on the edges and variable importance on the nodes.
