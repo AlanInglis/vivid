@@ -256,15 +256,18 @@ pdpPairs <- function(data,
 
   if (is.null(colorVar)) {
     df <- data.frame(x = x, y = y)
-    ggplot(df, aes(x = x, y = y, color = predData)) +
+    df %>%
+    ggplot(aes(x = .data$x, y = .data$y, color = predData)) +
       geom_point(shape = 16, size = 1, show.legend = FALSE) +
       scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
+
   } else {
     data$response <- rep
     names(data)[names(data) == "response"] <- response
     colorVar <- data[[colorVar]]
     df <- data.frame(x = x, y = y, colVar = colorVar)
-    ggplot(df, aes(x = x, y = y)) +
+    df %>%
+    ggplot(aes(x = .data$x, y = .data$y)) +
       geom_point(shape = 16, size = 1, show.legend = FALSE, aes(color = colVar))
   }
 }
