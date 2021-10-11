@@ -268,7 +268,7 @@ pdpPairs <- function(data,
     df <- data.frame(x = x, y = y, colVar = colorVar)
     df %>%
     ggplot(aes(x = .data$x, y = .data$y)) +
-      geom_point(shape = 16, size = 1, show.legend = FALSE, aes(color = colVar))
+      geom_point(shape = 16, size = 1, show.legend = FALSE, aes(color = .data$colVar))
   }
 }
 
