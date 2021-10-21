@@ -302,7 +302,7 @@ pdpPairs <- function(data,
      # axis.ticks = element_blank(),
       axis.text.x = element_text(angle = 0, hjust = 1, size = 6),
       axis.text.y = element_text(size = 6),
-      strip.text = element_text(face = "bold", colour = "red", size = 7)
+      strip.text = element_text(face = "bold", colour = "black", size = 7)
     )
 
 
