@@ -119,7 +119,7 @@ viviHeatmap <- function(mat,
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank()
     ) +
-    theme(axis.text = element_text(size = 10)) +
+    theme(axis.text = element_text(size = 11)) +
     theme(axis.text.x = element_text(angle = angle, hjust = 0)) +
     theme(aspect.ratio = 1)
 

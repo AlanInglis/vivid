@@ -164,7 +164,7 @@ viviNetwork <- function(mat,
     ) +
       xlim(xlim) +
       ylim(ylim) +
-      geom_label(aes(label = dfImp$Variable_1),
+      geom_label(aes(label = dfImp$Variable_1), size = 4.5,
         nudge_x = nudged[, 1], nudge_y = nudged[, 2],
         hjust = "middle", vjust = "middle",
         label.size = NA
