@@ -251,7 +251,8 @@ pdpZen <- function(data,
   suppressMessages({
     zenplots::zenplot(zdata,
       pkg = "grid", labs = list(group = NULL),
-      plot2d = pdpnn, ...
+      plot2d = pdpnn,
+      ...
     )
   })
 }
