@@ -1,0 +1,18 @@
+---
+title: "readMe"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The supplementary files include a .pdf document called datasets.pdf that contains tables describing the data set used in Sections 2 and 3 for the college example, and Section 4 for the cervical cancer example. 
+
+Also included are three .Rmd files containing the code used throughout the paper. These are:
+
+* college.Rmd: Code for examples of Sections 2 and 3.
+
+* cervical.Rmd: Code for examples in Section 4.
+
+* hstat.Rmd: Code for example of Appendix. 
