@@ -68,16 +68,12 @@ aq <- na.omit(airquality)
 f <- lm(Ozone ~ ., data = aq)
 pdpPairs(aq, f, "Ozone")
 \donttest{
-# Run an mlr ranger model:
-library(mlr3)
-library(mlr3learners)
+# Run a ranger model:
 library(ranger)
 library(MASS)
 Boston1 <- Boston[, c(4:6, 8, 13:14)]
 Boston1$chas <- factor(Boston1$chas)
-task <- TaskRegr$new(id = "Boston1", backend = Boston1, target = "medv")
-learner <- lrn("regr.ranger", importance = "permutation")
-fit <- learner$train(task)
+fit <- ranger(medv~., data = Boston1, importance = "permutation")
 pdpPairs(Boston1[1:30, ], fit, "medv")
 pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE)
 viv <- vivi(Boston1, fit, "medv")
@@ -89,9 +85,5 @@ library(ranger)
 rf <- ranger(Species ~ ., data = iris, probability = TRUE)
 pdpPairs(iris, rf, "Species") # prediction probs for first class, setosa
 pdpPairs(iris, rf, "Species", class = "versicolor") # prediction probs versicolor
-# and with mlr3
-task <- TaskClassif$new(id = "iris", backend = iris, target = "Species")
-fitm <- lrn("classif.ranger", importance = "permutation", predict_type = "prob")$train(task)
-pdpPairs(iris, fitm, "Species", class = "versicolor")
 }
 }

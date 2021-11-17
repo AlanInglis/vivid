@@ -11,30 +11,6 @@ library(mlr)
 
 aq <- na.omit(airquality)
 
-test_that("Vivi function works for mlr3 example data",{
-  aq_Task <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
-  aq_lrn <- lrn("regr.svm")
-  aq_fit <- aq_lrn$train(aq_Task)
-
-  # Default values
-  m <- vivi(fit = aq_fit, data = aq, response = "Ozone", nmax = 10, gridSize = 5)
-
-  expect_s3_class(m,c("vivid","matrix","array"))
-  expect_identical(sort(colnames(m)), sort(colnames(aq)[-1]))
-  expect_identical(sort(rownames(m)), sort(colnames(aq)[-1]))
-  expect_true(ncol(m)==nrow(m))
-
-  # Run for small grid size
-  expect_s3_class(vivi(fit = aq_fit, data = aq, response = "Ozone", nmax = 10, gridSize = 10),c("vivid","matrix","array"))
-
-  # Try changing importance type
-   expect_s3_class(vivi(fit = aq_fit, data = aq, response = "Ozone",nmax = 10, gridSize = 5, importanceType = "agnostic"),c("vivid","matrix","array"))
-
-  # Set reorder to FALSE
-  m <- vivi(fit = aq_fit, data = aq, response = "Ozone", gridSize = 5, reorder = FALSE)
-  expect_identical(colnames(m), colnames(aq)[-1])
-
-})
 
 test_that("vivi function works for classification", {
   rf <- ranger(Species ~ ., data = iris, importance = "impurity")

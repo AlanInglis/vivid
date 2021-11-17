@@ -54,19 +54,6 @@ m <- vivi(fit = f, data = aq, response = "Ozone") # as expected all interactions
 viviHeatmap(m)
 
 \donttest{
-# Run an mlr ranger model:
-library(mlr3)
-library(mlr3learners)
-library(ranger)
-aq <- na.omit(airquality)
-aq_Task <- TaskRegr$new(id = "airQ", backend = aq, target = "Ozone")
-aq_lrn <- lrn("regr.ranger", importance = "permutation")
-aq_fit <- aq_lrn$train(aq_Task)
-
-m <- vivi(fit = aq_fit, data = aq, response = "Ozone")
-viviHeatmap(m)
-}
-\donttest{
 library(ranger)
 rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 vivi(fit = rf, data = iris, response = "Species")
