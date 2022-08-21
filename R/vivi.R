@@ -55,8 +55,7 @@ vivi <- function(data,
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) {
     pFun <- CVpredictfun(classif, class)
-  }
-  else pFun <- predictFun
+  } else pFun <- predictFun
 
   # Call the importance function
   if (!is.null(importanceType) && importanceType == "agnostic") {
