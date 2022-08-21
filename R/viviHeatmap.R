@@ -86,6 +86,11 @@ viviHeatmap <- function(mat,
   dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
   dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
 
+  if(angle > 10){
+    hj <- 0
+  }else{
+      hj <- 0.5
+    }
 
 
   p <- ggplot(dfInt, aes(.data[["Variable_1"]], .data[["Variable_2"]])) +
@@ -120,7 +125,7 @@ viviHeatmap <- function(mat,
       panel.grid.minor = element_blank()
     ) +
     theme(axis.text = element_text(size = 11)) +
-    theme(axis.text.x = element_text(angle = angle, hjust = 0)) +
+    theme(axis.text.x = element_text(angle = angle, hjust = hj)) +
     theme(aspect.ratio = 1)
 
     if(border){
