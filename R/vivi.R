@@ -235,7 +235,7 @@ vividImportance.randomForest <- function(fit,
                                          predictFun = NULL) {
 
  fitImp <- dim(fit$importance)
- importanceData <- randomForest::importance(fit)
+ importanceData <- randomForest::importance(fit, scale = FALSE)
  st <- colnames(importanceData)
 
  if (fit$type == "classification") {
