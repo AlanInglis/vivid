@@ -58,16 +58,15 @@ gene-environment interactions have made these measures an important tool
 for genomic analysis (e.g. Chen and Ishwaran 2012).
 
 In Table 1 we summarize VIVI measures and visualizations
-provided by a selection of R packages. VIVI measures from fitted ML
+provided by a selection of R packages. VIVI measures
 models fall into two categories; model specific (embedded) methods or
 model agnostic methods. In embedded methods the variable importance is
-incorporated into the ML algorithm. For example random forests {[}RF;
+incorporated into the ML algorithm. For example, random forests {[}RF;
 Breiman (2001){]} and gradient boosting machines {[}GBM;
 Friedman (2000){]} use the tree structure to evaluate the performance of the
 model. Bayesian additive regression tree models {[}BART; Chipman, George, and McCulloch (2010){]}
 also use an embedded method to obtain VIVI measures by looking at the
-proportion of splitting rules used in the trees. Specifically for random
-forests, the package \CRANpkg{randomForestExplainer} (Paluszynska, Biecek, and Jiang 2020) provides
+proportion of splitting rules used in the trees. The package \CRANpkg{randomForestExplainer} (Paluszynska, Biecek, and Jiang 2020) provides
 a set of tools to understand what is happening inside a random forest
 and uses the concept of minimal depth (Ishwaran et al. 2010) to assess both importance and interaction
 strength by examining the position of a variable within the trees. For
@@ -88,7 +87,6 @@ measure and identify VIVI and visualize the results.
 \end{minipage} \\
 \midrule()
 \endhead
-\CRANpkg{vivid} & Contains a suite of plots for viewing VIVI jointly and the partial dependence. Both model-agnostic and model-specific methods are catered for. & Heatmaps and network plots to view VIVI jointly. Univariate, bivariate PDPs, ICE curves with functionality to plot all pairs and a PDP in a ``zenplots'' style. Built with \CRANpkg{ggplot2}. \\
 \CRANpkg{vip} & A general framework for constructing VImp plots from various types of ML models in R. Both model-agnostic and model-specific methods are catered for. & Has built-in \CRANpkg{ggplot2} functionality to display VIVI measures. Also provides univariate PDPs and ICE curves and ability to plot Shapley values. \\
 \CRANpkg{iml} & A general framework for analysing the behavior of ML models. Includes model-agnostic VIVI measures. & Ability to plot VIVI measures using lollipop, dot, and barplots. Also includes univariate and bivariate PDPs, ICE curves, LIME, and Shapley visualizations. Built with \CRANpkg{ggplot2}. \\
 \CRANpkg{flashlight} & A general framework for analyzing the behavior of ML models. Includes model-agnostic VIVI measures. & Ability to plot VIVI measures using barplots. Includes univariate and bivariate PDPs, ICE curves, Global surrogate, and SHAP visualizations. Built with \CRANpkg{ggplot2} . \\
@@ -102,7 +100,10 @@ measure and identify VIVI and visualize the results.
 \bottomrule()
 \end{longtable}
 
-\textbf{Table 1:} Summary of a selection of R packages that can be used to assess the variable importance, variable interactions, or partial dependence and if these metrics are model-specific or model-agnostic. A brief description of available visualizations for evaluating model behavior is also provided. Our \CRANpkg{vivid} package differentiates itself by allowing the VIVI measures to be viewed jointly and allowing all pairs of PDPs to displayed in a single plot. For more on the \CRANpkg{lime} and \CRANpkg{varImp} packages see Hvitfeldt, Pedersen, and Benesty (2022) and Probst (2020), respectively.
+\textbf{Table 1:} Summary of a selection of R packages that can be used to assess the variable importance, variable interactions, or partial dependence and if these metrics are model-specific or model-agnostic. A brief description of available visualizations for evaluating model behavior is also provided.
+For more on the \CRANpkg{lime} and \CRANpkg{varImp} packages see Hvitfeldt, Pedersen, and Benesty (2022) and Probst (2020), respectively.
+
+\newpage
 
 Model-agnostic methods are techniques that can, in principle, be applied
 to any ML algorithm. Agnostic methods not only provide flexibility in
@@ -402,7 +403,7 @@ pdpVars(data = Boston,
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{vivid_files/figure-latex/pdpRf-1} 
+{\centering \includegraphics[width=1\linewidth]{vivid_files/figure-latex/pdpRf-1} 
 
 }
 

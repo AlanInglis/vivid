@@ -130,7 +130,7 @@ class(viviRf)<- c("vivid", class(viviRf))
 head(as.data.frame(viviRf), 4)
 
 
-## ---- pdpRf,echo = TRUE,  out.width="75%", fig.width=10, fig.height=4,fig.cap = "Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a GBM fit on the Boston housing data. The changing partial dependence and ICE curves of $lstat$ and $rm$ indicate that these variables have some impact on the response."----
+## ---- pdpRf,echo = TRUE,  out.width="100%", fig.width=10, fig.height=3,fig.cap = "Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a GBM fit on the Boston housing data. The changing partial dependence and ICE curves of $lstat$ and $rm$ indicate that these variables have some impact on the response."----
 pdpVars(data = Boston,
         fit = gbst,
         response = 'medv',

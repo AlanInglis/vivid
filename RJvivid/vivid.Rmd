@@ -111,28 +111,26 @@ gene-environment interactions have made these measures an important tool
 for genomic analysis [e.g. @chen2012random].
 
 In Table 1  we summarize VIVI measures and visualizations
-provided by a selection of R packages. VIVI measures from fitted ML
+provided by a selection of R packages. VIVI measures 
 models fall into two categories; model specific (embedded) methods or
 model agnostic methods. In embedded methods the variable importance is
-incorporated into the ML algorithm. For example random forests [RF;
+incorporated into the ML algorithm. For example, random forests [RF;
 @breiman2001randomforest] and gradient boosting machines [GBM;
 @Friedpdp] use the tree structure to evaluate the performance of the
 model. Bayesian additive regression tree models [BART; @chipman2010bart]
 also use an embedded method to obtain VIVI measures by looking at the
-proportion of splitting rules used in the trees. Specifically for random
-forests, the package \CRANpkg{randomForestExplainer} [@RFE] provides
+proportion of splitting rules used in the trees. The package \CRANpkg{randomForestExplainer} [@RFE] provides
 a set of tools to understand what is happening inside a random forest
 and uses the concept of minimal depth [@ishwaran2010high] to assess both importance and interaction
 strength by examining the position of a variable within the trees. For
 gradient boosted machines (GBMs) the \CRANpkg{EIX} [@EIX] package can be used to
 measure and identify VIVI and visualize the results.
 
-
+<!-- | \CRANpkg{vivid}| Contains a suite of plots for viewing VIVI jointly and the partial dependence. Both model-agnostic and model-specific methods are catered for. | Heatmaps and network plots to view VIVI jointly. Univariate, bivariate PDPs, ICE curves with functionality to plot all pairs and a PDP in a “zenplots” style. Built with \CRANpkg{ggplot2}. |  -->
 
 
 | **Package** | **Description** | **Visualisation** |
 | --- | ---- | ----- |
-| \CRANpkg{vivid}| Contains a suite of plots for viewing VIVI jointly and the partial dependence. Both model-agnostic and model-specific methods are catered for. | Heatmaps and network plots to view VIVI jointly. Univariate, bivariate PDPs, ICE curves with functionality to plot all pairs and a PDP in a “zenplots” style. Built with \CRANpkg{ggplot2}. | 
 | \CRANpkg{vip} | A general framework for constructing VImp  plots from various types of ML models in R. Both model-agnostic and model-specific methods are catered for. 	| Has built-in \CRANpkg{ggplot2} functionality to display VIVI measures. Also provides univariate PDPs and ICE curves and ability to plot Shapley values.|                                                                             	|
 | \CRANpkg{iml} | A general framework for analysing the behavior of ML models. Includes model-agnostic VIVI measures.| Ability to plot VIVI measures using lollipop, dot, and barplots. Also includes univariate and bivariate PDPs, ICE curves, LIME, and Shapley visualizations. Built with \CRANpkg{ggplot2}. |
 | \CRANpkg{flashlight}| A general framework for analyzing the behavior of ML models. Includes model-agnostic VIVI measures. | Ability to plot VIVI measures using barplots. Includes univariate and bivariate PDPs, ICE curves, Global surrogate, and SHAP visualizations. Built with \CRANpkg{ggplot2} .|
@@ -143,8 +141,11 @@ measure and identify VIVI and visualize the results.
 | \CRANpkg{varImp} | Computes model-specific random forest VImps for the conditional inference random forest (cforest) of the \CRANpkg{party} package. | None available. |                                  | \CRANpkg{randomForest} | Used to build random forest models. Can assess VImp .| Offers VImp, error rate, and univariate PDPs. Built using base R.|    
 | \CRANpkg{bartMachine}| Used to build Bayesian additive  regression tree models. Can assess VIVI.| Ability to plot VIVI measures with uncertainty included using barplots. Also includes a suite of model diagnostic  plots and univariate PDP. Built using  base R.|
 | \CRANpkg{pdp} | A general framework for constructing PDPs from various types machine  learning models, bivariate, and  trivariate PDPs and ICE curves.  Built with \CRANpkg{ggplot2}.| |\CRANpkg{ICEbox}| Used to create Individual Conditional Expectation (ICE) plots                      | Provides univariate and bivariate  PDPs and ICE curves.  Built with \CRANpkg{ggplot2}. |
-**Table 1:** Summary of a selection of R packages that can be used to assess the variable importance, variable interactions, or partial dependence and if these metrics are model-specific or model-agnostic. A brief description of available visualizations for evaluating model behavior is also provided. Our \CRANpkg{vivid} package differentiates itself by allowing the VIVI measures to be viewed jointly and allowing all pairs of PDPs to displayed in a single plot. For more on the \CRANpkg{lime} and \CRANpkg{varImp} packages see @lime and @varImpPack, respectively. 
+**Table 1:** Summary of a selection of R packages that can be used to assess the variable importance, variable interactions, or partial dependence and if these metrics are model-specific or model-agnostic. A brief description of available visualizations for evaluating model behavior is also provided. 
+<!-- Our \CRANpkg{vivid} package differentiates itself by allowing the VIVI measures to be viewed jointly and allowing all pairs of PDPs to displayed in a single plot.  -->
+For more on the \CRANpkg{lime} and \CRANpkg{varImp} packages see @lime and @varImpPack, respectively. 
 
+\newpage
 
 Model-agnostic methods are techniques that can, in principle, be applied
 to any ML algorithm. Agnostic methods not only provide flexibility in
@@ -417,7 +418,7 @@ head(as.data.frame(viviRf), 4)
 The `pdpVars` function constructs a grid of univariate PDPs with ICE curves for selected variables. We use ICE curves to assist in the identification of linear or non-linear effects. The fit, data frame used to train the model, and the name of the response variable are required inputs. In the code below, we show an example of the partial dependence and ICE curves for the first five features from the GBM `vivid` matrix, with  output  shown in Figure \@ref(fig:pdpRf).  We use the custom GBM predict function given previously.
 
 
-```{r, pdpRf,echo = TRUE,  out.width="75%", fig.width=10, fig.height=4,fig.cap = "Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a GBM fit on the Boston housing data. The changing partial dependence and ICE curves of $lstat$ and $rm$ indicate that these variables have some impact on the response."}
+```{r, pdpRf,echo = TRUE,  out.width="100%", fig.width=10, fig.height=3,fig.cap = "Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a GBM fit on the Boston housing data. The changing partial dependence and ICE curves of $lstat$ and $rm$ indicate that these variables have some impact on the response."}
 pdpVars(data = Boston,
         fit = gbst,
         response = 'medv',
