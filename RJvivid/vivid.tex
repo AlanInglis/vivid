@@ -1,0 +1,732 @@
+% !TeX root = RJwrapper.tex
+\title{vivid: An R package for Variable Importance and Variable Interactions Displays for Machine Learning Models}
+\author{by Alan Inglis, Andrew Parnell, and Catherine Hurley}
+
+\maketitle
+
+\abstract{%
+We present \CRANpkg{vivid}, an R package for visualizing variable importance and variable interactions in machine learning models. The package provides a range of displays including heatmap and graph-based displays for viewing variable importance and interaction jointly and partial dependence plots in both a matrix layout and an alternative layout emphasizing important variable subsets. With the intention of increasing a machine learning models' interpretability and making the work applicable to a wider readership, we discuss the design choices behind our implementation by focusing on the package structure and providing an in-depth look at the package functions and key features. We also provide a practical illustration of the software in use on a data set.
+}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Our motivation behind the creation of the \CRANpkg{vivid} package is to investigate machine learning
+models in a way that is simple to understand while also offering helpful
+insights into how variables affect the fit. We do this through the use
+of heatmaps, network graphs, and both a generalized pairs plot style
+partial dependence plot (PDP) (Friedman 2000) and a space saving PDP based
+on key variable subsets. While the techniques and fundamental goals of
+these visualizations have been discussed in (Inglis, Parnell, and Hurley 2022), we
+focus here on the implementation details of the package by providing a
+complete listing of the functions and arguments included in the vivid
+package with further examples indicating advanced usage beyond that
+previously shown. In this work we examine the decisions made when
+designing the package and provide an in-depth look at the package
+functions and features with the intention of making the work applicable
+to a larger readership. This article outlines the general architectural
+principles implemented in \CRANpkg{vivid}, such as the data structures we use and data
+formatting, function design, filtering techniques, and more. We
+illustrate each function by way of a practical example. Our package is
+available on the Comprehensive R Archive Network at
+\url{https://cran.r-project.org/web/packages/vivid} or on GitHub at
+\url{https://github.com/AlanInglis/vivid}.
+
+In recent years machine learning (ML) algorithms have emerged as a
+valuable tool for both industry and science. However, due to the
+black-box nature of many of these algorithms it can be challenging to
+communicate the reasoning behind the algorithm's decision-making
+processes. With the need for transparency in ML growing it is important
+to gain understanding and clarity about how these algorithms are making
+predictions (Antunes et al. 2018; Felzmann et al. 2019). Many R
+packages are now available that aid in creating interpretable machine
+learning (IML) models such as \CRANpkg{iml} (Molnar, Bischl, and Casalicchio 2018), \CRANpkg{DALEX} (Biecek 2018),
+\CRANpkg{lime} and (Hvitfeldt, Pedersen, and Benesty 2022). For a
+comprehensive review of IML see (Molnar 2022), and
+(Biecek and Burzykowski 2021).
+
+How we choose to visualize aspects of the model output is of vital
+importance in how a researcher can interpret and communicate their
+findings. Consequently model summaries such as variable importance and
+variable interactions (VImp and VInt; together we term these VIVI) are
+frequently used in various fields to comprehend and explain the hidden
+structure in an ML fit. In ecology they are employed to determine the
+causes of ecological phenomena (e.g. Murray and Conner 2009); in meteorology
+VImp measures and partial dependence plots are used to examine air
+quality (e.g. Grange et al. 2018); in bioinformatics, understanding
+gene-environment interactions have made these measures an important tool
+for genomic analysis (e.g. Chen and Ishwaran 2012).
+
+In Table 1 we summarize VIVI measures and visualizations
+provided by a selection of R packages. VIVI measures from fitted ML
+models fall into two categories; model specific (embedded) methods or
+model agnostic methods. In embedded methods the variable importance is
+incorporated into the ML algorithm. For example random forests {[}RF;
+Breiman (2001){]} and gradient boosting machines {[}GBM;
+Friedman (2000){]} use the tree structure to evaluate the performance of the
+model. Bayesian additive regression tree models {[}BART; Chipman, George, and McCulloch (2010){]}
+also use an embedded method to obtain VIVI measures by looking at the
+proportion of splitting rules used in the trees. Specifically for random
+forests, the package \CRANpkg{randomForestExplainer} (Paluszynska, Biecek, and Jiang 2020) provides
+a set of tools to understand what is happening inside a random forest
+and uses the concept of minimal depth (Ishwaran et al. 2010) to assess both importance and interaction
+strength by examining the position of a variable within the trees. For
+gradient boosted machines (GBMs) the \CRANpkg{EIX} (Maksymiuk, Karbowiak, and Biecek 2021) package can be used to
+measure and identify VIVI and visualize the results.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4167}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Package}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Description}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Visualisation}
+\end{minipage} \\
+\midrule()
+\endhead
+\CRANpkg{vivid} & Contains a suite of plots for viewing VIVI jointly and the partial dependence. Both model-agnostic and model-specific methods are catered for. & Heatmaps and network plots to view VIVI jointly. Univariate, bivariate PDPs, ICE curves with functionality to plot all pairs and a PDP in a ``zenplots'' style. Built with \CRANpkg{ggplot2}. \\
+\CRANpkg{vip} & A general framework for constructing VImp plots from various types of ML models in R. Both model-agnostic and model-specific methods are catered for. & Has built-in \CRANpkg{ggplot2} functionality to display VIVI measures. Also provides univariate PDPs and ICE curves and ability to plot Shapley values. \\
+\CRANpkg{iml} & A general framework for analysing the behavior of ML models. Includes model-agnostic VIVI measures. & Ability to plot VIVI measures using lollipop, dot, and barplots. Also includes univariate and bivariate PDPs, ICE curves, LIME, and Shapley visualizations. Built with \CRANpkg{ggplot2}. \\
+\CRANpkg{flashlight} & A general framework for analyzing the behavior of ML models. Includes model-agnostic VIVI measures. & Ability to plot VIVI measures using barplots. Includes univariate and bivariate PDPs, ICE curves, Global surrogate, and SHAP visualizations. Built with \CRANpkg{ggplot2} . \\
+\CRANpkg{DALEX} & A general framework for analyzing the behavior of ML models. Includes model-agnostic VImp measures. & Contains a suite of visualizations including Ceteris Paribus, Shapley, PDPs, model performance, and diagnostic plots. Built with \CRANpkg{ggplot2}. \\
+\CRANpkg{lime} & A general framework for fitting a local interpretable model. Includes model-agnostic VImp measures. & Ability to create VImp and model visualizations using barplots and heatmaps. Can also create interactive plots. Built with \CRANpkg{ggplot2}. \\
+\CRANpkg{randomForestExplainer} & Contains a set of model-specific tools to determine which random forests variables are most important. Can assess VIVI. & Ability to create VIVI plots displaying the mean minimal depth distribution and conditional minimal depth. Can also display multi-way importance, pairs plots containing different metrics, and Bivariate PDP. Built with \CRANpkg{ggplot2}. \\
+\CRANpkg{EIX} & Contains a set of model-specific tools to determine which GBM variables are most important. Can assess VIVI. & Ability to create VIVI plots using lollipops, barplots, and heatmaps. Can also display dot and radar plots. Built with \CRANpkg{ggplot2}. \\
+\CRANpkg{varImp} & Computes model-specific random forest VImps for the conditional inference random forest (cforest) of the \CRANpkg{party} package. & None available. \\
+\CRANpkg{bartMachine} & Used to build Bayesian additive regression tree models. Can assess VIVI. & Ability to plot VIVI measures with uncertainty included using barplots. Also includes a suite of model diagnostic plots and univariate PDP. Built using base R. \\
+\CRANpkg{pdp} & A general framework for constructing PDPs from various types machine learning models, bivariate, and trivariate PDPs and ICE curves. Built with \CRANpkg{ggplot2}. & \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Table 1:} Summary of a selection of R packages that can be used to assess the variable importance, variable interactions, or partial dependence and if these metrics are model-specific or model-agnostic. A brief description of available visualizations for evaluating model behavior is also provided. Our \CRANpkg{vivid} package differentiates itself by allowing the VIVI measures to be viewed jointly and allowing all pairs of PDPs to displayed in a single plot. For more on the \CRANpkg{lime} and \CRANpkg{varImp} packages see Hvitfeldt, Pedersen, and Benesty (2022) and Probst (2020), respectively.
+
+Model-agnostic methods are techniques that can, in principle, be applied
+to any ML algorithm. Agnostic methods not only provide flexibility in
+relation to model selection but are also useful for comparing different
+fitted ML models. An example of a model agnostic approach for evaluating
+VImps is permutation importance (Breiman 2001). This method
+calculates the difference in a model's predictive performance following
+a variable's permutation; implementations are available in \CRANpkg{iml},
+\CRANpkg{flashlight}, \CRANpkg{vip} (Brandon M. Greenwell and Boehmke 2020),
+and \CRANpkg{DALEX} packages. For VInts, Friedman's \(H\)-statistic (Friedman and Popescu 2008) is an
+agnostic interaction measure derived from the partial dependence by
+comparing a pair of variables' partial dependency with their marginal
+effects. Packages \CRANpkg{iml} and \CRANpkg{flashlight} provide implementations.
+
+Partial dependence plots (PDPs) were first introduced by (Friedman 2000) as
+a model agnostic way to visualize the relationship between a specified
+predictor variable and the fit, averaging over other predictors'
+effects. Similar to PDPs, individual conditional expectation curves
+{[}ICE; Goldstein et al. (2015){]} show the relationship between a specified predictor and the
+fit, fixing the levels of other predictors at those of a particular
+observation. PDP curves are then the average of the ICE curves over all
+observations in the dataset. R packages offering PDPs include, \CRANpkg{pdp} (Brandon M. Greenwell 2017),
+\CRANpkg{iml}, and \CRANpkg{DALEX}; the package \CRANpkg{ICEbox} (Goldstein et al. 2015) provides ICE curves and variations.
+
+In \CRANpkg{vivid} we provide a suite of functions (see Table 2) for calculating and visualizing variable importance, interactions and the partial dependence. Our displays conveniently show
+(both model specific and agnostic) VImp and VInt jointly using heatmaps and network graphs, thus providing a more informative picture identifying relevant features. Our generalized PDP (GPDP) displays partial dependence plots in a matrix layout combining univariate and bivariate partial dependence plots with variable scatterplots. We furthermore provide a more compact version of the GDPD, the so-called zen-partial dependence plot (ZPDP) consisting only of those bivariate partial dependence plots with high VInt. All of our displays are designed to quickly identify how variables, both singly and jointly, affect the fitted response and can be used for regression or classification fits. As the output of our displays are \CRANpkg{ggplot2} objects (Wickham 2016), they are easily customizable and provide the flexibility to create custom VIVI visualizations.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+Function
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Type
+\end{minipage} \\
+\midrule()
+\endhead
+\texttt{vivi} & Create a VIVI matrix of class \texttt{vivid}. & VIVI construction \\
+\texttt{viviReorder} & Reorders a square matrix so high VIVI values are pushed to the top left of the matrix. & VIVI construction \\
+\texttt{CVpredictfun} & Heatmap plot of VIVI values. & Visualization \\
+\texttt{viviHeatmap} & Network plot of VIVI values. & Visualization \\
+\texttt{viviNetwork} & Univariate partial dependence plot with ICE curves displayed as a grid. & Visualization \\
+\texttt{pdpVars} & Univariate partial dependence plot with ICE curves displayed as a grid. & Visualization \\
+\texttt{pdpPairs} & Pairs plot showing bivariate PDP, ice/univariate PDP, and data. & Visualization \\
+\texttt{pdpZen} & A zigzag expanded navigation plot (zenplot) displaying partial dependence values. & Visualization \\
+\texttt{zPath} & Constructs a zenpath for connecting and displaying pairs to be used with \texttt{pdpZen}. & Utility \\
+\texttt{as.data.frame.vivid} & Takes a matrix of class \texttt{vivid} and turns it into a data frame. & Utility \\
+\texttt{vip2vivid} & Takes measured importance and interactions from the \texttt{vip} package and turns them into \texttt{vivid} matrix which can be used for plotting & Utility \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Table 2:} Summary of functions available in the \CRANpkg{vivid} package. The main construction function is \texttt{vivi} which is used to calculate the VIVI values for subsequent use in the visualizations.
+
+This paper is structured as follows. First we introduce a dataset and fit models that will be used as examples throughout this paper. Following this, we describe \CRANpkg{vivid} functionality for calculating VIVI. We then move on to visualizations and focus on the functionality provided by the two functions \texttt{viviHeatmap} and \texttt{viviNetwork} for displaying VIVI, and two functions for displaying PDPs namely, \texttt{pdpPairs} and \texttt{pdpZen}. Finally we provide some concluding discussion.
+
+\hypertarget{datamodel}{%
+\section{Example: Data and Models}\label{datamodel}}
+
+The well-known Boston housing data (Harrison Jr and Rubinfeld 1978) from the R package \CRANpkg{MASS} (Venables and Ripley 2002) concerns prices of 506 houses and 14 predictor variables including property attributes such as number of rooms and social attributes like crime rate and pollution levels. The response is the median value of owner-occupied homes in \$1000s (medv).
+
+We first fit a random forest (using the \CRANpkg{randomForest} package). In order to avail of embedded variable importance scores for the random forest, the \texttt{importance} argument must be \texttt{TRUE}.
+
+\begin{verbatim}
+library("randomForest") 
+library("MASS")
+set.seed(1701)  
+data("Boston")
+
+rf <- randomForest(medv ~., 
+                   data = Boston, 
+                   importance = TRUE)
+\end{verbatim}
+
+Next we fit a gradient boosted machine (using the \CRANpkg{xgboost} package). For the GBM we set the maximum number of boosting iterations, \texttt{nrounds}, to 100 as no default is provided in \CRANpkg{xgboost}.
+
+\begin{verbatim}
+library("xgboost") 
+gbst <- xgboost(data = as.matrix(Boston[,1:13]), 
+                label =  as.matrix(Boston[,14]),
+                nrounds = 100,
+                verbose = 0)
+\end{verbatim}
+
+In the following sections we will explain how aspects of the two fits can be compared with \CRANpkg{vivid} software. We will also explain aspects of our software design with reference to these fits.
+
+\hypertarget{data}{%
+\section{Calculating VIVI}\label{data}}
+
+The first step in using \CRANpkg{vivid} is to calculate variable importance and interactions for a model fit.
+The \texttt{vivi} function calculates both of these, creating a square, symmetric matrix containing variable importance on the diagonal and variable interactions on the off-diagonal. Required inputs are a fitted ML model, a data frame on which the model was trained, and the name of the response variable for the fit. The returned matrix has importance and interaction values for all variables in the supplied data frame, other than the response. Variables that are not used by the supplied ML fit will have their importance and interaction values set to zero. Our visualizations functions \texttt{viviHeatmap} and \texttt{viviNetwork} are designed to show the results of a \texttt{vivi} calculation, but will work equally well for any square, symmetric matrix with identical row and column names. Note, the symmetry assumption is not required for \texttt{viviHeatmap}. \texttt{viviNetwork} uses interaction values from the lower-triangular part of the matrix only.
+
+The code snippet below shows the creation of a \texttt{vivid} matrix for the random forest fit. For clarity, we include all of the \texttt{vivi} function arguments for the random forest fit, though only the first three arguments are required. Other arguments will be described in the Section on \emph{vivid matrix additional arguments}
+
+\begin{verbatim}
+library("vivid")
+
+set.seed(1701)
+viviRf <- vivi(fit = rf,
+               data = Boston,
+               response = "medv",
+               reorder = FALSE,
+               normalized = FALSE,
+               importanceType = 'agnostic',
+               gridSize = 50,
+               nmax = 500,
+               class = 1,
+               predictFun = NULL)
+\end{verbatim}
+
+In the absence of any model-specific importance measure we use an agnostic permutation method described by Fisher, Rudin, and Dominici (2019) to obtain the variable importance scores. In this method a model error score (root mean square error) is calculated, then each feature is randomly permuted and the model error is re-calculated. The difference in performance is considered to be the variable importance score for that feature.
+
+The \texttt{vivi} function calculates importance using an S3 method called \texttt{vividImportance}. We provide methods for \CRANpkg{randomForest},
+\CRANpkg{ranger} (Wright and Ziegler 2017), \CRANpkg{mlr} (Bischl et al. 2016), \CRANpkg{mlr3} (Lang et al. 2019), and \CRANpkg{tidymodels} (Kuhn and Wickham 2020) to access embedded model-specific measures. When \texttt{vivi} is provided with a model fitted using one of these packages, importance defaults to the embedded method, as set when the model was fit. By specifying \texttt{importanceType\ =\ "agnostic"} in the call to \texttt{vivi} as in the example above, agnostic importance is calculated instead. If the model fit offers more than one embedded importance measure, these may be selected by specifying suitable values to \texttt{importanceType}.
+\texttt{vivid} relies on the package \CRANpkg{flashlight} package to calculate agnostic importance via \texttt{flashlight::light\_importance} which currently works for numeric and numeric binary responses only.
+
+For variable interactions, we use the model-agnostic Friedman's \(H\)-statistic to identify any pairwise interactions. As discussed in Inglis, Parnell, and Hurley (2022), we recommend the unnormalized version of the \(H\)-statistic which prevents detection of spurious interactions which can occur when the bivariate partial dependence function (used in the construction of the \(H\)-statistic) is flat. In the case of a binary response classification model, we follow Hastie, Tibshirani, and Friedman (2009) and compute the \(H\)-statistic and partial dependence using the logit scale.
+
+The \texttt{vivi} function calculates interactions using an S3 method called \texttt{vividInteraction}, which again relies on the \CRANpkg{flashlight} package to calculate Friedman's \(H\)-statistic via
+\texttt{flashlight::light\_interaction}. Friedman's \(H\)-statistic is the only interaction measure currently available in \CRANpkg{vivid}, though the method of Brandon M. Greenwell, Boehmke, and McCarthy (2018) could also be used for this purpose. Embedded interaction measures could easily be incorporated via S3 methods in future.
+
+\CRANpkg{flashlight} simplifies the calculation of VIVI values
+as it allows a custom predict function to be supplied for the calculation of agnostic importance and the \(H\)-statistic; this flexibility means importance and the \(H\)-statistic can be calculated for any ML model.
+We supply an internal custom predict function called \texttt{CVpredictfun} to both \texttt{flashlight::light\_importance} and \texttt{flashlight::light\_interaction}. \texttt{CVpredictfun} is a wrapper around \texttt{CVpredict} from the \CRANpkg{condvis2} package, which adds an option for the classification to select (via the \texttt{class} argument to \texttt{vivi}) the class to be used for prediction and calculates predictions on the logit scale by default.
+\texttt{CVpredict} accepts a broad range of fit classes thus streamlining the process of calculating VIVI.
+
+In situations where the fit class is not covered by \texttt{CVpredict} (as is the case for the GBM model created from \CRANpkg{xgboost}), supplying a custom predict function to the \texttt{vivi} function by way of the \texttt{predictFun} argument allows the agnostic VIVI values to be calculated.
+In the code snippet below, we build the \texttt{vivid} matrix for the GBM fit by providing a custom predict function. A custom predict function must be of the form given in the code snippet.
+For brevity we omit some of the optional \texttt{vivi} function arguments.
+
+\begin{verbatim}
+# predict function for GBM
+pFun <- function(fit, data, ...) predict(fit, as.matrix(data[,1:13]))
+
+set.seed(1701) 
+viviGBst <- vivi(fit = gbst,
+                 data = Boston,
+                 response = "medv",
+                 reorder = FALSE,
+                 normalized = FALSE,
+                 predictFun = pFun)
+\end{verbatim}
+
+\hypertarget{sec:vivimatarg}{%
+\subsection{\texorpdfstring{\texttt{vivi} function additional arguments}{vivi function additional arguments}}\label{sec:vivimatarg}}
+
+The \texttt{vivi} function has 10 arguments. Some of these have been discussed above, including \texttt{fit}, \texttt{data}, \texttt{response}, \texttt{importanceType}, and \texttt{predictFun}. Here we provide a summary of the remaining arguments. First, the \texttt{normalized} argument determines if Friedman's \(H\)-statistic should be normalized or not (see Inglis, Parnell, and Hurley (2022), for the pros and cons of each version). The arguments \texttt{gridSize} and \texttt{nmax} are used to set the size of the grid for evaluating the predictions and maximum number of data rows to consider, respectively. As the calculation of the \(H\)-statistic can be slow (as discussed in Section \emph{Calculating VIVI}) lowering the grid size can provide a significant speed boost. However this increase in speed can come at the expense of predictive accuracy. Additionally, sampling the data via \texttt{nmax} can offer a practical speed boost. The default values for \texttt{gridSize} and \texttt{nmax} are 50 and 500, respectively. These values were chosen as to provide reasonable computational time while maintaining predictive accuracy. As \texttt{nmax} randomly samples rows of the data, to get reproducible results a seed must be set before running the \texttt{vivi} function.
+
+\hypertarget{sec:speed}{%
+\subsection{Speed tests}\label{sec:speed}}
+
+A drawback of using Friedman's \(H\)-statistic as a measure of interaction is that it is a computationally expensive calculation for models that are slower to produce predictions. Consequently, the time taken to build the \texttt{vivid} matrix can vary.
+Figure \ref{fig:speedtest}
+shows the build time (rounded to the nearest second) averaged over five runs for the creation of a \texttt{vivid} matrix with default parameters for different ML algorithms using the Boston Housing data. As the Boston housing data has 13 predictor variables, Friedman's \(H\)-statistic is computed for 91 predictor pairs. The ML algorithms are: GBM, random forest, support vector machine (SVM), neural network (NN), and k-nearest neighbors (KNN). The SVM, NN, and KNN were built using the \CRANpkg{e1071} (Meyer et al. 2021), \CRANpkg{nnet} (Venables and Ripley 2002), and \CRANpkg{kknn} (Schliep and Hechenbichler 2016) packages, with the KNN being built through the \CRANpkg{mlr3} (Lang et al. 2019) framework. Each of the models were built using their default settings and, for each model fit, the agnostic VImp was measured. The speed tests were performed on both a 2017 MacBook Pro 2.3 GHz Dual-Core Intel Core i5 with 8GB of RAM and a 2021 32GB MacBook M1 Pro We can see that a NN model created using the \CRANpkg{nnet} package was the fastest for both scenarios. Surprisingly, the time to build the \texttt{vivid} matrix for a random forest model created from the \CRANpkg{ranger} package was over 1.5 times longer than the random forest fit from the \CRANpkg{randomForest} package for MBP 2017. Interestingly, repeating these tests for MBP 2021, the \texttt{ranger} calculation is reduced by over 60\% while the \texttt{randomForest} actually increases by 47\%.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{speedTestsplot} 
+
+}
+
+\caption{Mean time over five runs, on two MacBook machines, for the creation of a vivid matrix for different models.}\label{fig:speedtest}
+\end{figure}
+
+In all of the \CRANpkg{vivid} functions making use of model predictions (namely \texttt{vivi}, and the three variants of partial dependence plots described in the next section) we provide two arguments to reduce the number of predictions necessary. These are \texttt{gridSize}, which controls the number of points at which predictions are to be made, and \texttt{nmax} which specifies the maximum number of observations for which predictions are to be evaluated.
+
+\hypertarget{sec:vip2vivid}{%
+\subsection{\texorpdfstring{Alternative construction of a \texttt{vivid} matrix}{Alternative construction of a vivid matrix}}\label{sec:vip2vivid}}
+
+A further way to create a valid \texttt{vivid} matrix is to construct one from variable importance and interaction values calculated elsewhere. The package \CRANpkg{vip} offers these, for which we provide a convenient translation function. \CRANpkg{vip} provides the ability to evaluate interactions using a method called the \emph{feature importance ranking measure} (FIRM, see {[}greenwell2018simple{]}, for more details). The \texttt{vip2vivid} function we provide in \CRANpkg{vivid} takes VIVI values created in \CRANpkg{vip} and turns them into a \texttt{vivid} matrix, that can be subsequently used with our plotting tools. For example, in the code below, model-specific VImp and FIRM VInt scores are calculated for the random forest fit, and subsequently arranged into a \texttt{vivid} matrix with the VImps on the diagonal and VInts on the off-diagonal.
+
+\begin{verbatim}
+library("vip")
+# get model specific VImps using vip package
+vipVImp <- vi(rf, method = 'model')
+# get VInts using vip package
+vipVInt <- vint(rf, feature_names = names(Boston[-14]))
+
+# turn into vivi-matrix
+vipViviMat <- vip2vivid(importance = vipVImp, interaction = vipVInt)
+\end{verbatim}
+
+\hypertarget{sec:heatmapSec}{%
+\section{Heatmap of Variable Importance and Variable Interactions}\label{sec:heatmapSec}}
+
+The \texttt{viviHeatmap} function constructs a heatmap displaying both importance and interactions, with importance on the diagonal and interactions on the off-diagonals. A \texttt{vivid} matrix is the only required input (not necessarily symmetric). Color palettes for the importance and interactions are optionally provided via \texttt{impPal} and \texttt{intPal} arguments.
+For the default color palette we choose single-hue, color-blind friendly sequential color palettes from {[}colorspaceJSS{]}, where low VIVI values are represented by low luminance color values and and high VIVI by high luminance colors, which aids in highlighting values of interest.
+
+The ordering of the heatmap is taken from the ordering of the input matrix. As \texttt{reorder} was set to \texttt{FALSE} when building both the random forest and GBM fit \texttt{vivid} matrix, the ordering of the heatmaps matches the variable order in the dataset. This is useful for directly comparing multiple heatmaps, however it does not necessarily lend itself for easy identification of the largest VIVI values. If we were to seriate both \texttt{vivi-matrices} separately, we would end up with different optimal orderings for each matrix. An alternative is to create a common ordering by averaging over the two \texttt{vivid} matrix objects and applying the \texttt{vividReorder} function to the result. Both VIVI matrices are then re-ordered using the newly obtained variable order. The code below shows such a strategy for our chosen model fits.
+
+\begin{verbatim}
+# average over matrices and seriate to get common ordering
+viviAvg <- (viviRf + viviGBst) / 2
+viviAvgReorder <- vividReorder(viviAvg)
+
+# reorder vivi-matrices 
+ord <- colnames(viviAvgReorder)
+viviRf <- viviRf[ord,ord]
+viviGBst <- viviGBst[ord,ord]
+\end{verbatim}
+
+Arguments \texttt{impLims} and \texttt{intLims} specify the range of importance and interaction values to be mapped to colors. Default values are calculated from the maximum and minimum VIVI values in the \texttt{vivid} matrix. Importance and interaction values falling outside the supplied limits are squished to the closest limit. It can be useful to specify these limits in the situation where there is an extremely large VIVI value that dominates the display, or where we wish two or more plots to have the same limits for comparison purposes, as in the example below.
+
+Figure \ref{fig:heatmaps} shows our improved ordering so that variables with high VIVI values are pushed to the top left of the plots. Filtering can also be applied to the input matrix to display a subset of variables. When compared to the GBM fit in (b), the random forest fit in (a) appears to create weaker interactions and lower importance scores. Both plots identify \(lstat\) as being the most important. Both fits also show that \(lstat\) interacts with several other variables. Notably the strongest interaction in both fits are different. Namely \(lstat:crim\) (where \(crim\) is the per capita crime rate by town) for the random forest fit and \(lstat:nox\) (where \(nox\) is parts per 10 million nitrogen oxides concentration) for the GBM fit.
+
+\begin{verbatim}
+viviHeatmap(viviRf, angle = 45, intLims = c(0,1), impLims = c(0,8))
+viviHeatmap(viviGBst, angle = 45, intLims = c(0,1), impLims = c(0,8))
+\end{verbatim}
+
+\begin{figure}
+
+{\centering \subfloat[\label{fig:heatmaps-1}]{\includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/heatmaps-1} }\subfloat[\label{fig:heatmaps-2}]{\includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/heatmaps-2} }
+
+}
+
+\caption{Agnostic variable importance and variable interaction scores for a random forest fit in (a) and GBM fit in (b) on the Boston housing data displayed as a heatmap. The random forest fit appears to produce weaker interactions and lower importance scores when compared to the GBM fit. Both fits identify $lstat$ as the most important followed by $rm$. In both fits we can see that $lstat$ has numerous interactions with other variables, notably $crim$ in the random forest fit in (a) and $nox$ in the GBM fit in (b).}\label{fig:heatmaps}
+\end{figure}
+
+\hypertarget{networkSec}{%
+\section{Network of Variable Importance and Variable Interactions}\label{networkSec}}
+
+The \texttt{viviNetwork} function constructs a network graph displaying both importance and interactions.
+Similar to the heatmap, this function takes a \texttt{vivid} matrix as the only required input and provides a visual representation of the magnitude of the importance and interaction values through the size of the nodes and edges in the graph, in addition to color. In the plot each variable is represented as a node, with its importance being represented through size and color such that larger, darker nodes indicate a higher importance. Each pairwise interaction is represented by a connecting edge, where larger interaction values get thicker, darker edges; Figure \ref{fig:networks1} provides an example. This type of plot benefits from being able to quickly identify the magnitude of the importance and interactions of the variables that have the most impact on the response in an efficient manner. The \texttt{viviNetwork} function follows the same convention as the heatmap and allows custom color palettes for the importance and interactions to be provided via the \texttt{impPal} and \texttt{intPal} arguments and the range of VIVI values to be mapped to the colors can be specified via the \texttt{impLims} and \texttt{intLims} arguments.
+
+By default, we choose a circular layout to display the graphs as when coupled with the seriation techniques described previously, variables with high VIVI are grouped in a clock-wise arrangement starting at the top. This arrangement allows for quick identification of variables with high VIVI. Custom layouts are possible by providing a numeric matrix with two columns and one row per node to the \texttt{layout} argument. Additionally, any of the layouts available in the \CRANpkg{igraph} package (Csardi and Nepusz 2006) can be passed to \texttt{layout}. This can be useful for for producing force-directed layouts, which try to produce a visually appealing graph with minimal cross-over of the edges and organizes edges so that they are of a similar length.
+
+We provide options to filter the graph via the \texttt{intThreshold} and \texttt{removeNode} arguments. This helps to highlight variables with high VIVI scores, which can be useful in settings with many predictors. The \texttt{intThreshold} argument filters edges with weight (i.e., VInt value) below a specified value and \texttt{removeNode} removes nodes with no connecting edges after thresholding interaction values. We can optionally cluster similar variables together with respect to their VIVI scores via the \texttt{cluster} argument, thereby aiding in the process of highlighting variables of interest. The \texttt{cluster} argument can take either a vector of cluster memberships for nodes or an appropriate \CRANpkg{igraph} clustering function. We allow for a multitude of clustering and filtering approaches, some of which are shown below.
+
+In the interest of space, we only include network plots displaying VIVI values for the GBM fit. In Figure \ref{fig:networks1} we show both a default network plot including all variables in (a) and a filtered and clustered network plot in (b). For the filtered plot we select VIVI values above the median. This selection allows us to focus only on the variables with the most impact on the response. The variables that remain are \(lstat\), \(nox\), \(rm\), \(crim\), \(dis\) (weighted mean of distances to five Boston employment centers), \(age\) (proportion of owner-occupied units built prior to 1940), and \(ptratio\) (pupil-teacher ratio by town). We then perform a hierarchical clustering treating variable interactions as similarities, with the goal of grouping together high-interaction variables. Finally we rearrange the layout using \CRANpkg{igraph}. Here, \texttt{igraph::layout\_as\_star} places the first variable (deemed most relevant using the VIVI seriation process above) at the center, which in Figure \ref{fig:networks1} (b) emphasizes its key role as the most important predictor which also has the strongest interactions.
+
+\begin{verbatim}
+# default network plot for GBM
+viviNetwork(viviGBst)
+
+# clustered and filtered network for GBM
+intVals <- viviGBst
+diag(intVals) <- NA 
+
+# select VIVI values above median value
+sv <- which(diag(viviGBst) > median(diag(viviGBst)) |
+              apply(intVals, 1, max, na.rm=TRUE) > median(apply(intVals, 1, max, na.rm=TRUE)))
+              
+h <- hclust(-as.dist(viviGBst[sv,sv]), method="single")
+
+viviNetwork(viviGBst[sv,sv],
+            intLims = c(0,1),
+            impLims = c(0,8),
+            cluster = cutree(h, k = 3), # specify number of groups
+            layout = igraph::layout_as_star)
+\end{verbatim}
+
+\begin{figure}
+
+{\centering \subfloat[\label{fig:networks1-1}]{\includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/networks1-1} }\subfloat[\label{fig:networks1-2}]{\includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/networks1-2} }
+
+}
+
+\caption{Network plots showing VIVI scores obtained from a GBM fit on the Boston housing data. In (a) we display the all values in a circle. In (b) we use a hierarchical clustering to group variable with high VIVI together and rearrange the layout using an igraph function.}\label{fig:networks1}
+\end{figure}
+
+In Figure \ref{fig:networks1}(a), when displaying all the variables, we can clearly identify which variables have the highest VIVI values. The large darker nodes of \(lstat\) and \(rm\) indicate their importance and the dark, thick connecting edge between \(lstat\) and \(nox\) tell us that these two variables strongly interact. In (b), after applying a hierarchical clustering on the variables with a VIVI value above the median, we can see the strongest mutual interactions have been grouped together for the GBM fit. Namely, \(lstat\), \(nox\), \(crim\), \(rm\), and \(dis\) are all grouped together. The remaining variables are individually clustered.
+
+We provide a conversion of \texttt{vivid} matrix objects to a data frame via an \texttt{as.data.frame} method, which facilitates plotting with base R and \CRANpkg{ggplot2}. The following code snippet shows the structure of the first four rows of the created data frame for the random forest VIVI matrix, where we can see that each variable pair is represented with their corresponding VIVI value. This data frame can then be easily manipulated and plotted as, for example, a barplot of either VImp or VInt values.
+
+\begin{verbatim}
+class(viviRf)<- c("vivid", class(viviRf))
+head(as.data.frame(viviRf), 4)
+\end{verbatim}
+
+\begin{verbatim}
+#>   Variable_1 Variable_2     Value Measure Row Col
+#> 1      lstat      lstat 4.7720394    Vimp   1   1
+#> 2        nox      lstat 0.1789794    Vint   2   1
+#> 3         rm      lstat 0.2562817    Vint   3   1
+#> 4       crim      lstat 0.3371364    Vint   4   1
+\end{verbatim}
+
+\hypertarget{GPDP}{%
+\section{Partial Dependence and Individual Conditional Expectation Curves}\label{GPDP}}
+
+\hypertarget{univariate-partial-dependence-plot}{%
+\subsection{Univariate Partial Dependence Plot}\label{univariate-partial-dependence-plot}}
+
+The \texttt{pdpVars} function constructs a grid of univariate PDPs with ICE curves for selected variables. We use ICE curves to assist in the identification of linear or non-linear effects. The fit, data frame used to train the model, and the name of the response variable are required inputs. In the code below, we show an example of the partial dependence and ICE curves for the first five features from the GBM \texttt{vivid} matrix, with output shown in Figure \ref{fig:pdpRf}. We use the custom GBM predict function given previously.
+
+\begin{verbatim}
+pdpVars(data = Boston,
+        fit = gbst,
+        response = 'medv',
+        vars = colnames(viviGBst)[1:5],
+        predictFun = pFun)
+\end{verbatim}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{vivid_files/figure-latex/pdpRf-1} 
+
+}
+
+\caption{Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a GBM fit on the Boston housing data. The changing partial dependence and ICE curves of $lstat$ and $rm$ indicate that these variables have some impact on the response.}\label{fig:pdpRf}
+\end{figure}
+
+All of our PDP variants handle categorical responses and predictors. The color palette is customized via the \texttt{pal} argument. In all of our PDPs, this defaults to a diverging palette which accentuates fitted values that differ from the average. Dark red and dark blue are used to indicate high and low values of \(\hat{y}\) respectively. The middle values are displayed in yellow. The \texttt{nIce} argument specifies the number of ICE curves to be drawn. This is either a single number specifying the number of observations to be sampled for the ICE curves, or a vector of row indices. The default value for \texttt{nIce} is 30, which allows individual curves to be seen.
+
+The ordering of the PDPs is taken from the ordering of variables in the data set, however custom ordering or filtering is obtained via the \texttt{vars} argument (seen in the code above). As with the construction of the \texttt{vivid} matrix, the \texttt{gridSize} and \texttt{nmax} arguments determine the number of predictions required.
+
+In Figure \ref{fig:pdpRf} we can see from the changing PDP and ICE curves that \(lstat\) and \(rm\) have the clearest impact on the response, with the predicted median house price being higher for low values of \(lstat\) and high values of \(rm\). Additionally, the predicted median house price appears to be higher for low values of \(dis\) before leveling off at around 2.5. The remaining variables have generally flat partial dependence and ICE curves.
+
+\hypertarget{generalized-pairs-partial-dependence-plot}{%
+\subsection{Generalized Pairs Partial Dependence Plot}\label{generalized-pairs-partial-dependence-plot}}
+
+The \texttt{pdpPairs} function creates a generalized pairs partial dependence plot (GPDP). In our GPDP, we use a matrix layout and plot the univariate partial dependence (with ICE curves) on the diagonal, bivariate partial dependence on the upper diagonal and a scatterplot of the data on the lower diagonal, where all colours are assigned to points and ICE curves by the predicted \(\hat{y}\) value. As with the univariate PDP, the fit, data frame used to train the model, and the name of the response variable are required inputs. However, in the code below we include additional arguments which are described in the following paragraph.
+
+\begin{verbatim}
+# select rows to plot associated ICE curves:
+rmHigh <- sample(which(Boston$rm > mean(Boston$rm)), 25)
+lstatLow <- sample(which(Boston$lstat < mean(Boston$lstat)), 25)
+
+set.seed(1701)
+pdpPairs(data = Boston,
+         fit = gbst,
+         response = "medv",
+         gridSize = 20,
+         nIce = c(rmHigh, lstatLow),
+         var = colnames(viviGBst)[1:5],
+         convexHull = TRUE,
+         fitlims = "pdp",
+         predictFun = pFun)
+\end{verbatim}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.75\linewidth]{vivid_files/figure-latex/gpdp-1} 
+
+}
+
+\caption{Filtered generalized pairs partial dependence plot for a GBM fit on the Boston housing data. From both the univariate and bivariate PDPs, we can see that $lstat$ and $rm$ have an impact on the response. As $lstat$ decreases and $rm$ increases, predicted median house price value goes up. The bivariate PDP of $lstat:nox$ shows that as $nox$ increases, the predicted value decreases.}\label{fig:gpdp}
+\end{figure}
+
+In the above code, we display only the interesting variables seen in previous plots via the \texttt{var} argument. We also chose to display 50 ICE curves, where 25 instances are sampled from rows above the mean value for \(rm\) and the other 25 are sampled from rows below the mean value for \(lstat\). These values were chosen as it seems evident in Figure \ref{fig:pdpRf} that as the number of rooms increases and as the lower status value of the population decreases, the predicted median house price goes up. The previously mentioned arguments from \texttt{pdpVars} for controlling the color palette, grid size, the number of rows of data considered, and the number of ICE curves drawn can equally be applied to our GPDP.
+
+For our GPDP, we follow the general design choices in \CRANpkg{vivid} and so provide the functionality to specify the range of predicted values to be mapped to the colors via the \texttt{fitlims} argument. As before the custom limits allow for a direct comparison of different model fits should they require. We set the default fit range for the color map for the GPDP to the range of the collection of PDP surfaces with \texttt{fitlims\ =\ "pdp"}. The setting of this argument at its default value allows for maximum resolution of the bivariate PDPs. Since predictions for specific observations and ICE curves could exceed these bounds, the closest value within the color map's bounds is used to allocate colors. Alternatively to set the full range of the data as the limits we can use \texttt{fitlims\ =\ \textquotesingle{}all"}.
+
+In the upper diagonals we exclude extrapolated areas from the bivariate PDPs to prevent interpretation of the PDPs in areas where there are no data. The removal of extrapolated areas is a default setting but can be removed with the argument \texttt{convexHull\ =\ FALSE}. In this example, we set the grid size equal to 20 (with the default being 10). We increase the value from the default grid size here, despite this increasing processing time since the data set is reasonably small. As with the previous PDPs, we use the custom predict function to generate PDPs for the GBM fit.
+
+In Figure \ref{fig:gpdp}, in addition to the univariate PDPs, we capture the effects of the variables on the response via the bivariate PDP on the upper-diagonal and the distribution of the data in the lower-diagonal. The scatterplots are useful for determining if any of the variables are highly correlated, as highly correlated variables may spuriously affect the partial dependence and give erroneous results (Apley and Zhu 2020). Of note are the variables \(lstat\) and \(rm\). We can clearly see that when the number of rooms (\(rm\)) is high and the percentage of lower status of the population (\(lstat\)) is low, the predicted \(\hat{y}\) median house price value is high. This is exemplified in the changing bivariate PDP.
+
+In the case of categorical predictors, the partial dependence for each factor level is shown in the upper-diagonal (for an example of this, see Inglis, Parnell, and Hurley (2022)). Additionally, in classification scenarios, being able to select specific rows of data to display their corresponding ICE curves can be useful for displaying ICE curves from particular classes.
+
+\hypertarget{sec:ZPDP}{%
+\section{Zen Partial Dependence Plots}\label{sec:ZPDP}}
+
+The \texttt{pdpZen} function creates a PDP that utilizes a space-saving method based on graph Eulerians to show the bivariate partial dependence, which we call zen-partial dependence plots (ZPDP).
+This plot is based on the zigzag expanded navigation plots, known as zenplots (Hofert and Oldford 2020), available in the \CRANpkg{zenplots} package. Zenplots were created to display paired graphs of high-dimensional data focusing on the most important 2D displays.
+In our adaptation we show bivariate PDPs that focus on the most important interacting variables in a compact zigzag layout, helpful when predictor space is high-dimensional.
+
+The code below illustrates \texttt{pdpZen}, here displaying the first five variables from GBM's \texttt{vivid} matrix. Later we show an example focusing on high-interacting pairs of variables.
+We use the same convention as our previous PDPs with regard to color palette and limits, grid size, and the number of rows considered for evaluation. The ZPDP also has a variable rug plot on each axis to avoid interpretation problems that may occur in the presence of skewness.
+
+\begin{verbatim}
+pdpZen(data = Boston,
+       fit = gbst,
+       response = "medv",
+       convexHull = TRUE,
+       zpath = colnames(viviGBst)[1:5],
+       predictFun = pFun)
+\end{verbatim}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/zpdpGbm1-1} 
+
+}
+
+\caption{Zen partial dependence plot for the GBM fit on the Boston data. Here we display first five variables from the GBM's `vivid` matrix. Only plots for consecutive variables are shown.}\label{fig:zpdpGbm1}
+\end{figure}
+
+The argument \texttt{zpath} specifies the variables to be plotted, defaulting to all dataset variables aside from the response. In the code above, \texttt{zpath} is the vector \(lstat\), \(nox\), \(rm\), \(crim\) and \(dis\). The resulting plot shown in Figure \ref{fig:zpdpGbm1} presents the bivariate PDP for every consecutive pair of variables in a zigzag layout.
+
+\hypertarget{sec:zp}{%
+\subsection{\texorpdfstring{\texttt{Zen-paths}}{Zen-paths}}\label{sec:zp}}
+
+ZPDP are most useful when the bivariate PDPs plotted are selected to be an interesting subset of all pairwise plots. To obtain this subset, we consider a network graph displaying VIVI values, such as that in Figure \ref{fig:networks1} (a). We then filter the edges below a selected interaction value, leaving only highly interacting variable pairs, as in Figure \ref{fig:networks1}(b). Our goal is to then build a ZPDP consisting of the bivariate plots represented by each edge of the thresholded graph. The \texttt{zPath} function creates a sequence or sequences of variable paths for use in \texttt{pdpZen}.
+
+The \texttt{zPath} function takes four arguments. These are:
+\texttt{viv} - a matrix of interaction values,
+\texttt{cutoff} - exclude interaction values below this threshold,
+\texttt{method} - a string indicating which method to use to create the path, and
+\texttt{connect} - a logical value indicating if separate Eulerians should be connected
+
+Two methods are provided, either \texttt{"greedy.weighted"} or \texttt{"strictly.weighted"}. The first option uses the greedy Eulerian path algorithm of C. Hurley and Oldford (2011) (available in the \CRANpkg{PairViz} package (C. B. Hurley and Oldford 2022)) for connected graphs. This visits each edge at least once, beginning at the edge with the highest weight and traversing through the remaining edges, giving priority to the highest-weighted edge. Some edges may be visited more than once or additional edges may be visited if the number of nodes in the graph is not even. The second method \texttt{"strictly.weighted"} (provided by \CRANpkg{zenplot}) visits edges strictly in decreasing order by weight (here the interaction values). If \texttt{connect} is \texttt{TRUE} the sequences obtained by the strictly weighted method are concatenated to form a single path.
+
+In the code below, we provide two examples of creating zen-paths, from the top 10\% of interaction scores in \texttt{viviGBst}.
+
+\begin{verbatim}
+# find the 90% quantile of the interactions
+qVIntBst <- quantile(intVals, 0.9, na.rm=TRUE)
+
+# set zpaths with different parameters
+zpGw  <- zPath(viv = viviGBst, cutoff = qVIntBst, method = 'greedy.weighted')
+zpGw
+\end{verbatim}
+
+\begin{verbatim}
+#>  [1] "nox"     "lstat"   "dis"     "ptratio" "lstat"   "rm"      "crim"   
+#>  [8] "lstat"   "tax"     "rm"      "nox"
+\end{verbatim}
+
+\begin{verbatim}
+zpSw  <- zPath(viv = viviGBst, cutoff = qVIntBst, connect = FALSE, method = 'strictly.weighted')
+zpSw
+\end{verbatim}
+
+\begin{verbatim}
+#> [[1]]
+#> [1] "nox"   "lstat" "dis"  
+#> 
+#> [[2]]
+#> [1] "lstat" "rm"    "nox"  
+#> 
+#> [[3]]
+#> [1] "lstat" "crim"  "rm"   
+#> 
+#> [[4]]
+#> [1] "ptratio" "lstat"   "tax"
+\end{verbatim}
+
+Our first created zen-path object, \texttt{zpGw}, uses the \texttt{greedy.weighted} method and visits each edge at exactly once. The second zen-path uses the \texttt{strictly.weighted} method with \texttt{connect\ =\ FALSE}.
+\texttt{zpSw} consists of four unconnected paths.
+The zenplots for two of these paths are constructed below.
+
+\begin{verbatim}
+pdpZen(data = Boston,
+       fit = gbst,
+       response = "medv",
+       zpath = zpGw,
+       convexHull = TRUE,
+       predictFun = pFun) 
+
+pdpZen(data = Boston,
+       fit = gbst,
+       response = "medv",
+       zpath = zpSw,
+       convexHull = TRUE,
+       predictFun = pFun)
+\end{verbatim}
+
+\begin{figure}
+
+{\centering \subfloat[\label{fig:zpdpGBM-1}]{\includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/zpdpGBM-1} }\subfloat[\label{fig:zpdpGBM-2}]{\includegraphics[width=0.5\linewidth]{vivid_files/figure-latex/zpdpGBM-2} }
+
+}
+
+\caption{ZPDP for a GBM fit on the Boston data. In (a) the zpath is defined by the `greedy.weighted` sorting method. In (b), the sorting method is defined by the `strictly.weighted` method and is unconnected. For low values of $lstat$ and and high values of $rm$, predicted median house price value increases.}\label{fig:zpdpGBM}
+\end{figure}
+
+Note that there are 7 different variables involved in high interactions, which could be displayed in a 7X7 GPDP, showing a total of 21 bivariate PDPs. But only 8 of these have VInt values above the 90\% quantile, and Figure \ref{fig:zpdpGBM}(b) using the \texttt{strictly.weighted} path shows just these bivariate PDPs compact layout. Using the \texttt{greedy.weighted} sorting method in (a) produces a smaller, neater plot but at the expense of including some plots that are not particularly interesting (for example the pair \(dis:ptratio\)).
+
+\hypertarget{summary}{%
+\section{Summary}\label{summary}}
+
+We have presented a detailed exposition of our R package \CRANpkg{vivid} which contains a suite of integrated functions implementing algorithms and novel visualizations for exploring variable importance and variable interactions in machine learning models. Our techniques are intuitive, adaptable, easy to customize and facilitate model comparison. When building the \texttt{vivid} matrix to use in our heatmap and network visualizations, VIVI metrics that are model specific or model-agnostic may be employed. For measuring interactions we currently only provide the option to use the agnostic Friedman's \(H\)-statistic. However, as outlined in the \emph{Calculating VIVI} Section, the inclusion of different VIVI measures is easily possible.
+
+Our \CRANpkg{vivid} package is a useful addition to the other packages in the area of model visualization, such as those discussed in the \emph{Introduction} Section. Our heatmap and network plots efficiently determine which variables have the greatest impact on the response. When coupled with the seriation, filtering, and clustering techniques, these visualizations enhance the interpretation of ML predictions. Our GPDP and ZPDP can be used to provide a thorough examination of the behavior of a fitted ML model by examining the individual variable effects and their pairwise interactions. These plots combine the bivariate PDP, ICE curves, and scatterplots of the raw variable values. They further allow focusing on subsets of variables with high VInt, and so allow us to efficiently explore a fitted ML model by focusing attention to only the most important aspects.
+
+For future work, the inclusion of other model summaries could be incorporated into \CRANpkg{vivid}, such as the interaction statistics described in Brandon M. Greenwell, Boehmke, and McCarthy (2018) or the use of Accumulated Local Effects (ALE; Apley and Zhu (2020)). This latter method was created to address bias problems with partial dependency functions and could be used in place of the bivariate PDPs seen in both the GPDP and ZPDP. However the calculation of an agnostic, easily interpretable variable interaction measure that accounts for correlated variables remains an ongoing research goal.
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-antunes2018fairness}{}}%
+Antunes, Nuno, Leandro Balby, Flavio Figueiredo, Nuno Lourenco, Wagner Meira, and Walter Santos. 2018. {``Fairness and Transparency of Machine Learning for Trustworthy Cloud Services.''} In \emph{2018 48th Annual IEEE/IFIP International Conference on Dependable Systems and Networks Workshops (DSN-w)}, 188--93. IEEE.
+
+\leavevmode\vadjust pre{\hypertarget{ref-apley2020visualizing}{}}%
+Apley, Daniel W, and Jingyu Zhu. 2020. {``Visualizing the Effects of Predictor Variables in Black Box Supervised Learning Models.''} \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)} 82 (4): 1059--86.
+
+\leavevmode\vadjust pre{\hypertarget{ref-dalex}{}}%
+Biecek, Przemyslaw. 2018. {``DALEX: Explainers for Complex Predictive Models in {R}.''} \emph{Journal of Machine Learning Research} 19 (84): 1--5. \url{https://jmlr.org/papers/v19/18-416.html}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-biecek2021explanatory}{}}%
+Biecek, Przemyslaw, and Tomasz Burzykowski. 2021. \emph{Explanatory Model Analysis: Explore, Explain and Examine Predictive Models}. Chapman; Hall/CRC.
+
+\leavevmode\vadjust pre{\hypertarget{ref-mlr}{}}%
+Bischl, Bernd, Michel Lang, Lars Kotthoff, Julia Schiffner, Jakob Richter, Erich Studerus, Giuseppe Casalicchio, and Zachary M. Jones. 2016. {``{mlr}: Machine Learning in {R}.''} \emph{Journal of Machine Learning Research} 17 (170): 1--5. \url{https://jmlr.org/papers/v17/15-066.html}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-breiman2001randomforest}{}}%
+Breiman, Leo. 2001. {``Random Forests.''} \emph{Machine Learning} 45 (1): 5--32. \url{https://doi.org/10.1023/A:1010933404324}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-chen2012random}{}}%
+Chen, Xi, and Hemant Ishwaran. 2012. {``Random Forests for Genomic Data Analysis.''} \emph{Genomics} 99 (6): 323--29.
+
+\leavevmode\vadjust pre{\hypertarget{ref-chipman2010bart}{}}%
+Chipman, Hugh A, Edward I George, and Robert E McCulloch. 2010. {``BART: Bayesian Additive Regression Trees.''} \emph{The Annals of Applied Statistics} 4 (1): 266--98.
+
+\leavevmode\vadjust pre{\hypertarget{ref-igraph}{}}%
+Csardi, Gabor, and Tamas Nepusz. 2006. {``The Igraph Software Package for Complex Network Research.''} \emph{InterJournal} Complex Systems: 1695. \url{https://igraph.org}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-felzmann2019transparency}{}}%
+Felzmann, Heike, Eduard Fosch Villaronga, Christoph Lutz, and Aurelia Tamò-Larrieux. 2019. {``Transparency You Can Trust: Transparency Requirements for Artificial Intelligence Between Legal Norms and Contextual Concerns.''} \emph{Big Data \& Society} 6 (1): 2053951719860542.
+
+\leavevmode\vadjust pre{\hypertarget{ref-fisher2019all}{}}%
+Fisher, Aaron, Cynthia Rudin, and Francesca Dominici. 2019. {``All Models Are Wrong, but Many Are Useful: Learning a Variable's Importance by Studying an Entire Class of Prediction Models Simultaneously.''} \emph{J. Mach. Learn. Res.} 20 (177): 1--81.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Friedpdp}{}}%
+Friedman, J. H. 2000. {``Greedy Function Approximation: A Gradient Boosting Machine.''} \emph{The Annals of Statistics} 29 (November). \url{https://doi.org/10.1214/aos/1013203451}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Friedmans_H}{}}%
+Friedman, J. H., and B. E. Popescu. 2008. {``Predictive Learning via Rule Ensembles.''} \emph{The Annals of Applied Statistics.}, 916--54.
+
+\leavevmode\vadjust pre{\hypertarget{ref-iceR}{}}%
+Goldstein, Alex, Adam Kapelner, Justin Bleich, and Emil Pitkin. 2015. {``Peeking Inside the Black Box: Visualizing Statistical Learning with Plots of Individual Conditional Expectation.''} \emph{Journal of Computational and Graphical Statistics} 24 (1): 44--65. \url{https://doi.org/10.1080/10618600.2014.907095}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-grange2018random}{}}%
+Grange, Stuart K, David C Carslaw, Alastair C Lewis, Eirini Boleti, and Christoph Hueglin. 2018. {``Random Forest Meteorological Normalisation Models for Swiss PM 10 Trend Analysis.''} \emph{Atmospheric Chemistry and Physics} 18 (9): 6223--39.
+
+\leavevmode\vadjust pre{\hypertarget{ref-pdpR}{}}%
+Greenwell, Brandon M. 2017. {``Pdp: An r Package for Constructing Partial Dependence Plots.''} \emph{The R Journal} 9 (1): 421--36. \url{https://journal.r-project.org/archive/2017/RJ-2017-016/index.html}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-vip}{}}%
+Greenwell, Brandon M., and Bradley C. Boehmke. 2020. {``Variable Importance Plots---an Introduction to the Vip Package.''} \emph{The R Journal} 12 (1): 343--66. \url{https://doi.org/10.32614/RJ-2020-013}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-greenwell2018simple}{}}%
+Greenwell, Brandon M, Bradley C Boehmke, and Andrew J McCarthy. 2018. {``A Simple and Effective Model-Based Variable Importance Measure.''} \emph{arXiv Preprint arXiv:1805.04755}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-boston}{}}%
+Harrison Jr, David, and Daniel L Rubinfeld. 1978. {``Hedonic Housing Prices and the Demand for Clean Air.''} \emph{Journal of Environmental Economics and Management} 5 (1): 81--102.
+
+\leavevmode\vadjust pre{\hypertarget{ref-elementsStats}{}}%
+Hastie, T., R. Tibshirani, and J. Friedman. 2009. \emph{The Elements of Statistical Learning: Data Mining, Inference, and Prediction.} 2nd ed. Springer Series in Statistics. Springer-Verlag.
+
+\leavevmode\vadjust pre{\hypertarget{ref-zenplot}{}}%
+Hofert, Marius, and Wayne Oldford. 2020. {``Zigzag Expanded Navigation Plots in {R}: The {R} Package {zenplots}.''} \emph{Journal of Statistical Software} 95 (4): 1--44. \url{https://doi.org/10.18637/jss.v095.i04}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-pviz}{}}%
+Hurley, C. B., and R. W. Oldford. 2022. \emph{PairViz: Visualization Using Graph Traversal}. \url{https://CRAN.R-project.org/package=PairViz}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-PairViz1}{}}%
+Hurley, Catherine, and R. Oldford. 2011. {``Eulerian Tour Algorithms for Data Visualization and the PairViz Package.''} \emph{Computational Statistics} 26 (December): 613--33. \url{https://doi.org/10.1007/s00180-011-0229-5}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-lime}{}}%
+Hvitfeldt, Emil, Thomas Lin Pedersen, and Michaël Benesty. 2022. \emph{Lime: Local Interpretable Model-Agnostic Explanations}. \url{https://CRAN.R-project.org/package=lime}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-inglis2022visualizing}{}}%
+Inglis, Alan, Andrew Parnell, and Catherine B Hurley. 2022. {``Visualizing Variable Importance and Variable Interaction Effects in Machine Learning Models.''} \emph{Journal of Computational and Graphical Statistics}, 1--13.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ishwaran2010high}{}}%
+Ishwaran, Hemant, Udaya B Kogalur, Eiran Z Gorodeski, Andy J Minn, and Michael S Lauer. 2010. {``High-Dimensional Variable Selection for Survival Data.''} \emph{Journal of the American Statistical Association} 105 (489): 205--17.
+
+\leavevmode\vadjust pre{\hypertarget{ref-tmodels}{}}%
+Kuhn, Max, and Hadley Wickham. 2020. \emph{Tidymodels: A Collection of Packages for Modeling and Machine Learning Using Tidyverse Principles.} \url{https://www.tidymodels.org}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-mlr3}{}}%
+Lang, Michel, Martin Binder, Jakob Richter, Patrick Schratz, Florian Pfisterer, Stefan Coors, Quay Au, Giuseppe Casalicchio, Lars Kotthoff, and Bernd Bischl. 2019. {``{mlr3}: A Modern Object-Oriented Machine Learning Framework in {R}.''} \emph{Journal of Open Source Software}, December. \url{https://doi.org/10.21105/joss.01903}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-EIX}{}}%
+Maksymiuk, Szymon, Ewelina Karbowiak, and Przemyslaw Biecek. 2021. \emph{EIX: Explain Interactions in 'XGBoost'}. \url{https://CRAN.R-project.org/package=EIX}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-svmPack}{}}%
+Meyer, David, Evgenia Dimitriadou, Kurt Hornik, Andreas Weingessel, and Friedrich Leisch. 2021. \emph{E1071: Misc Functions of the Department of Statistics, Probability Theory Group (Formerly: E1071), TU Wien}. \url{https://CRAN.R-project.org/package=e1071}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-molnar2022book}{}}%
+Molnar, Christoph. 2022. \emph{Interpretable Machine Learning: A Guide for Making Black Box Models Explainable}. 2nd ed. \url{https://christophm.github.io/interpretable-ml-book}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-iml}{}}%
+Molnar, Christoph, Bernd Bischl, and Giuseppe Casalicchio. 2018. {``Iml: An r Package for Interpretable Machine Learning.''} \emph{JOSS} 3 (26): 786. \url{https://doi.org/10.21105/joss.00786}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-murray2009methods}{}}%
+Murray, Kim, and Mary M Conner. 2009. {``Methods to Quantify Variable Importance: Implications for the Analysis of Noisy Ecological Data.''} \emph{Ecology} 90 (2): 348--55.
+
+\leavevmode\vadjust pre{\hypertarget{ref-RFE}{}}%
+Paluszynska, Aleksandra, Przemyslaw Biecek, and Yue Jiang. 2020. \emph{randomForestExplainer: Explaining and Visualizing Random Forests in Terms of Variable Importance}. \url{https://CRAN.R-project.org/package=randomForestExplainer}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-varImpPack}{}}%
+Probst, Philipp. 2020. \emph{varImp: {RF} {V}ariable {I}mportance for {A}rbitrary {M}easures}. \url{https://CRAN.R-project.org/package=varImp}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-kknn}{}}%
+Schliep, Klaus, and Klaus Hechenbichler. 2016. \emph{Kknn: Weighted k-Nearest Neighbors}. \url{https://CRAN.R-project.org/package=kknn}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-mass}{}}%
+Venables, W. N., and B. D. Ripley. 2002. \emph{Modern Applied Statistics with s}. Fourth. New York: Springer. \url{https://www.stats.ox.ac.uk/pub/MASS4/}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ggplot2}{}}%
+Wickham, Hadley. 2016. \emph{Ggplot2: Elegant Graphics for Data Analysis}. Springer-Verlag New York. \url{https://ggplot2.tidyverse.org}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ranger}{}}%
+Wright, Marvin N., and Andreas Ziegler. 2017. {``{ranger}: A Fast Implementation of Random Forests for High Dimensional Data in {C++} and {R}.''} \emph{Journal of Statistical Software} 77 (1): 1--17. \url{https://doi.org/10.18637/jss.v077.i01}.
+
+\end{CSLReferences}
+
+\bibliography{vivid.bib}
+
+\address{%
+Alan Inglis\\
+Maynooth University\\%
+Department of Mathematics and Statistics\\ Maynooth, Ireland\\
+%
+%
+\textit{ORCiD: \href{https://orcid.org/0000-0002-1151-6657}{0000-0002-1151-6657}}\\%
+\href{mailto:alan.inglis@mu.ie}{\nolinkurl{alan.inglis@mu.ie}}%
+}
+
+\address{%
+Andrew Parnell\\
+Maynooth University\\%
+Hamilton Institute\\ Maynooth, Ireland\\
+%
+%
+\textit{ORCiD: \href{https://orcid.org/0000-0001-7956-7939}{0000-0001-7956-7939}}\\%
+\href{mailto:andrew.parnell@mu.ie}{\nolinkurl{andrew.parnell@mu.ie}}%
+}
+
+\address{%
+Catherine Hurley\\
+Maynooth University\\%
+Department of Mathematics and Statistics\\ Maynooth, Ireland\\
+%
+%
+\textit{ORCiD: \href{https://orcid.org/0000-0003-2758-5531}{0000-0003-2758-5531}}\\%
+\href{mailto:catherine.hurley@mu.ie}{\nolinkurl{catherine.hurley@mu.ie}}%
+}
