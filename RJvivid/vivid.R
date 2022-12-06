@@ -40,36 +40,42 @@ gbst <- xgboost(data = as.matrix(Boston[,1:13]),
                 verbose = 0)
 
 
-## ---- vivirf, echo=TRUE-------------------------------------------------------
-library("vivid")
+## ---- vivirf, echo=TRUE, eval=FALSE-------------------------------------------
+#> library("vivid")
+#> 
+#> set.seed(1701)
+#> viviRf <- vivi(fit = rf,
+#>                data = Boston,
+#>                response = "medv",
+#>                reorder = FALSE,
+#>                normalized = FALSE,
+#>                importanceType = 'agnostic',
+#>                gridSize = 50,
+#>                nmax = 500,
+#>                class = 1,
+#>                predictFun = NULL)
 
-set.seed(1701)
-viviRf <- vivi(fit = rf,
-               data = Boston,
-               response = "medv",
-               reorder = FALSE,
-               normalized = FALSE,
-               importanceType = 'agnostic',
-               gridSize = 50,
-               nmax = 500,
-               class = 1,
-               predictFun = NULL)
+
+## ----echo=FALSE, eval=TRUE----------------------------------------------------
+load("vivi.Rdata")
 
 
-## ---- vivigbm, echo=TRUE------------------------------------------------------
+## ---- echo=TRUE---------------------------------------------------------------
 # predict function for GBM
 pFun <- function(fit, data, ...) predict(fit, as.matrix(data[,1:13]))
 
-set.seed(1701) 
-viviGBst <- vivi(fit = gbst,
-                 data = Boston,
-                 response = "medv",
-                 reorder = FALSE,
-                 normalized = FALSE,
-                 predictFun = pFun)
+
+## ---- vivigbm, echo=TRUE, eval=FALSE------------------------------------------
+#> set.seed(1701)
+#> viviGBst <- vivi(fit = gbst,
+#>                  data = Boston,
+#>                  response = "medv",
+#>                  reorder = FALSE,
+#>                  normalized = FALSE,
+#>                  predictFun = pFun)
 
 
-## ----  speedtest, echo=FALSE,   out.width = '60%', fig.cap = "Mean time over five runs, on two MacBook machines, for the creation of a vivid matrix for different models."----
+## ----  speedtest, echo=FALSE,   out.width = '60%', fig.cap = "Mean time over five runs, on two MacBooks, for the creation of a vivid matrix for different models. Times are highly dependent on the model fit, with NN the fastest and random forests the slowest."----
 knitr::include_graphics("speedTestsplot.png")
 
 
@@ -95,7 +101,7 @@ viviRf <- viviRf[ord,ord]
 viviGBst <- viviGBst[ord,ord]
 
 
-## ---- heatmaps,  echo=TRUE,fig.subcap = c("", ""), out.width="50%", fig.cap = "Agnostic variable importance and variable interaction scores for a random forest fit in (a) and GBM fit in (b) on the Boston housing data displayed as a heatmap. The random forest fit appears to produce weaker interactions and lower importance scores when compared to the GBM fit. Both fits identify $lstat$ as the most important followed by $rm$. In both fits we can see that $lstat$ has numerous interactions with other variables, notably $crim$ in the random forest fit in (a) and $nox$ in the GBM fit in (b)."----
+## ---- heatmaps,  echo=TRUE,fig.subcap = c("", ""), out.width="50%", fig.cap = "Agnostic variable importance and variable interaction scores for a random forest fit in (a) and GBM fit in (b) on the Boston housing data displayed as a heatmap. The random forest fit has weaker interactions and lower importance scores than the GBM fit. Both fits identify $lstat$ as the most important followed by $rm$. In both fits, $lstat$ has numerous interactions with other variables, notably $crim$ in the random forest fit and $nox$ in the GBM fit."----
 viviHeatmap(viviRf, angle = 45, intLims = c(0,1), impLims = c(0,8))
 viviHeatmap(viviGBst, angle = 45, intLims = c(0,1), impLims = c(0,8))
 
@@ -110,9 +116,11 @@ viviNetwork(viviGBst)
 intVals <- viviGBst
 diag(intVals) <- NA 
 
-# select VIVI values above median value
-sv <- which(diag(viviGBst) > median(diag(viviGBst)) |
-              apply(intVals, 1, max, na.rm=TRUE) > median(apply(intVals, 1, max, na.rm=TRUE)))
+# select VIVI values in top 10%
+impTresh <- quantile(diag(viviGBst),.9)
+intThresh <- quantile(intVals,.9,na.rm=TRUE)
+sv <- which(diag(viviGBst) > impTresh |
+              apply(intVals, 1, max, na.rm=TRUE) > intThresh)
               
 h <- hclust(-as.dist(viviGBst[sv,sv]), method="single")
 
@@ -124,33 +132,30 @@ viviNetwork(viviGBst[sv,sv],
 
 
 
-
 ## ---- dataframe, echo=TRUE----------------------------------------------------
-class(viviRf)<- c("vivid", class(viviRf))
+class(viviRf)<- c("vivid", class(viviRf)) 
 head(as.data.frame(viviRf), 4)
 
 
 ## ---- pdpRf,echo = TRUE,  out.width="100%", fig.width=10, fig.height=3,fig.cap = "Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a GBM fit on the Boston housing data. The changing partial dependence and ICE curves of $lstat$ and $rm$ indicate that these variables have some impact on the response."----
+top5 <- colnames(viviGBst)[1:5]
 pdpVars(data = Boston,
         fit = gbst,
         response = 'medv',
-        vars = colnames(viviGBst)[1:5],
+        vars = top5,
         predictFun = pFun)
 
 
 ## ---- gpdp, echo = TRUE, out.width="75%", fig.width=5, fig.height=4, fig.align='center', fig.cap = "Filtered generalized pairs partial dependence plot for a GBM fit on the Boston housing data. From both the univariate and bivariate PDPs, we can see that $lstat$ and $rm$ have an impact on the response. As $lstat$ decreases and $rm$ increases, predicted median house price value goes up. The bivariate PDP of $lstat:nox$ shows that as $nox$ increases, the predicted value decreases."----
 
-# select rows to plot associated ICE curves:
-rmHigh <- sample(which(Boston$rm > mean(Boston$rm)), 25)
-lstatLow <- sample(which(Boston$lstat < mean(Boston$lstat)), 25)
 
 set.seed(1701)
 pdpPairs(data = Boston,
          fit = gbst,
          response = "medv",
          gridSize = 20,
-         nIce = c(rmHigh, lstatLow),
-         var = colnames(viviGBst)[1:5],
+         nIce = 50,
+         vars = top5,
          convexHull = TRUE,
          fitlims = "pdp",
          predictFun = pFun)
@@ -162,18 +167,16 @@ pdpZen(data = Boston,
        fit = gbst,
        response = "medv",
        convexHull = TRUE,
-       zpath = colnames(viviGBst)[1:5],
+       zpath = top5,
        predictFun = pFun)
 
 
 ## ---- echo=TRUE---------------------------------------------------------------
-# find the 90% quantile of the interactions
-qVIntBst <- quantile(intVals, 0.9, na.rm=TRUE)
-
+intThresh <- quantile(intVals,.9,na.rm=TRUE)
 # set zpaths with different parameters
-zpGw  <- zPath(viv = viviGBst, cutoff = qVIntBst, method = 'greedy.weighted')
+zpGw  <- zPath(viv = viviGBst, cutoff = intThresh, method = 'greedy.weighted')
 zpGw
-zpSw  <- zPath(viv = viviGBst, cutoff = qVIntBst, connect = FALSE, method = 'strictly.weighted')
+zpSw  <- zPath(viv = viviGBst, cutoff = intThresh, connect = FALSE, method = 'strictly.weighted')
 zpSw
 
 
