@@ -10,32 +10,27 @@ Editor
 The R Journal  
 \bigskip
 
-Dear Professor Cook,
+Dear Dr. Hurley,
 \bigskip
 
-Please consider our article titled "ToOoOlTiPs: An R Package for Customizable Tooltips in Interactive Graphics" for publication in the R Journal.
+Please consider our article titled "vivid: An R package for Variable Importance and Variable Interactions Displays for Machine Learning Models" for publication in the R Journal.
 
-The manuscript introduces the new package called `ToOoOlTiPs` which provides examples on how to use interactive graphics in journal articles, and general tips for making an interesting contribution.
+The manuscript introduces the package called `vivid` which provides examples on how to visualize and evaluate variable importance and variable interactions in machine learning models, using a range of displays including heatmap and graph-based displays for viewing variable importance and interaction jointly and partial dependence plots in both a matrix layout and an alternative layout emphasizing important variable subsets. We additionally discuss the design choices behind our implementation by focusing on the package structure and providing an in-depth look at the package functions and key features.
 
-We believe the readers of the R Journal will find this article helpful for their work because it provides generally useful instructions that will work for many purposes. 
+
+We believe the readers of the R Journal will find this article helpful for their work because it provides generally useful instructions with the intention of increasing a machine learning models' interpretability and making the work applicable to a wider readership.
 
 \bigskip
 \bigskip
 
 Regards,
     
+    Alan Inglis
     
     
-    
-Quietest Quokka  
-Department of Letter Q  
-University of Little Mates  
-Somewhere, Australia  
-qquo@ulm.edu
+Hamilton Institute and  
+Department of Mathematics and Statistics  
+Maynooth University  
+Ireland  
+alan.inglis@mu.ie
 
-\bigskip
-
-NOTES: Modify this file with information about your article. 
-
-1. It may be invisible to you, so be aware that after each address line there are two spaces, this makes the line break correctly.
-2. It is also reasonable to submit an .md format of your motivating letter instead of a pdf. 
