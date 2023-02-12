@@ -1,6 +1,6 @@
 Package: vivid
 Title: Variable Importance and Variable Interaction Displays
-Version: 0.2.4
+Version: 0.2.5
 Authors@R: c(
     person(given = "Alan", family = "Inglis", email = "alan.n.inglis@gmail.com", role = c("aut", "cre")),
     person(given = "Andrew", family = "Parnell", email = "andrew.parnell@mu.ie", role = "aut"),
