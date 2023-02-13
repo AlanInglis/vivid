@@ -21,8 +21,7 @@ Imports:
     dplyr,
     igraph,
     flashlight,
-    ggnewscale,
-    tidyr
+    ggnewscale
 Suggests:
     intergraph (>= 2.0-2),
     network (>= 1.12.0),
@@ -48,5 +47,5 @@ Suggests:
     covr
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Config/testthat/edition: 3

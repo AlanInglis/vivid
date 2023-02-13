@@ -28,6 +28,7 @@
 #' @importFrom dplyr %>%
 #' @importFrom stats na.omit
 #' @import ggplot2
+#' @importFrom RColorBrewer brewer.pal
 #'
 #' @examples
 #'

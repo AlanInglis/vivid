@@ -24,6 +24,7 @@
 #' @return A zenplot of partial dependence values.
 #'
 #' @importFrom stats na.omit
+#' @importFrom RColorBrewer brewer.pal
 #' @examples
 #' \dontrun{
 #' # To use this function, install zenplots and graph from Bioconductor.

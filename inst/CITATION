@@ -1,7 +1,7 @@
 citHeader("To cite vivid in publications use:")
 
-citEntry(
-  entry    = "Article",
+bibentry(
+   bibtype = "Article",
   title    = "Visualizing Variable Importance and Variable Interaction Effects in Machine Learning Models",
   author   = c(person(c("Alan"), "Inglis"),
               person(c("Andrew"), "Parnell"),

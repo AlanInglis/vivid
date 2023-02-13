@@ -15,6 +15,7 @@
 #' @import ggplot2
 #' @importFrom ggnewscale new_scale_fill
 #' @importFrom stats as.dist
+#' @importFrom colorspace sequential_hcl
 #'
 #' @return A heatmap plot showing variable importance on the diagonal
 #' and variable interaction on the off-diagonal.

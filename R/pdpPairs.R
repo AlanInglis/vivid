@@ -33,6 +33,7 @@
 #' @importFrom stats na.omit
 #' @importFrom grDevices chull
 #' @import ggplot2
+#' @importFrom RColorBrewer brewer.pal
 #'
 #' @examples
 #' # Load in the data:

@@ -24,7 +24,7 @@
 #' @importFrom ggnewscale new_scale_fill
 #' @importFrom ggalt geom_encircle
 #' @importFrom grDevices rainbow
-#'
+#' @importFrom colorspace sequential_hcl
 #' @examples
 #'\donttest{
 #' library(ranger)
