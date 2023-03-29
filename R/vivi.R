@@ -85,7 +85,10 @@ vivi <- function(data,
       predictFun = pFun
     )
   }
-
+  vImp1 <- vector("numeric", length=ncol(data) -1)
+  vImp1[]<- NA
+  names(vImp1)<- names(data)[-match(response, names(data))]
+  vImp1[names(vImp)]<- vImp
 
 
   # Call the interaction function
@@ -99,7 +102,7 @@ vivi <- function(data,
     predictFun = pFun,
     normalized = normalized
   )
-  viviUpdate(vInt, vImp, reorder=reorder)
+  viviUpdate(vInt, vImp1, reorder=reorder)
 }
 
 
@@ -123,12 +126,14 @@ vivi <- function(data,
 #' viviUpdate(m, corimp) # use correlation as importance and reorder
 #'
 vividReorder <- function(d) {
-  vImp <- diag(d)
+  d1 <- d
+  d1[is.na(d)]<- 0
+  vImp <- diag(d1)
   rvImp <- range(vImp)
   if (rvImp[2] != rvImp[1]) {
     vImp <- (vImp - rvImp[1]) / (rvImp[2] - rvImp[1])
   }
-  vInt <- as.dist(d)
+  vInt <- as.dist(d1)
   rvInt <- range(vInt)
   if (rvInt[2] != rvInt[1]) {
     vInt <- (vInt - rvInt[1]) / (rvInt[2] - rvInt[1])
@@ -184,7 +189,6 @@ vividImportance.default <- function(fit,
   )
 
   importance <- imp$data[, 3:4]
-
   if (any(is.nan(importance$value))) {
     importance$value <- 1
     message("Flashlight importance works for numeric and numeric binary response only; setting importance to 1.")
