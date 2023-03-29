@@ -50,7 +50,7 @@ viviHeatmap <- function(mat,
 
   # set the limits for importance
   if (is.null(impLims)) {
-    impLims <- range(diag(mat))
+    impLims <- range(diag(mat), na.rm=TRUE)
     limitsImp <- range(labeling::rpretty(impLims[1], impLims[2]))
   } else {
     limitsImp <- impLims
@@ -58,7 +58,7 @@ viviHeatmap <- function(mat,
 
   # set the limits for interactions
   if (is.null(intLims)) {
-    intLims <- range(as.dist(mat))
+    intLims <- range(as.dist(mat), na.rm=TRUE)
     limitsInt <- range(labeling::rpretty(intLims[1], intLims[2]))
   } else {
     limitsInt <- intLims
