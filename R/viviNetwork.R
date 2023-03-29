@@ -12,6 +12,7 @@
 #' @param removeNode If TRUE, then removes nodes with no connecting edges when thresholding interaction values.
 #' @param layout igraph layout function or a numeric matrix with two columns, one row per node. Defaults to igraph::layout_as_circle
 #' @param cluster Either a vector of cluster memberships for nodes or an igraph clustering function.
+#' @param clusterFill If TRUE, then the cluster will be filled with colour. If FALSE, then only the cluster outline is coloured.
 #' @param nudge_x Nudge (centered) labels by this amount, outward horizontally.
 #' @param nudge_y Nudge (centered) labels by this amount, outward vertically.
 #' @param edgeWidths A vector specifying the scaling of the edges for the displayed graph. Values must be positive.
@@ -45,6 +46,7 @@ viviNetwork <- function(mat,
                         removeNode = FALSE,
                         layout = igraph::layout_in_circle,
                         cluster = NULL,
+                        clusterFill = TRUE,
                         nudge_x = .05,
                         nudge_y = .03,
                         edgeWidths = 1:4) {
@@ -200,12 +202,21 @@ viviNetwork <- function(mat,
     colPal <- rainbow(length(unique(cluster)))
     colCluster <- colPal[cluster]
 
-    p <- p + geom_encircle(aes(group = cluster),
-      spread = 0.01,
-      alpha = 0.2,
-      expand = 0.03,
-      fill = colCluster
-    )
+    if(clusterFill){
+      p <- p + geom_encircle(aes(group = cluster),
+                             spread = 0.01,
+                             alpha = 0.2,
+                             expand = 0.03,
+                             fill = colCluster
+      )
+    }else{
+      p <- p + geom_encircle(aes(group = cluster),
+                             spread = 0.01,
+                             alpha = 1,
+                             expand = 0.03,
+                             color = colCluster
+      )
+    }
   }
   p
 }
