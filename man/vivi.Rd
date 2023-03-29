@@ -9,12 +9,13 @@ vivi(
   fit,
   response,
   gridSize = 50,
-  importanceType = NULL,
+  importanceType = "agnostic",
   nmax = 500,
   reorder = TRUE,
   class = 1,
   predictFun = NULL,
-  normalized = FALSE
+  normalized = FALSE,
+  numPerm = 4
 )
 }
 \arguments{
@@ -26,8 +27,9 @@ vivi(
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{importanceType}{One of either "\%IncMSE" or "IncNodePurity" for use with randomForest. Or set to equal "agnostic" to override
-embedded importance measures and return agnostic importance values.}
+\item{importanceType}{One of either "\%IncMSE" or "IncNodePurity" for use with randomForest regression.
+Or 'MeanDecreaseAccuracy' or  'MeanDecreaseGini' for classification.
+Alternatively, set to equal "agnostic" (the default) to override embedded importance measures and return agnostic importance values.}
 
 \item{nmax}{Maximum number of data rows to consider. Default is 500. Use all rows if NULL.}
 
@@ -38,6 +40,8 @@ embedded importance measures and return agnostic importance values.}
 \item{predictFun}{Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.}
 
 \item{normalized}{Should Friedman's H-statistic be normalized or not. Default is FALSE.}
+
+\item{numPerm}{Number of permutations to preform. Default is 4.}
 }
 \value{
 A matrix of interaction values, with importance on the diagonal.
@@ -45,6 +49,11 @@ A matrix of interaction values, with importance on the diagonal.
 \description{
 Creates a matrix displaying variable importance on the diagonal
 and variable interaction on the off-diagonal.
+}
+\details{
+If the argument \code{importanceType = 'agnostic'}, then an agnostic permutation importance (1) is calculated.
+Friedman's H statistic (2) is used for measuring the interactions. This measure is based on partial dependence curves
+and relates the interaction strength of a pair of variables to the total effect strength of that variable pair.
 }
 \examples{
 
@@ -58,4 +67,9 @@ library(ranger)
 rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 vivi(fit = rf, data = iris, response = "Species")
 }
+}
+\references{
+1: Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.
+
+2: Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
 }

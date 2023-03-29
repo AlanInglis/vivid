@@ -16,7 +16,7 @@
 #' @param gridSize The size of the grid for evaluating the predictions.
 #' @param importanceType  One of either "%IncMSE" or "IncNodePurity" for use with randomForest regression.
 #' Or 'MeanDecreaseAccuracy' or  'MeanDecreaseGini' for classification.
-#' Alternatively, set to equal "agnostic" to override embedded importance measures and return agnostic importance values.
+#' Alternatively, set to equal "agnostic" (the default) to override embedded importance measures and return agnostic importance values.
 #' @param nmax Maximum number of data rows to consider. Default is 500. Use all rows if NULL.
 #' @param reorder If TRUE (default) uses DendSer to reorder the matrix of interactions and variable importances.
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
@@ -53,7 +53,7 @@ vivi <- function(data,
                  fit,
                  response,
                  gridSize = 50,
-                 importanceType = NULL,
+                 importanceType = 'agnostic',
                  nmax = 500,
                  reorder = TRUE,
                  class = 1,
@@ -166,8 +166,12 @@ vividReorder <- function(d) {
 # vividImportance ---------------------------------------------------------
 
 # Main vImp function:
-vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, numPerm = 4,...) {
-  UseMethod("vividImportance", fit)
+vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, numPerm = 4, ...) {
+  if (importanceType == "agnostic")
+    vividImportance.default(fit, data, response=response, predictFun = predictFun, numPerm = 4, ...)
+  else {
+    UseMethod("vividImportance", fit)
+  }
 }
 
 
