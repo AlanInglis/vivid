@@ -17,8 +17,10 @@ vip2vivid(importance, interaction, reorder = TRUE)
 A matrix of interaction values, with importance on the diagonal.
 }
 \description{
-@description Takes measured importance and interactions from the vip package and turns them into a matrix
-which can be used for plotting. Accepts any of the variable importance methods supplied by vip.
+Takes measured importance and interactions
+from the vip package and turns them into a matrix
+which can be used for plotting. Accepts any of the variable importance
+methods supplied by vip.
 }
 \examples{
 \dontrun{
