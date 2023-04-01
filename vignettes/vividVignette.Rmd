@@ -305,7 +305,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <caption><span id="fig8:fig8">Figure 8: </span>*Zen partial dependence plot for the random forest fit on the Friedman data. Here we display all the variables used in the random forest model.*</caption>
 </center>
 
-In Fig 8, we can see PDPs laid out in a zigzag structure, with the most influential variable pairs displayed at the top and generally decreasing as we move down. In Figure 9, below, we select a subset of variables to diplay. In this case we select the first five variables from the data. The argument `zpath` specifies the variables to be plotted, defaulting to all dataset variables aside from the response. 
+In Fig 8, we can see PDPs laid out in a zigzag structure, with the most influential variable pairs displayed at the top and generally decreasing as we move down. In Figure 9, below, we select a subset of variables to display. In this case we select the first five variables from the data. The argument `zpath` specifies the variables to be plotted, defaulting to all dataset variables aside from the response. 
 
 
 
