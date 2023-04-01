@@ -21,7 +21,8 @@ Imports:
     dplyr,
     igraph,
     flashlight,
-    ggnewscale
+    ggnewscale,
+    sp
 Suggests:
     intergraph (>= 2.0-2),
     network (>= 1.12.0),
@@ -34,7 +35,6 @@ Suggests:
     lemon,
     mlr3,
     mlr3learners,
-    sp,
     scales,
     ranger,
     vip,
