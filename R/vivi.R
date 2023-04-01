@@ -462,10 +462,17 @@ vividInteraction.default <- function(fit,
   res <- NULL
 
   # create flashlight
-  fl <- flashlight(
-    model = fit, data = data, y = response, label = "",
-    predict_function = function(fit, data) predictFun(fit, as.data.frame(data), prob = normalized)
-  )
+  if(any(class(fit) == 'model_fit')){
+    fl <- flashlight(
+      model = fit, data = data, y = response, label = "",
+      predict_function = function(fit, data) condvis2::CVpredict(fit, as.data.frame(data))
+    )
+  }else{
+    fl <- flashlight(
+      model = fit, data = data, y = response, label = "",
+      predict_function = function(fit, data) predictFun(fit, as.data.frame(data), prob = normalized)
+    )
+  }
 
 
   # calculate interactions
