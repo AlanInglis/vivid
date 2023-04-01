@@ -11,3 +11,5 @@
 ^pkgdown$
 ^paperCodeData$
 ^CRAN-SUBMISSION$
+^RJvivid$
+^rjwrap$
