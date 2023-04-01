@@ -28,7 +28,7 @@ supervised learning settings. They enhance interpretation even in
 situations where the number of variables is large and the interaction
 structure complex. A practical example of the package in use can be
 found here:
-<https://alaninglis.github.io/vivid/articles/articles/vividVignette.html>
+<https://alaninglis.github.io/vivid/articles/vividVignette.html>
 
 ## Installation
 
