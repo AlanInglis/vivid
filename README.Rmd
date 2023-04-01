@@ -17,11 +17,15 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![codecov](https://codecov.io/gh/AlanInglis/vivid/branch/master/graph/badge.svg?token=IJTT3ZW1RP)](https://app.codecov.io/gh/AlanInglis/vivid)
-
-<img src="https://github.com/AlanInglis/vivid/blob/master/badge/vividLogoNew.png" width="240" height="276" align="right" />
 <!-- badges: end -->
 
-Variable importance, interaction measures and partial dependence plots are important summaries in the interpretation of statistical and machine learning models. In our R package `vivid` (variable importance and variable interaction displays) we create new visualisation techniques for exploring these model summaries. We construct heatmap and graph-based displays showing variable importance and interaction jointly, which are carefully designed to highlight important aspects of the fit. We also construct a new matrix-type layout showing all single and bivariate partial dependence plots, and an alternative layout based on graph Eulerians focusing on key subsets. Our new visualisations are model-agnostic and are applicable to regression and classification supervised learning settings. They enhance interpretation even in situations where the number of variables is large and the interaction structure complex.
+<!-- badges: start -->
+<img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew.png" width="240" height="276" align="right" />
+<!-- badges: end -->
+
+Variable importance, interaction measures and partial dependence plots are important summaries in the interpretation of statistical and machine learning models. In our R package `vivid` (variable importance and variable interaction displays) we create new visualisation techniques for exploring these model summaries. We construct heatmap and graph-based displays showing variable importance and interaction jointly, which are carefully designed to highlight important aspects of the fit. We also construct a new matrix-type layout showing all single and bivariate partial dependence plots, and an alternative layout based on graph Eulerians focusing on key subsets. Our new visualisations are model-agnostic and are applicable to regression and classification supervised learning settings. They enhance interpretation even in situations where the number of variables is large and the interaction structure complex. A practical
+example of the package in use can be found here:
+<https://alaninglis.github.io/vivid/articles/articles/vividVignette.html>
 
 
 ## Installation

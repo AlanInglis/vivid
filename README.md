@@ -6,8 +6,11 @@
 <!-- badges: start -->
 
 [![codecov](https://codecov.io/gh/AlanInglis/vivid/branch/master/graph/badge.svg?token=IJTT3ZW1RP)](https://app.codecov.io/gh/AlanInglis/vivid)
+<!-- badges: end -->
 
-<img src="https://github.com/AlanInglis/vivid/blob/master/badge/vividLogoNew.png" width="240" height="276" align="right" />
+<!-- badges: start -->
+
+<img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew.png" width="240" height="276" align="right" />
 <!-- badges: end -->
 
 Variable importance, interaction measures and partial dependence plots
@@ -23,7 +26,9 @@ on graph Eulerians focusing on key subsets. Our new visualisations are
 model-agnostic and are applicable to regression and classification
 supervised learning settings. They enhance interpretation even in
 situations where the number of variables is large and the interaction
-structure complex.
+structure complex. A practical example of the package in use can be
+found here:
+<https://alaninglis.github.io/vivid/articles/articles/vividVignette.html>
 
 ## Installation
 
