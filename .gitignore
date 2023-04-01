@@ -4,7 +4,7 @@
 inst/doc
 .httr-oauth
 .DS_Store
-docs
+
 
 # History files
 .Rhistory
@@ -45,3 +45,4 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+docs
