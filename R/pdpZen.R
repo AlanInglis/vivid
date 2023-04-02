@@ -84,15 +84,15 @@ pdpZen <- function(data,
 
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
-  if(classif){
+  if (classif) {
     predData <- predictFun(fit, data, prob = probability)
-  }else{
+  } else {
     predData <- predictFun(fit, data)
   }
 
 
 
-  if(!classif && probability){
+  if (!classif && probability) {
     warning("Probability scale is for classification only and will be ignored")
   }
 
@@ -100,37 +100,35 @@ pdpZen <- function(data,
 
   vars <- names(data)
   vars <- vars[-match(response, vars)]
-  datap <- data[,vars]
+  datap <- data[, vars]
 
   if (is.null(zpath)) {
     zpath <- 1:length(vars)
     zdata <- datap
-    zpairs <- t(sapply(1:(length(zpath)-1), function(i){
-      z <- zpath[i:(i+1)]
+    zpairs <- t(sapply(1:(length(zpath) - 1), function(i) {
+      z <- zpath[i:(i + 1)]
       if (i %% 2 == 0) rev(z) else z
     }))
-  }
-  else if (is.character(zpath)){
+  } else if (is.character(zpath)) {
     zpath <- match(zpath, vars)
     if (any(is.na(zpath))) stop("'zpath' should contain predictor names.")
     zdata <- zenplots::indexData(datap, zpath)
-    zpairs <- t(sapply(1:(length(zpath)-1), function(i){
-      z <- zpath[i:(i+1)]
+    zpairs <- t(sapply(1:(length(zpath) - 1), function(i) {
+      z <- zpath[i:(i + 1)]
       if (i %% 2 == 0) rev(z) else z
     }))
-  }
-  else if (is.list(zpath)){
+  } else if (is.list(zpath)) {
     zpath0 <- unlist(zpath)
     zpath0 <- match(zpath0, vars)
     if (any(is.na(zpath0))) stop("'zpath' should contain predictor names.")
     zpath <- lapply(zpath, function(z) match(z, vars))
-    zpairs <- t(sapply(1:(length(zpath0)-1), function(i){
-      z <- zpath0[i:(i+1)]
+    zpairs <- t(sapply(1:(length(zpath0) - 1), function(i) {
+      z <- zpath0[i:(i + 1)]
       if (i %% 2 == 0) rev(z) else z
     }))
     fixind <- cumsum(sapply(zpath, length))
     fixind <- fixind[-length(fixind)]
-    for (i in fixind) zpairs[i,]<- NA
+    for (i in fixind) zpairs[i, ] <- NA
     zdata <- zenplots::groupData(datap, indices = zpath)
   }
 
@@ -155,9 +153,9 @@ pdpZen <- function(data,
   }
 
   pdplist <- bind_rows(pdplist)
-  if(classif){
+  if (classif) {
     pdplist$fit <- predictFun(fit, pdplist, prob = probability)
-  }else{
+  } else {
     pdplist$fit <- predictFun(fit, pdplist)
   }
   pdplist <- split(pdplist, pdplist$.pid)
@@ -206,8 +204,8 @@ pdpZen <- function(data,
     pdp <- pdplist[[z2index]]
     if (!is.null(pdp)) {
       if (!comboImage && is.factor(pdp[[vars[1]]]) + is.factor(pdp[[vars[2]]]) == 1) {
-         flip <-  is.factor(pdp[[vars[1]]])
-         if (flip) vars <- rev(vars)
+        flip <- is.factor(pdp[[vars[1]]])
+        if (flip) vars <- rev(vars)
 
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = fit, color = .data[[vars[2]]])) +
           geom_line() +
@@ -216,7 +214,7 @@ pdpZen <- function(data,
         if (is.factor(pdp[[vars[1]]])) posx <- "jitter" else posx <- "identity"
         if (is.factor(pdp[[vars[2]]])) posy <- "jitter" else posy <- "identity"
 
-        num2d <- zargs$num/2
+        num2d <- zargs$num / 2
         p <- ggplot(data = pdp, aes(x = .data[[vars[1]]], y = .data[[vars[2]]])) +
           geom_tile(aes(fill = fit)) +
           scale_fill_gradientn(name = "y-hat", colors = pal, limits = limits, oob = scales::squish)
@@ -228,7 +226,7 @@ pdpZen <- function(data,
       }
 
       p <- p +
-        guides(fill = "none",  color = "none") +
+        guides(fill = "none", color = "none") +
         theme_bw() +
         theme(
           axis.line = element_blank(),
@@ -239,8 +237,6 @@ pdpZen <- function(data,
           axis.title.y = element_blank(),
           panel.border = element_rect(colour = "gray", fill = NA, size = 1.5)
         )
-
-
     } else {
       p <- ggplot() +
         theme(panel.background = element_blank())

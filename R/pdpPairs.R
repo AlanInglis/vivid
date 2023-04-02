@@ -46,7 +46,7 @@
 #' library(MASS)
 #' Boston1 <- Boston[, c(4:6, 8, 13:14)]
 #' Boston1$chas <- factor(Boston1$chas)
-#' fit <- ranger(medv~., data = Boston1, importance = "permutation")
+#' fit <- ranger(medv ~ ., data = Boston1, importance = "permutation")
 #' pdpPairs(Boston1[1:30, ], fit, "medv")
 #' pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE)
 #' viv <- vivi(Boston1, fit, "medv")
@@ -80,7 +80,6 @@ pdpPairs <- function(data,
                      predictFun = NULL,
                      convexHull = FALSE,
                      probability = FALSE) {
-
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5, nmax)
@@ -91,22 +90,22 @@ pdpPairs <- function(data,
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
 
-  if(classif){
-    if(probability){
+  if (classif) {
+    if (probability) {
       legendName <- "y-hat\nprobability"
-    } else{
+    } else {
       legendName <- "y-hat\nlogit"
     }
-  } else{
+  } else {
     legendName <- "y-hat"
   }
 
 
   if (is.null(predictFun)) predictFun <- CVpredictfun(classif, class)
 
-  if(classif){
-  predData <- predictFun(fit, data, prob = probability)
-  }else{
+  if (classif) {
+    predData <- predictFun(fit, data, prob = probability)
+  } else {
     predData <- predictFun(fit, data)
   }
 
@@ -116,7 +115,7 @@ pdpPairs <- function(data,
   vars <- vars[vars %in% vars0]
   if (is.null(vars)) vars <- vars0
 
-  if(length(nIce) > 1){
+  if (length(nIce) > 1) {
     nIce <- nIce[nIce <= nrow(data)]
     sice <- c(NA, nIce)
   } else {
@@ -136,9 +135,9 @@ pdpPairs <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  if(classif){
-      pdplist1$fit <- predictFun(fit, pdplist1, prob = probability)
-  }else{
+  if (classif) {
+    pdplist1$fit <- predictFun(fit, pdplist1, prob = probability)
+  } else {
     pdplist1$fit <- predictFun(fit, pdplist1)
   }
 
@@ -165,9 +164,9 @@ pdpPairs <- function(data,
 
   pdplist <- bind_rows(pdplist)
 
-  if(classif){
+  if (classif) {
     pdplist$fit <- predictFun(fit, pdplist, prob = probability)
-  }else{
+  } else {
     pdplist$fit <- predictFun(fit, pdplist)
   }
   pdplist <- split(pdplist, pdplist$.pid)
@@ -220,23 +219,23 @@ pdpPairs <- function(data,
 
 
     if (is.null(colorVar)) {
-    filter(pdp, .data[[".id"]] %in% sice) %>%
-      ggplot(aes(x = .data[[var]], y = fit)) +
-      geom_line(aes(color = predData, group = .data[[".id"]])) +
-      scale_color_gradientn(
-        name = legendName, colors = pal, limits = limits, oob = scales::squish,
-        guide = guide_colorbar(
-          frame.colour = "black",
-          ticks.colour = "black"
-        )
-      ) +
-      geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
-    }else{
       filter(pdp, .data[[".id"]] %in% sice) %>%
         ggplot(aes(x = .data[[var]], y = fit)) +
-         geom_line(aes(color = .data[[colorVar]], group = .data[[".id"]])) +
+        geom_line(aes(color = predData, group = .data[[".id"]])) +
+        scale_color_gradientn(
+          name = legendName, colors = pal, limits = limits, oob = scales::squish,
+          guide = guide_colorbar(
+            frame.colour = "black",
+            ticks.colour = "black"
+          )
+        ) +
         geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
-      }
+    } else {
+      filter(pdp, .data[[".id"]] %in% sice) %>%
+        ggplot(aes(x = .data[[var]], y = fit)) +
+        geom_line(aes(color = .data[[colorVar]], group = .data[[".id"]])) +
+        geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1)
+    }
   }
 
 
@@ -247,23 +246,22 @@ pdpPairs <- function(data,
     x <- eval_data_col(data, mapping$x)
     y <- eval_data_col(data, mapping$y)
 
-  if (is.null(colorVar)) {
-    df <- data.frame(x = x, y = y)
-    df %>%
-    ggplot(aes(x = .data$x, y = .data$y, color = predData)) +
-      geom_point(shape = 16, size = 1, show.legend = FALSE) +
-      scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
-
-  } else {
-    data$response <- rep
-    names(data)[names(data) == "response"] <- response
-    colorVar <- data[[colorVar]]
-    df <- data.frame(x = x, y = y, colVar = colorVar)
-    df %>%
-    ggplot(aes(x = .data$x, y = .data$y)) +
-      geom_point(shape = 16, size = 1, show.legend = FALSE, aes(color = .data$colVar))
+    if (is.null(colorVar)) {
+      df <- data.frame(x = x, y = y)
+      df %>%
+        ggplot(aes(x = .data$x, y = .data$y, color = predData)) +
+        geom_point(shape = 16, size = 1, show.legend = FALSE) +
+        scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
+    } else {
+      data$response <- rep
+      names(data)[names(data) == "response"] <- response
+      colorVar <- data[[colorVar]]
+      df <- data.frame(x = x, y = y, colVar = colorVar)
+      df %>%
+        ggplot(aes(x = .data$x, y = .data$y)) +
+        geom_point(shape = 16, size = 1, show.legend = FALSE, aes(color = .data$colVar))
+    }
   }
-}
 
   dplotm <- function(data, mapping) {
     x <- eval_data_col(data, mapping$x)
@@ -273,7 +271,7 @@ pdpPairs <- function(data,
     jittery <- if (is.factor(df$y)) .25 else 0
 
 
-     ggplot(df, aes(x = x, y = y, color = predData)) +
+    ggplot(df, aes(x = x, y = y, color = predData)) +
       geom_jitter(shape = 16, size = 1, show.legend = FALSE, width = jitterx, height = jittery) +
       scale_colour_gradientn(name = legendName, colors = pal, limits = limits, oob = scales::squish)
   }
@@ -283,7 +281,7 @@ pdpPairs <- function(data,
 
   p <- ggpairs(data[vars],
     upper = list(continuous = pdpnn, combo = if (comboImage) pdpnn else pdpc, discrete = pdpnn),
-    diag  = list(continuous = ice, discrete = ice),
+    diag = list(continuous = ice, discrete = ice),
     lower = list(continuous = dplotn, combo = dplotm, discrete = dplotm),
     legend = wlegend,
     cardinality_threshold = NULL
@@ -292,7 +290,7 @@ pdpPairs <- function(data,
     theme(
       panel.border = element_rect(colour = "black", fill = NA, size = 1),
       axis.line = element_line(),
-     # axis.ticks = element_blank(),
+      # axis.ticks = element_blank(),
       axis.text.x = element_text(angle = 0, hjust = 1, size = 6),
       axis.text.y = element_text(size = 6),
       strip.text = element_text(face = "bold", colour = "black", size = 7)
@@ -320,8 +318,7 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
       d1
     }))
     if (is.factor(pdpvar)) dnew[[var]] <- factor(dnew[[var]], levels = levels(pdpvar), ordered = is.ordered(pdpvar))
-  }
-  else {
+  } else {
     pdpvar1 <- d[[var[1]]]
     pdpvar2 <- d[[var[2]]]
 
@@ -385,5 +382,3 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
   rownames(dnew) <- NULL
   dnew
 }
-
-

@@ -39,7 +39,7 @@
 #' m <- vivi(fit = f, data = aq, response = "Ozone") # as expected all interactions are zero
 #' viviHeatmap(m)
 #'
-#'\donttest{
+#' \donttest{
 #' library(ranger)
 #' rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 #' vivi(fit = rf, data = iris, response = "Species")
@@ -53,19 +53,20 @@ vivi <- function(data,
                  fit,
                  response,
                  gridSize = 50,
-                 importanceType = 'agnostic',
+                 importanceType = "agnostic",
                  nmax = 500,
                  reorder = TRUE,
                  class = 1,
                  predictFun = NULL,
                  normalized = FALSE,
                  numPerm = 4) {
-
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) {
     pFun <- CVpredictfun(classif, class)
-  } else pFun <- predictFun
+  } else {
+    pFun <- predictFun
+  }
 
   # Call the importance function
   if (!is.null(importanceType) && importanceType == "agnostic") {
@@ -86,8 +87,7 @@ vivi <- function(data,
       predictFun = pFun1,
       numPerm = numPerm
     )
-  }
-  else {
+  } else {
     vImp <- vividImportance(
       data = data,
       fit = fit,
@@ -97,10 +97,10 @@ vivi <- function(data,
       numPerm = numPerm
     )
   }
-  vImp1 <- vector("numeric", length=ncol(data) -1)
-  vImp1[]<- NA
-  names(vImp1)<- names(data)[-match(response, names(data))]
-  vImp1[names(vImp)]<- vImp
+  vImp1 <- vector("numeric", length = ncol(data) - 1)
+  vImp1[] <- NA
+  names(vImp1) <- names(data)[-match(response, names(data))]
+  vImp1[names(vImp)] <- vImp
 
 
   # Call the interaction function
@@ -115,7 +115,7 @@ vivi <- function(data,
     normalized = normalized
   )
 
-  viviUpdate(vInt, vImp1, reorder=reorder)
+  viviUpdate(vInt, vImp1, reorder = reorder)
 }
 
 
@@ -140,7 +140,7 @@ vivi <- function(data,
 #'
 vividReorder <- function(d) {
   d1 <- d
-  d1[is.na(d)]<- 0
+  d1[is.na(d)] <- 0
   vImp <- diag(d1)
   rvImp <- range(vImp)
   if (rvImp[2] != rvImp[1]) {
@@ -154,7 +154,7 @@ vividReorder <- function(d) {
   score <- apply(as.matrix(vInt), 1, max) + vImp
   o <- DendSer::dser(-vInt, -score, cost = DendSer::costLS)
   res <- d[o, o]
-  class(res)<- class(d)
+  class(res) <- class(d)
   res
 }
 
@@ -167,9 +167,9 @@ vividReorder <- function(d) {
 
 # Main vImp function:
 vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, numPerm = 4, ...) {
-  if (importanceType == "agnostic")
-    vividImportance.default(fit, data, response=response, predictFun = predictFun, numPerm = 4, ...)
-  else {
+  if (importanceType == "agnostic") {
+    vividImportance.default(fit, data, response = response, predictFun = predictFun, numPerm = 4, ...)
+  } else {
     UseMethod("vividImportance", fit)
   }
 }
@@ -185,18 +185,17 @@ vividImportance.default <- function(fit,
                                     importanceType = NULL,
                                     predictFun = NULL,
                                     numPerm = 4) {
-
   message("Agnostic variable importance method used.")
 
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
 
 
-    # create flashlight
-    fl <- flashlight(
-      model = fit, data = data, y = response, label = "",
-      predict_function = function(fit, data) predictFun(fit, data, prob = TRUE)
-    )
+  # create flashlight
+  fl <- flashlight(
+    model = fit, data = data, y = response, label = "",
+    predict_function = function(fit, data) predictFun(fit, data, prob = TRUE)
+  )
 
 
 
@@ -226,8 +225,6 @@ vividImportance.ranger <- function(fit,
                                    importanceType = NULL,
                                    predictFun = NULL,
                                    numPerm = 4) {
-
-
   # If no importance mode selected, then default! Else, extract importance type
   if (fit$importance.mode == "none") {
     message("No variable importance mode selected.")
@@ -257,44 +254,43 @@ vividImportance.randomForest <- function(fit,
                                          importanceType = NULL,
                                          predictFun = NULL,
                                          numPerm = 4) {
+  fitImp <- dim(fit$importance)
+  importanceData <- randomForest::importance(fit, scale = FALSE)
+  st <- colnames(importanceData)
 
- fitImp <- dim(fit$importance)
- importanceData <- randomForest::importance(fit, scale = FALSE)
- st <- colnames(importanceData)
-
- if (fit$type == "classification") {
-   if (all(st != importanceType) && !is.null(importanceType)) {
-     message("Stated importanceType not found. Returning MeanDecreaseGini importance values")
-     importance <- importanceData[, "MeanDecreaseGini"]
-   } else {
-     if (!is.null(importanceType)) {
-       importance <- importanceData[, importanceType]
-       message(importanceType, " importance selected.")
-     } else if (is.null(importanceType) && fitImp[2] != 1) {
-       message("No importanceType selected. Returning MeanDecreaseGini importance values")
-       importance <- importanceData[, "MeanDecreaseGini"]
-     } else {
-       message("No importanceType selected. Returning MeanDecreaseGini importance values")
-       importance <- importanceData[, "MeanDecreaseGini"]
-     }
-   }
- }
-
+  if (fit$type == "classification") {
+    if (all(st != importanceType) && !is.null(importanceType)) {
+      message("Stated importanceType not found. Returning MeanDecreaseGini importance values")
+      importance <- importanceData[, "MeanDecreaseGini"]
+    } else {
+      if (!is.null(importanceType)) {
+        importance <- importanceData[, importanceType]
+        message(importanceType, " importance selected.")
+      } else if (is.null(importanceType) && fitImp[2] != 1) {
+        message("No importanceType selected. Returning MeanDecreaseGini importance values")
+        importance <- importanceData[, "MeanDecreaseGini"]
+      } else {
+        message("No importanceType selected. Returning MeanDecreaseGini importance values")
+        importance <- importanceData[, "MeanDecreaseGini"]
+      }
+    }
+  }
 
 
 
-   if (fit$type == "regression") {
-     if (!is.null(importanceType)) {
-       importance <- importanceData[, importanceType]
-       message(importanceType, " importance selected.")
-     } else if (is.null(importanceType) && fitImp[2] != 1) {
-       message("No importanceType selected. Returning IncNodePurity importance values")
-       importance <- importanceData[, "IncNodePurity"]
-     } else {
-       message("No importanceType selected. Returning IncNodePurity importance values")
-       importance <- importanceData[, "IncNodePurity"]
-     }
-   }
+
+  if (fit$type == "regression") {
+    if (!is.null(importanceType)) {
+      importance <- importanceData[, importanceType]
+      message(importanceType, " importance selected.")
+    } else if (is.null(importanceType) && fitImp[2] != 1) {
+      message("No importanceType selected. Returning IncNodePurity importance values")
+      importance <- importanceData[, "IncNodePurity"]
+    } else {
+      message("No importanceType selected. Returning IncNodePurity importance values")
+      importance <- importanceData[, "IncNodePurity"]
+    }
+  }
 
   return(importance)
 }
@@ -308,14 +304,11 @@ vividImportance.Learner <- function(fit,
                                     importanceType = NULL,
                                     predictFun = NULL,
                                     numPerm = 4) {
-
-
   # if no importance mode selected, use default
   if (fit$packages == "ranger" && fit$model$importance.mode == "none") {
     message("No variable importance mode selected.")
     vividImportance.default(fit, data, response, importanceType, predictFun = predictFun)
   } else {
-
     # get data names without response
     featureNames <- names(data[, !(names(data) %in% response)])
 
@@ -401,8 +394,7 @@ vividImportance.model_fit <- function(fit,
                                       importanceType = NULL,
                                       predictFun = NULL,
                                       numPerm = 4) {
-
-  vImp <- vip::vi_model(fit, type=importanceType)
+  vImp <- vip::vi_model(fit, type = importanceType)
   vImp <- vImp[, 1:2]
   importance <- vImp$Importance
   names(importance) <- vImp$Variable
@@ -462,12 +454,12 @@ vividInteraction.default <- function(fit,
   res <- NULL
 
   # create flashlight
-  if(any(class(fit) == 'model_fit')){
+  if (any(class(fit) == "model_fit")) {
     fl <- flashlight(
       model = fit, data = data, y = response, label = "",
       predict_function = function(fit, data) condvis2::CVpredict(fit, as.data.frame(data))
     )
-  }else{
+  } else {
     fl <- flashlight(
       model = fit, data = data, y = response, label = "",
       predict_function = function(fit, data) predictFun(fit, as.data.frame(data), prob = normalized)
@@ -477,8 +469,8 @@ vividInteraction.default <- function(fit,
 
   # calculate interactions
   res <- light_interaction(fl,
-                           pairwise = TRUE, type = "H", grid_size = gridSize,
-                           normalize = normalized, n_max = nmax
+    pairwise = TRUE, type = "H", grid_size = gridSize,
+    normalize = normalized, n_max = nmax
   )$data
 
   # reorder

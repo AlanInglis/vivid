@@ -26,13 +26,13 @@
 #' @importFrom grDevices rainbow
 #' @importFrom colorspace sequential_hcl
 #' @examples
-#'\donttest{
+#' \donttest{
 #' library(ranger)
 #' aq <- na.omit(airquality)
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 #' viviNetwork(myMat)
-#'}
+#' }
 #' @export
 
 # Plotting Function -------------------------------------------------------
@@ -48,9 +48,6 @@ viviNetwork <- function(mat,
                         nudge_x = .05,
                         nudge_y = .03,
                         edgeWidths = 1:4) {
-
-
-
   nnodes <- nrow(mat)
   if (nnodes == 1) stop("Only one node provided, no graph drawn")
 
@@ -65,14 +62,14 @@ viviNetwork <- function(mat,
 
   dfInt <- df[df$Measure == "Vint", ]
   dfInt <- dfInt[-which(dfInt$Row < dfInt$Col), ]
-  dfInt <- dfInt[!is.na(dfInt$Value),] #new
+  dfInt <- dfInt[!is.na(dfInt$Value), ]
   dfInt <- dfInt[with(dfInt, order(Value)), ]
 
   # Limits ------------------------------------------------------------------
 
   # set the limits for importance
   if (is.null(impLims)) {
-    impLimits <- range(dfImp$Value, na.rm=T) #new
+    impLimits <- range(dfImp$Value, na.rm = T)
     impLimits <- range(labeling::rpretty(impLimits[1], impLimits[2]))
   } else {
     impLimits <- impLims
@@ -132,9 +129,9 @@ viviNetwork <- function(mat,
   if (r[2] == 0) glayout[, 2] <- seq(-1, 1, length.out = nrow(glayout))
 
   mapinto <- function(x, lims, v) {
-     x[is.na(x)] <- lims[1] # new
-     x <- pmin(pmax(x, lims[1]), lims[2])
-     i <- cut(x, breaks = seq(lims[1], lims[2], length = length(v) + 1), include.lowest = TRUE)
+    x[is.na(x)] <- lims[1]
+    x <- pmin(pmax(x, lims[1]), lims[2])
+    i <- cut(x, breaks = seq(lims[1], lims[2], length = length(v) + 1), include.lowest = TRUE)
     v[i]
   }
 
@@ -158,19 +155,21 @@ viviNetwork <- function(mat,
 
   suppressMessages(
     p <- ggnet2(g,
-                mode = glayout,
-                size = 0,
-                edge.label = NULL,
-                edge.size = edgeWidthScaled,
-                edge.color = edgeCols
+      mode = glayout,
+      size = 0,
+      edge.label = NULL,
+      edge.size = edgeWidthScaled,
+      edge.color = edgeCols
     ) +
       xlim(xlim) +
-      ylim(ylim)+
-      geom_label(aes(label = dfImp$Variable_1), size = 4.5,
-                 nudge_x = nudged[, 1], nudge_y = nudged[, 2],
-                 hjust = "middle", vjust = "middle",
-                 label.size = NA
-      ) )
+      ylim(ylim) +
+      geom_label(aes(label = dfImp$Variable_1),
+        size = 4.5,
+        nudge_x = nudged[, 1], nudge_y = nudged[, 2],
+        hjust = "middle", vjust = "middle",
+        label.size = NA
+      )
+  )
 
   if (!is.null(cluster)) {
     # add numeric vector to cluster by, else use igraph clustering
@@ -183,13 +182,13 @@ viviNetwork <- function(mat,
     colCluster <- colPal[cluster]
 
     p <- p + geom_encircle(aes(group = cluster),
-                           spread = 0.01,
-                           alpha = 0.2,
-                           expand = 0.03,
-                           fill = colCluster
+      spread = 0.01,
+      alpha = 0.2,
+      expand = 0.03,
+      fill = colCluster
     )
   }
-  p <- p+ geom_point(aes(fill = dfImp$Value), size = impScaled * 2, colour = "transparent", shape = 21) +
+  p <- p + geom_point(aes(fill = dfImp$Value), size = impScaled * 2, colour = "transparent", shape = 21) +
     scale_fill_gradientn(
       name = "Vimp", colors = impPal, limits = impLimits,
       guide = guide_colorbar(

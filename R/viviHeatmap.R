@@ -21,13 +21,13 @@
 #' and variable interaction on the off-diagonal.
 #'
 #' @examples
-#'\donttest{
+#' \donttest{
 #' library(ranger)
 #' aq <- na.omit(airquality)
 #' rF <- ranger(Ozone ~ ., data = aq, importance = "permutation")
 #' myMat <- vivi(fit = rF, data = aq, response = "Ozone")
 #' viviHeatmap(myMat)
-#'}
+#' }
 #' @export
 # Main plot function -----------------------------------------------------------
 viviHeatmap <- function(mat,
@@ -37,10 +37,6 @@ viviHeatmap <- function(mat,
                         impLims = NULL,
                         border = FALSE,
                         angle = 0) {
-
-
-
-
   # Small set-up ------------------------------------------------------------
 
   # get label names
@@ -50,7 +46,7 @@ viviHeatmap <- function(mat,
 
   # set the limits for importance
   if (is.null(impLims)) {
-    impLims <- range(diag(mat), na.rm=TRUE)
+    impLims <- range(diag(mat), na.rm = TRUE)
     limitsImp <- range(labeling::rpretty(impLims[1], impLims[2]))
   } else {
     limitsImp <- impLims
@@ -58,7 +54,7 @@ viviHeatmap <- function(mat,
 
   # set the limits for interactions
   if (is.null(intLims)) {
-    intLims <- range(as.dist(mat), na.rm=TRUE)
+    intLims <- range(as.dist(mat), na.rm = TRUE)
     limitsInt <- range(labeling::rpretty(intLims[1], intLims[2]))
   } else {
     limitsInt <- intLims
@@ -87,11 +83,11 @@ viviHeatmap <- function(mat,
   dfInt$Variable_1 <- factor(dfInt$Variable_1, levels = labelNames)
   dfInt$Variable_2 <- factor(dfInt$Variable_2, levels = labelNames)
 
-  if(angle > 10){
+  if (angle > 10) {
     hj <- 0
-  }else{
-      hj <- 0.5
-    }
+  } else {
+    hj <- 0.5
+  }
 
 
   p <- ggplot(dfInt, aes(.data[["Variable_1"]], .data[["Variable_2"]])) +
@@ -107,9 +103,10 @@ viviHeatmap <- function(mat,
       ), oob = scales::squish
     ) +
     new_scale_fill() +
-    geom_tile(data = dfImp,
-              aes(fill = .data[["Value"]])
-             ) +
+    geom_tile(
+      data = dfImp,
+      aes(fill = .data[["Value"]])
+    ) +
     scale_fill_gradientn(
       colors = impPal, limits = limitsImp, name = "Vimp",
       guide = guide_colorbar(
@@ -129,10 +126,10 @@ viviHeatmap <- function(mat,
     theme(axis.text.x = element_text(angle = angle, hjust = hj)) +
     theme(aspect.ratio = 1)
 
-    if(border){
-         p$layers[[2]]$aes_params$colour = 'black'
-         p$layers[[2]]$aes_params$size = 0.2
-    }
+  if (border) {
+    p$layers[[2]]$aes_params$colour <- "black"
+    p$layers[[2]]$aes_params$size <- 0.2
+  }
 
 
   return(p)

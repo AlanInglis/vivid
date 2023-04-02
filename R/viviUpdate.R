@@ -15,25 +15,25 @@
 #' viviUpdate(m, corimp) # use correlation as updated importance
 #' @export
 
-viviUpdate <- function(mat, newImp, reorder=TRUE) {
-  if (is.null(names(newImp)))
+viviUpdate <- function(mat, newImp, reorder = TRUE) {
+  if (is.null(names(newImp))) {
     names(newImp) <- rownames(mat)[1:length(newImp)]
+  }
 
   newnames <- intersect(rownames(mat), names(newImp))
-  if (length(newnames) != nrow(mat)){
-    n <- setdiff(rownames(mat),newnames)
-    message(paste("Importance values not provided for", paste0(n, collapse=" ")))
+  if (length(newnames) != nrow(mat)) {
+    n <- setdiff(rownames(mat), newnames)
+    message(paste("Importance values not provided for", paste0(n, collapse = " ")))
   }
 
   matdiag <- diag(mat)
-  matdiag[newnames]<- newImp[newnames]
+  matdiag[newnames] <- newImp[newnames]
   diag(mat) <- matdiag
   if (reorder) mat <- vividReorder(mat)
 
-  if(class(mat)[1] != "vivid"){
+  if (class(mat)[1] != "vivid") {
     class(mat) <- c("vivid", class(mat))
   }
 
   return(mat)
-
 }

@@ -31,8 +31,7 @@
 #' @importFrom RColorBrewer brewer.pal
 #'
 #' @examples
-#'
-#'\donttest{
+#' \donttest{
 #' # Load in the data:
 #' aq <- na.omit(airquality)
 #' fit <- lm(Ozone ~ ., data = aq)
@@ -46,7 +45,7 @@
 #' pp <- pdpVars(iris, rfClassif, "Species", class = 2, draw = FALSE)
 #' pp[[1]]
 #' pdpVars(iris, rfClassif, "Species", class = 2, colorVar = "Species")
-#'}
+#' }
 #' @export
 
 pdpVars <- function(data,
@@ -63,7 +62,6 @@ pdpVars <- function(data,
                     colorVar = NULL,
                     draw = TRUE,
                     probability = FALSE) {
-
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5, nmax)
@@ -73,13 +71,13 @@ pdpVars <- function(data,
   gridSize <- min(gridSize, nmax)
 
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
-  if(classif){
-    if(probability){
+  if (classif) {
+    if (probability) {
       legendName <- "y-hat\nprobability"
-    } else{
+    } else {
       legendName <- "y-hat\nlogit"
     }
-  } else{
+  } else {
     legendName <- "y-hat"
   }
 
@@ -89,9 +87,9 @@ pdpVars <- function(data,
 
 
 
-  if(classif){
+  if (classif) {
     predData <- predictFun(fit, data, prob = probability)
-  }else{
+  } else {
     predData <- predictFun(fit, data)
   }
 
@@ -101,7 +99,7 @@ pdpVars <- function(data,
   vars <- vars[vars %in% vars0]
   if (is.null(vars)) vars <- vars0
 
-  if(length(nIce) > 1){
+  if (length(nIce) > 1) {
     nIce <- nIce[nIce <= nrow(data)]
     sice <- c(NA, nIce)
   } else {
@@ -119,9 +117,9 @@ pdpVars <- function(data,
     pdplist1[[i]] <- px
   }
   pdplist1 <- bind_rows(pdplist1)
-  if(classif){
-    pdplist1$fit <- predictFun(fit, pdplist1,  prob = probability)
-  }else{
+  if (classif) {
+    pdplist1$fit <- predictFun(fit, pdplist1, prob = probability)
+  } else {
     pdplist1$fit <- predictFun(fit, pdplist1)
   }
 
@@ -176,4 +174,3 @@ pdpVars <- function(data,
 
   invisible(plots)
 }
-
