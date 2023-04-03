@@ -10,7 +10,7 @@
 
 <!-- badges: start -->
 
-<img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew.png" width="240" height="276" align="right" />
+<img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew2.png" width="240" height="276" align="right" />
 <!-- badges: end -->
 
 Variable importance, interaction measures and partial dependence plots
