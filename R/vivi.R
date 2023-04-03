@@ -23,7 +23,7 @@
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param normalized Should Friedman's H-statistic be normalized or not. Default is FALSE.
 #' @param numPerm Number of permutations to preform. Default is 4.
-#' @param viewVimpError Logical. If TRUE, and `numPerm > 1` then a tibble containing the variable names, their importance values,
+#' @param showVimpError Logical. If TRUE, and `numPerm > 1` then a tibble containing the variable names, their importance values,
 #' and the standard error for each importance is printed to the console.
 #' @return A matrix of interaction values, with importance on the diagonal.
 #'
