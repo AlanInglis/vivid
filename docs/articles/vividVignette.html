@@ -83,7 +83,7 @@ img {
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <!-- badges: start -->
-<p><img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew.png" width="240" height="276" align="right"><!-- badges: end --></p>
+<p><img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew2.png" width="240" height="276" align="right"><!-- badges: end --></p>
 <p>Variable importance (VImp), variable interaction measures (VInt) and
 partial dependence plots (PDPs) are important summaries in the
 interpretation of statistical and machine learning models. In this
@@ -99,7 +99,12 @@ settings. They enhance interpretation even in situations where the
 number of variables is large and the interaction structure complex. Our
 R package <code>vivid</code> (variable importance and variable
 interaction displays) provides an implementation. When referring to VImp
-and VInt together, we use the shorthand VIVI.</p>
+and VInt together, we use the shorthand VIVI. For more information
+related to visualising variable importance and interactions in machine
+learning models see our published work<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Alan Inglis and Andrew Parnell and Catherine B. Hurley
+(2022) Visualizing Variable Importance and Variable Interaction Effects
+in Machine Learning Models. Journal of Computational and Graphical
+Statistics (3), pages 1-13&lt;/p&gt;"><sup>1</sup></a>.</p>
 <div class="section level3">
 <h3 id="install-instructions">Install instructions<a class="anchor" aria-label="anchor" href="#install-instructions"></a>
 </h3>
@@ -132,7 +137,7 @@ visualizations and some other packages to create various model fits.</p>
 </h3>
 <p>The data used in the following examples is simulated from the
 Friedman benchmark problem<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Friedman, Jerome H. (1991) Multivariate adaptive
-regression splines. The Annals of Statistics 19 (1), pages 1-67.&lt;/p&gt;"><sup>1</sup></a>. This benchmark problem is commonly used
+regression splines. The Annals of Statistics 19 (1), pages 1-67.&lt;/p&gt;"><sup>2</sup></a>. This benchmark problem is commonly used
 for testing purposes. The output is created according to the
 equation:</p>
 <center>
@@ -199,7 +204,7 @@ matrix that contains variable importance on the diagonal and variable
 interactions on the off-diagonal. To calculate the pair-wise interaction
 strength interactions Friedman’s model agnostic, unnormalized <span class="math inline">\(H\)</span>-Statistic<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Friedman, J. H. and Popescu, B. E. (2008). “Predictive
 learning via rule ensembles.” The Annals of Applied Statistics. JSTOR,
-916–54.&lt;/p&gt;"><sup>2</sup></a> is used. The
+916–54.&lt;/p&gt;"><sup>3</sup></a> is used. The
 unnormalized version of the <span class="math inline">\(H\)</span>-statistic was chosen to have a more
 direct comparison of interaction effects across pairs of variables and
 the results of <span class="math inline">\(H\)</span> are on the scale
@@ -208,7 +213,7 @@ embedded importance measure can be used or an agnostic permutation
 method<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Fisher A., Rudin C., Dominici F. (2018). All Models are
 Wrong but many are Useful: Variable Importance for Black-Box,
 Proprietary, or Misspecified Prediction Models, using Model Class
-Reliance. Arxiv.&lt;/p&gt;"><sup>3</sup></a>
+Reliance. Arxiv.&lt;/p&gt;"><sup>4</sup></a>
 can be selected (examples of which are shown below).</p>
 <p>The vivi function requires three inputs: a fitted machine learning
 model, a data frame used in the model’s training, and the name of the
@@ -240,7 +245,8 @@ use: <code>?vivid::vivi()</code></p>
 <span>                reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                class <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                predictFun <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                numPerm <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<span>                numPerm <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                showVimpError <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -261,7 +267,7 @@ al<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content=
 Ihaka, Claire D. McWhite, Paul Murrell, Reto Stauffer, and Claus O.
 Wilke. 2020. “Colorspace: A Toolbox for Manipulating and Assessing
 Colors and Palettes.” Journal of Statistical Software, Articles 96 (1):
-1–49&lt;/p&gt;"><sup>4</sup></a>.
+1–49&lt;/p&gt;"><sup>5</sup></a>.
 These palettes represent low and high VIVI values with low and high
 luminance colors, respectively, which can aid in highlighting pertinent
 values.</p>
@@ -420,13 +426,13 @@ the univariate and bivariate PDPs, we can see that <span class="math inline">\(x
 <p>The <code>pdpZen</code> function utilizes a space-saving technique
 based on graph Eulerians, introduced by Hierholzer and Wiener in 1873<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Hierholzer, Carl, and Chr Wiener. 1873. “Über Die
 möglichkeit, Einen Linienzug Ohne Wiederholung Und Ohne Unterbrechung Zu
-Umfahren.” Mathematische Annalen 6 (1): 30–32.&lt;/p&gt;"><sup>5</sup></a> to create
+Umfahren.” Mathematische Annalen 6 (1): 30–32.&lt;/p&gt;"><sup>6</sup></a> to create
 partial dependence plots. We refer to these plots as zen-partial
 dependence plots (ZPDP). These plots are based on zigzag expanded
 navigation plots, also known as zenplots, which are available in the
 zenplots package<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Hofert, Marius, and Wayne Oldford. 2020. “Zigzag
 Expanded Navigation Plots in R: The R Package zenplots.” Journal of
-Statistical Software 95 (4): 1–44.&lt;/p&gt;"><sup>6</sup></a>. Zenplots were designed to showcase paired
+Statistical Software 95 (4): 1–44.&lt;/p&gt;"><sup>7</sup></a>. Zenplots were designed to showcase paired
 graphs of high-dimensional data with a focus on the most significant 2D
 displays. In our version, we display bivariate PDPs that emphasize
 variables with the most significant interaction values in a compact
@@ -521,7 +527,7 @@ the Friedman data. The sorting method is defined by the
 calculations. <code>CVpredictfun</code> is a wrapper around
 <code>CVpredict</code> from the <code>condvis2</code> package<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Hurley, Catherine, Mark OConnell, and Katarina Domijan.
 2022. Condvis2: Interactive Conditional Visualization for Supervised and
-Unsupervised Models in Shiny.&lt;/p&gt;"><sup>7</sup></a>.
+Unsupervised Models in Shiny.&lt;/p&gt;"><sup>8</sup></a>.
 <code>CVpredict</code> accepts a broad range of fit classes thus
 streamlining the process of calculating variable importance and
 interactions.</p>
