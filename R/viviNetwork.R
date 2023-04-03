@@ -70,6 +70,10 @@ viviNetwork <- function(mat,
   # set the limits for importance
   if (is.null(impLims)) {
     impLimits <- range(dfImp$Value, na.rm = T)
+    if(impLimits[1] == impLimits[2]){
+      impLimits[1] <- impLimits[1]-(impLimits[1]/4)
+      impLimits[2] <- impLimits[2]+(impLimits[2]/4)
+    }
     impLimits <- range(labeling::rpretty(impLimits[1], impLimits[2]))
   } else {
     impLimits <- impLims
@@ -78,6 +82,10 @@ viviNetwork <- function(mat,
   # set the limits for interactions
   if (is.null(intLims)) {
     intLimits <- range(dfInt$Value)
+    if(intLimits[1] == intLimits[2]){
+      intLimits[1] <- intLimits[1]-(intLimits[1]/4)
+      intLimits[2] <- intLimits[2]+(intLimits[2]/4)
+    }
     intLimits <- range(labeling::rpretty(intLimits[1], intLimits[2]))
   } else {
     intLimits <- intLims
