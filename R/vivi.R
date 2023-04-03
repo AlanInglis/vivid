@@ -43,6 +43,7 @@
 #' library(ranger)
 #' rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 #' vivi(fit = rf, data = iris, response = "Species")
+#' vivi(fit = rf, data = iris, response = "Species", importance="impurity")
 #' }
 #' @export
 
