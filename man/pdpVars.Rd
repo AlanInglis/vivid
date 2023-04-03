@@ -59,7 +59,6 @@ Displays the individual conditional expectation (ICE) curves and aggregated part
 for each variable in a grid.
 }
 \examples{
-
 \donttest{
 # Load in the data:
 aq <- na.omit(airquality)

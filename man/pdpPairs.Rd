@@ -73,7 +73,7 @@ library(ranger)
 library(MASS)
 Boston1 <- Boston[, c(4:6, 8, 13:14)]
 Boston1$chas <- factor(Boston1$chas)
-fit <- ranger(medv~., data = Boston1, importance = "permutation")
+fit <- ranger(medv ~ ., data = Boston1, importance = "permutation")
 pdpPairs(Boston1[1:30, ], fit, "medv")
 pdpPairs(Boston1[1:30, ], fit, "medv", comboImage = TRUE)
 viv <- vivi(Boston1, fit, "medv")
