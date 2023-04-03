@@ -23,6 +23,8 @@
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param normalized Should Friedman's H-statistic be normalized or not. Default is FALSE.
 #' @param numPerm Number of permutations to preform. Default is 4.
+#' @param viewVimpError Logical. If TRUE, and `numPerm > 1` then a tibble containing the variable names, their importance values,
+#' and the standard error for each importance is printed to the console.
 #' @return A matrix of interaction values, with importance on the diagonal.
 #'
 #' @importFrom flashlight flashlight
@@ -60,7 +62,8 @@ vivi <- function(data,
                  class = 1,
                  predictFun = NULL,
                  normalized = FALSE,
-                 numPerm = 4) {
+                 numPerm = 4,
+                 showVimpError = FALSE) {
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) {
@@ -86,7 +89,8 @@ vivi <- function(data,
       response = response,
       importanceType = importanceType,
       predictFun = pFun1,
-      numPerm = numPerm
+      numPerm = numPerm,
+      showVimpError = showVimpError
     )
   } else {
     vImp <- vividImportance(
@@ -95,7 +99,8 @@ vivi <- function(data,
       response = response,
       importanceType = importanceType,
       predictFun = pFun,
-      numPerm = numPerm
+      numPerm = numPerm,
+      showVimpError = showVimpError
     )
   }
   vImp1 <- vector("numeric", length = ncol(data) - 1)
@@ -167,9 +172,16 @@ vividReorder <- function(d) {
 # vividImportance ---------------------------------------------------------
 
 # Main vImp function:
-vividImportance <- function(fit, data, response = NULL, importanceType = NULL, predictFun = NULL, numPerm = 4, ...) {
+vividImportance <- function(fit, data, response = NULL,
+                            importanceType = NULL,
+                            predictFun = NULL,
+                            numPerm = 4,
+                            showVimpError = FALSE, ...) {
   if (importanceType == "agnostic") {
-    vividImportance.default(fit, data, response = response, predictFun = predictFun, numPerm = 4, ...)
+    vividImportance.default(fit, data, response = response,
+                            predictFun = predictFun,
+                            numPerm = 4,
+                            showVimpError = FALSE, ...)
   } else {
     UseMethod("vividImportance", fit)
   }
@@ -185,7 +197,8 @@ vividImportance.default <- function(fit,
                                     response = NULL,
                                     importanceType = NULL,
                                     predictFun = NULL,
-                                    numPerm = 4) {
+                                    numPerm = 4,
+                                    showVimpError = FALSE) {
   message("Agnostic variable importance method used.")
 
 
@@ -206,6 +219,14 @@ vividImportance.default <- function(fit,
     imp <- light_importance(fl, m_repetitions = numPerm)
   )
 
+  if(showVimpError){
+    impDf <- imp$data[,c(3:5)]
+    names(impDf) <- c('Variable', 'Importance', 'Std_Error')
+    print(impDf)
+  }
+
+
+
   importance <- imp$data[, 3:4]
   if (any(is.nan(importance$value))) {
     importance$value <- 1
@@ -225,7 +246,8 @@ vividImportance.ranger <- function(fit,
                                    response = NULL,
                                    importanceType = NULL,
                                    predictFun = NULL,
-                                   numPerm = 4) {
+                                   numPerm = 4,
+                                   showVimpError = FALSE) {
   # If no importance mode selected, then default! Else, extract importance type
   if (fit$importance.mode == "none") {
     message("No variable importance mode selected.")
@@ -254,7 +276,8 @@ vividImportance.randomForest <- function(fit,
                                          response = NULL,
                                          importanceType = NULL,
                                          predictFun = NULL,
-                                         numPerm = 4) {
+                                         numPerm = 4,
+                                         showVimpError = FALSE) {
   fitImp <- dim(fit$importance)
   importanceData <- randomForest::importance(fit, scale = FALSE)
   st <- colnames(importanceData)
@@ -304,7 +327,8 @@ vividImportance.Learner <- function(fit,
                                     response = NULL,
                                     importanceType = NULL,
                                     predictFun = NULL,
-                                    numPerm = 4) {
+                                    numPerm = 4,
+                                    showVimpError = FALSE) {
   # if no importance mode selected, use default
   if (fit$packages == "ranger" && fit$model$importance.mode == "none") {
     message("No variable importance mode selected.")
@@ -345,7 +369,8 @@ vividImportance.WrappedModel <- function(fit,
                                          response = NULL,
                                          importanceType = NULL,
                                          predictFun = NULL,
-                                         numPerm = 4) {
+                                         numPerm = 4,
+                                         showVimpError = FALSE) {
   data <- as.data.frame(data)
 
   # get data names without response
@@ -394,7 +419,8 @@ vividImportance.model_fit <- function(fit,
                                       response = NULL,
                                       importanceType = NULL,
                                       predictFun = NULL,
-                                      numPerm = 4) {
+                                      numPerm = 4,
+                                      showVimpError = FALSE) {
   vImp <- vip::vi_model(fit, type = importanceType)
   vImp <- vImp[, 1:2]
   importance <- vImp$Importance

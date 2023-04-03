@@ -15,7 +15,8 @@ vivi(
   class = 1,
   predictFun = NULL,
   normalized = FALSE,
-  numPerm = 4
+  numPerm = 4,
+  showVimpError = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ Alternatively, set to equal "agnostic" (the default) to override embedded import
 \item{normalized}{Should Friedman's H-statistic be normalized or not. Default is FALSE.}
 
 \item{numPerm}{Number of permutations to preform. Default is 4.}
+
+\item{viewVimpError}{Logical. If TRUE, and \code{numPerm > 1} then a tibble containing the variable names, their importance values,
+and the standard error for each importance is printed to the console.}
 }
 \value{
 A matrix of interaction values, with importance on the diagonal.
@@ -66,6 +70,7 @@ viviHeatmap(m)
 library(ranger)
 rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
 vivi(fit = rf, data = iris, response = "Species")
+vivi(fit = rf, data = iris, response = "Species", importance="impurity")
 }
 }
 \references{
