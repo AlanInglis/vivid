@@ -44,7 +44,8 @@ Suggests:
     testthat (>= 3.0.0),
     labeling,
     zenplots,
-    covr
+    covr,
+    xgboost
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
