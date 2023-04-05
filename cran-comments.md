@@ -3,7 +3,6 @@
 
 0 errors | 0 warnings | 0 note
 
-* This is an update release concerning a change of maintainers email address.
+* This is an update release
 
-  Maintainer: 'Alan Inglis <alan.n.inglis@gmail.com>'
 
