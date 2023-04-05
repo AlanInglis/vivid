@@ -46,3 +46,4 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 docs
+vividVigplots
