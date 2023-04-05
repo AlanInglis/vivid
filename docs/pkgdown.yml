@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   vividVignette: vividVignette.html
-last_built: 2023-04-03T16:44Z
+last_built: 2023-04-05T15:05Z
 urls:
   reference: https://alaninglis.github.io/vivid/reference
   article: https://alaninglis.github.io/vivid/articles
