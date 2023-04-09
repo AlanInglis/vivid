@@ -2,7 +2,7 @@
 title: "vivid: Variable Importance and Variable Interaction Displays"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{bartMan}
+  %\VignetteIndexEntry{vivid}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
