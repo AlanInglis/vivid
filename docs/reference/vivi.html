@@ -89,9 +89,12 @@ and variable interaction on the off-diagonal.</p>
 
 
 <dt>importanceType</dt>
-<dd><p>One of either "%IncMSE" or "IncNodePurity" for use with randomForest regression.
-Or 'MeanDecreaseAccuracy' or  'MeanDecreaseGini' for classification.
-Alternatively, set to equal "agnostic" (the default) to override embedded importance measures and return agnostic importance values.</p></dd>
+<dd><p>Used to select the importance metric. By default, an agnostic importance
+measure is used. If an embedded metric is available, then setting this argument
+to the importance metric will use the selected importance values in the vivid-matrix.
+Please refer to the examples given for illustration.
+Alternatively, set to equal "agnostic" (the default) to override embedded importance measures and
+return agnostic importance values.</p></dd>
 
 
 <dt>nmax</dt>
@@ -152,27 +155,45 @@ and relates the interaction strength of a pair of variables to the total effect 
 <span class="r-in"><span><span class="fu"><a href="viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="vivi-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Select importance metric</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> randomForest 4.7-1.1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Type rfNews() to see new features/changes/bug fixes.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘randomForest’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:ranger’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     importance</span>
+<span class="r-in"><span><span class="va">rf1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ozone</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf1</span>, data <span class="op">=</span> <span class="va">aq</span>, response <span class="op">=</span> <span class="st">'Ozone'</span>,</span></span>
+<span class="r-in"><span>           importanceType <span class="op">=</span> <span class="st">'%IncMSE'</span><span class="op">)</span> <span class="co"># select %IncMSE as the importance measure</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> %IncMSE importance selected.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating interactions...</span>
+<span class="r-in"><span><span class="fu"><a href="viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="vivi-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/imbs-hl/ranger" class="external-link">ranger</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, importance <span class="op">=</span> <span class="st">"impurity"</span>, probability <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, data <span class="op">=</span> <span class="va">iris</span>, response <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, data <span class="op">=</span> <span class="va">iris</span>, response <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="co"># returns agnostic importance</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Agnostic variable importance method used.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating interactions...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Petal.Width Sepal.Length Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length    0.3441663   7.4631869   7.37252130  4.28165491</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width     7.4631869   0.2892991   7.31134161  4.41368068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length    7.3725213   7.3113416   0.02596577  3.68412288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width     4.2816549   4.4136807   3.68412288  0.01368244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Width Petal.Length Sepal.Length Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    0.3199185     8.096256   7.72883962  5.50293057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length   8.0962555     0.317892   7.74784704  5.56746915</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length   7.7288396     7.747847   0.02727271  4.92049749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width    5.5029306     5.567469   4.92049749  0.01306665</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vivid"  "matrix" "array" </span>
-<span class="r-in"><span><span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, data <span class="op">=</span> <span class="va">iris</span>, response <span class="op">=</span> <span class="st">"Species"</span>, importance<span class="op">=</span><span class="st">"impurity"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, data <span class="op">=</span> <span class="va">iris</span>, response <span class="op">=</span> <span class="st">"Species"</span>,</span></span>
+<span class="r-in"><span>     importanceType <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span> <span class="co"># returns selected 'impurity' importance.</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Embedded impurity variable importance method used.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating interactions...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Petal.Width Sepal.Length Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length    44.367067    7.976940     7.500113    5.225548</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width      7.976940   41.394998     7.429052    5.392784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length     7.500113    7.429052     8.499902    3.981258</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width      5.225548    5.392784     3.981258    1.378777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Width Petal.Length Sepal.Length Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    44.366696     8.146517     7.592112    5.356899</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length    8.146517    41.019282     7.614735    5.365701</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length    7.592112     7.614735     8.761284    4.231300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width     5.356899     5.365701     4.231300    1.438255</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vivid"  "matrix" "array" </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
