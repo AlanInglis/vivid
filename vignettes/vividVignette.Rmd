@@ -159,6 +159,9 @@ viviRf  <- vivi(fit = rf,
 
 # Section 2: Visualizing the results
 
+NOTE: If viewing this vignette from the vivid CRAN page, then some
+images may not format correctly. It is recommended to view this vignette via the following link: https://alaninglis.github.io/vivid/articles/vividVignette.html
+
 ### Heatmap plot
 
 The `viviHeatmap` function generates a heatmap that displays variable importance and interactions, with importance values on the diagonal and interaction values on the off-diagonal. The function only requires a `vivid` matrix as input, which does not need to be symmetrical. Additionally, color palettes can be specified for both importance and interactions via the `impPal` and `intPal` arguments. By default, we have opted for single-hue, color-blind friendly sequential color palettes developed by Zeileis et al^[Zeileis, Achim, Jason C. Fisher, Kurt Hornik, Ross Ihaka, Claire D. McWhite, Paul Murrell, Reto Stauffer, and Claus O. Wilke. 2020. “Colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes.” Journal of Statistical Software, Articles 96 (1): 1–49]. These palettes represent low and high VIVI values with low and high luminance colors, respectively, which can aid in highlighting pertinent values.
