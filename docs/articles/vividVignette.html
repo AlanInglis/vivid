@@ -181,18 +181,11 @@ by the above equation, the only interaction is between <span class="math inline"
 <div class="section level3">
 <h3 id="model-fit">Model fit<a class="anchor" aria-label="anchor" href="#model-fit"></a>
 </h3>
-<p>Here we create two model fits. We create a random forest fit from the
+<p>Here we fit the model. We create a random forest fit from the
 <code>randomForest</code> package.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>Note that for a <code>randomForest</code> model, if
-<code>importance = TRUE</code>, then multiple importance metrics are
-returned. In order to choose a specific metric for use with
-<code>vivid</code>, it is necessary to specify one of the importance
-metrics returned by the random forest as the argument for the
-<code>importanceType</code> parameter in the <code>vivi</code> function
-(as shown below).</p>
+<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="vivi-function">vivi function<a class="anchor" aria-label="anchor" href="#vivi-function"></a>
@@ -209,19 +202,22 @@ unnormalized version of the <span class="math inline">\(H\)</span>-statistic was
 direct comparison of interaction effects across pairs of variables and
 the results of <span class="math inline">\(H\)</span> are on the scale
 of the response (for regression). For the importance, either a selected
-embedded importance measure can be used or an agnostic permutation
-method<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Fisher A., Rudin C., Dominici F. (2018). All Models are
+embedded importance measure can be used (as seen in section 4) or an
+agnostic permutation method<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Fisher A., Rudin C., Dominici F. (2018). All Models are
 Wrong but many are Useful: Variable Importance for Black-Box,
 Proprietary, or Misspecified Prediction Models, using Model Class
-Reliance. Arxiv.&lt;/p&gt;"><sup>4</sup></a>
-can be selected (examples of which are shown below).</p>
+Reliance. Arxiv.&lt;/p&gt;"><sup>4</sup></a> can be selected.</p>
 <p>The vivi function requires three inputs: a fitted machine learning
 model, a data frame used in the model’s training, and the name of the
 response variable for the fit. The resulting matrix will have importance
 and interaction values for all variables in the data frame, excluding
-the response variable.</p>
+the response variable. By default, if no embedded variable importance
+method is available or selected, an agnostic permutation method is
+applied. For clarity, this is shown in the
+<code>importanceType = 'agnostic'</code> argument below. For an example
+of using embedded methods, see Section 4.</p>
 <p>Any variables that are not used by the supplied model will have their
-importance and interaction values set to <code>NA</code>. While the
+importance and interaction values set to zero. While the
 <code>viviHeatmap</code> and <code>viviNetwork</code> visualization
 functions (seen below) are tailored for displaying the results of vivi
 calculations, they can also work with any square matrix that has
@@ -240,10 +236,9 @@ use: <code>?vivid::vivi()</code></p>
 <span>                data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>                response <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>                gridSize <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                importanceType <span class="op">=</span> <span class="st">"%IncMSE"</span>,</span>
+<span>                importanceType <span class="op">=</span> <span class="st">"agnostic"</span>,</span>
 <span>                nmax <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>                reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                class <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                predictFun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                numPerm <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>                showVimpError <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
@@ -351,16 +346,47 @@ fit using custom layout.
 model fit, we can cluster variables together using the
 <code>cluster</code> argument. This argument can either accept a vector
 of cluster memberships for nodes or an <code>igraph</code> package
-clustering function.</p>
+clustering function. In the following example, we manually select
+variables with VIVI values in the top 20%. This selection allows us to
+focus only on the variables with the most impact on the response. The
+variables that remain are <span class="math inline">\(x1\)</span> to
+<span class="math inline">\(x5\)</span>. We then perform a hierarchical
+clustering treating variable interactions as similarities, with the goal
+of grouping together high-interaction variables. Here we manually select
+the number of groups we want to show via the <code>cutree</code>
+function (which cuts clustered data into a desired number of groups).
+Finally we rearrange the layout using <code>igraph</code>. Here,
+<code><a href="https://rdrr.io/pkg/igraph/man/layout_as_star.html" class="external-link">igraph::layout_as_star</a></code> places the first variable (deemed
+most relevant using the VIVI seriation process) at the center, which in
+Figure 5 emphasizes its key role as the most important predictor which
+also has the strongest interactions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviRf</span>, cluster <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/cluster_fast_greedy.html" class="external-link">cluster_fast_greedy</a></span><span class="op">)</span></span></code></pre></div>
-<img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfnet_cluster.png" width="70%" style="display: block; margin: auto;"><center>
+<span><span class="co"># clustered and filtered network for rf</span></span>
+<span><span class="va">intVals</span> <span class="op">&lt;-</span> <span class="va">viviRf</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span> </span>
+<span></span>
+<span></span>
+<span><span class="co"># select VIVI values in top 20%</span></span>
+<span><span class="va">impTresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span>,<span class="fl">.8</span><span class="op">)</span></span>
+<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">intVals</span>,<span class="fl">.8</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">impTresh</span> <span class="op">|</span></span>
+<span>              <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">1</span>, <span class="va">max</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">intThresh</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"single"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span>,</span>
+<span>            cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">h</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="co"># specify number of groups</span></span>
+<span>            layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/igraph/man/layout_as_star.html" class="external-link">layout_as_star</a></span><span class="op">)</span></span></code></pre></div>
+<img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfnet_cluster.png" width="80%" style="display: block; margin: auto;"><center>
 <caption>
 <span id="fig5:fig5">Figure 5: </span>Clustered network plot of a random
 forest fit.
 </caption>
 </center>
+<p>In Figure 5, after applying a hierarchical clustering, we can see the
+strongest mutual interactions have been grouped together. Namley; <span class="math inline">\(x1\)</span>, <span class="math inline">\(x2\)</span>, and <span class="math inline">\(x4\)</span>. The remaining variables are
+individually clustered.</p>
 </div>
 <div class="section level4">
 <h4 id="univariate-partial-dependence-plot">Univariate Partial Dependence Plot<a class="anchor" aria-label="anchor" href="#univariate-partial-dependence-plot"></a>
@@ -371,13 +397,16 @@ in the identification of linear or non-linear effects. The fit, data
 frame used to train the model, and the name of the response variable are
 required inputs.</p>
 <p>In the example below, we select the first five variables from our
-created <code>vivid</code> matrix to display.</p>
+created <code>vivid</code> matrix to display and set the number of ICE
+curves to be displayed to be 100, via the <code>nIce</code>
+argument.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="fu"><a href="../reference/pdpVars.html">pdpVars</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>,</span>
 <span>        fit <span class="op">=</span> <span class="va">rf</span>,</span>
 <span>        response <span class="op">=</span> <span class="st">'y'</span>,</span>
-<span>        vars <span class="op">=</span> <span class="va">top5</span><span class="op">)</span></span></code></pre></div>
+<span>        vars <span class="op">=</span> <span class="va">top5</span>,</span>
+<span>        nIce <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfpdp.png" width="100%" style="display: block; margin: auto;"><center>
 <caption>
 <span id="fig6:fig6">Figure 6: </span>Partial dependence plots (black
@@ -572,7 +601,48 @@ Friedman data.
 </center>
 </div>
 <div class="section level2">
-<h2 id="section-4-classification-example">Section 4: Classification example<a class="anchor" aria-label="anchor" href="#section-4-classification-example"></a>
+<h2 id="section-4-using-different-importance-metrics">Section 4: Using different importance metrics<a class="anchor" aria-label="anchor" href="#section-4-using-different-importance-metrics"></a>
+</h2>
+<p>In the following we show examples of how to select different
+(embedded) importance metrics for use with the <code>vivi</code>
+function. To illustrate the process we use a random forest model fit
+using the <code>randomForest</code> and <code>ranger</code>
+packages.</p>
+<p>To begin we fit the <code>randomForest</code> model.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>Note that for a <code>randomForest</code> model, if the argument
+<code>importance = TRUE</code>, then multiple importance metrics are
+returned. In this case, as we have a regression random forest, the
+returned importance metrics are the percent increase in mean squared
+error (%IncMSE) and the increase in node purity (IncNodePurity). In
+order to choose a specific metric for use with <code>vivid</code>, it is
+necessary to specify one of the importance metrics returned by the
+random forest as the argument for the <code>importanceType</code>
+parameter in the <code>vivi</code> function. In the code below we select
+the %IncMSE as the importance metric.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">viviRfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rfEmbedded</span>, </span>
+<span>                       data <span class="op">=</span> <span class="va">myData</span>, </span>
+<span>                       response <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>                       importanceType <span class="op">=</span> <span class="st">"%IncMSE"</span><span class="op">)</span></span></code></pre></div>
+<p>For a <code>ranger</code> random forest model, the importance metric
+must be specified when fitting the model. In the code below, we select
+the <code>impurity</code> as the importance metric.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rang</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="st">'impurity'</span><span class="op">)</span></span></code></pre></div>
+<p>Then when calling the <code>vivi</code> function, the
+<code>importanceType</code> argument is set to the same selected
+importance metric.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">viviRangEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rang</span>, </span>
+<span>                         data <span class="op">=</span> <span class="va">myData</span>, </span>
+<span>                         response <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>                         importanceType <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="section-5-classification-example">Section 5: Classification example<a class="anchor" aria-label="anchor" href="#section-5-classification-example"></a>
 </h2>
 <p>In this section, we briefly describe how to apply the above
 visualisations to a classification example using the <code>iris</code>
@@ -580,7 +650,7 @@ data set.</p>
 <p>To begin we fit a <code>ranger</code> random forest model with
 “Species” as the response and create the vivi matrix setting the
 category for classification to be “setosa” using <code>class</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>                    importance <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span>
@@ -594,7 +664,7 @@ category for classification to be “setosa” using <code>class</code>.</p>
 <span>                     reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                     class <span class="op">=</span> <span class="st">"setosa"</span><span class="op">)</span></span></code></pre></div>
 <p>Next we plot the heatmap and network plot of the iris data.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/classifVIVI.png" width="100%" style="display: block; margin: auto;"><center>
@@ -607,7 +677,7 @@ in (b) of random forest fit on the iris data
 extrapolate where there is no data. To solve this issue we calculate a
 convex hull around the data and remove any points that fall outside the
 convex hull, as shown below.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">iris</span>, </span>
 <span>         fit <span class="op">=</span> <span class="va">rfClassif</span>, </span>
