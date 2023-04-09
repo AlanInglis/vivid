@@ -28,9 +28,12 @@ vivi(
 
 \item{gridSize}{The size of the grid for evaluating the predictions.}
 
-\item{importanceType}{One of either "\%IncMSE" or "IncNodePurity" for use with randomForest regression.
-Or 'MeanDecreaseAccuracy' or  'MeanDecreaseGini' for classification.
-Alternatively, set to equal "agnostic" (the default) to override embedded importance measures and return agnostic importance values.}
+\item{importanceType}{Used to select the importance metric. By default, an agnostic importance
+measure is used. If an embedded metric is available, then setting this argument
+to the importance metric will use the selected importance values in the vivid-matrix.
+Please refer to the examples given for illustration.
+Alternatively, set to equal "agnostic" (the default) to override embedded importance measures and
+return agnostic importance values.}
 
 \item{nmax}{Maximum number of data rows to consider. Default is 500. Use all rows if NULL.}
 
@@ -66,11 +69,19 @@ f <- lm(Ozone ~ ., data = aq)
 m <- vivi(fit = f, data = aq, response = "Ozone") # as expected all interactions are zero
 viviHeatmap(m)
 
+# Select importance metric
+library(randomForest)
+rf1 <- randomForest(Ozone~., data = aq, importance = TRUE)
+m2 <- vivi(fit = rf1, data = aq, response = 'Ozone',
+           importanceType = '\%IncMSE') # select \%IncMSE as the importance measure
+viviHeatmap(m2)
+
 \donttest{
 library(ranger)
 rf <- ranger(Species ~ ., data = iris, importance = "impurity", probability = TRUE)
-vivi(fit = rf, data = iris, response = "Species")
-vivi(fit = rf, data = iris, response = "Species", importance="impurity")
+vivi(fit = rf, data = iris, response = "Species") # returns agnostic importance
+vivi(fit = rf, data = iris, response = "Species",
+     importanceType = "impurity") # returns selected 'impurity' importance.
 }
 }
 \references{
