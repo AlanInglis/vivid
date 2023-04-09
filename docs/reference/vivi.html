@@ -12,7 +12,7 @@ and variable interaction on the off-diagonal."><!-- mathjax --><script src="http
     
     <a class="navbar-brand me-2" href="../index.html">vivid</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -178,11 +178,11 @@ and relates the interaction strength of a pair of variables to the total effect 
 <span class="r-in"><span><span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, data <span class="op">=</span> <span class="va">iris</span>, response <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="co"># returns agnostic importance</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Agnostic variable importance method used.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating interactions...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Width Petal.Length Sepal.Length Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    0.3199185     8.096256   7.72883962  5.50293057</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length   8.0962555     0.317892   7.74784704  5.56746915</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length   7.7288396     7.747847   0.02727271  4.92049749</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width    5.5029306     5.567469   4.92049749  0.01306665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Petal.Width Sepal.Length Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length    0.3203924   8.0141013    7.5504394  4.14239994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width     8.0141013   0.3046451    7.3338698  3.95607475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length    7.5504394   7.3338698    0.0207133  3.36906038</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width     4.1423999   3.9560747    3.3690604  0.01089113</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vivid"  "matrix" "array" </span>
 <span class="r-in"><span><span class="fu">vivi</span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, data <span class="op">=</span> <span class="va">iris</span>, response <span class="op">=</span> <span class="st">"Species"</span>,</span></span>
@@ -190,10 +190,10 @@ and relates the interaction strength of a pair of variables to the total effect 
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Embedded impurity variable importance method used.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating interactions...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Width Petal.Length Sepal.Length Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    44.366696     8.146517     7.592112    5.356899</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length    8.146517    41.019282     7.614735    5.365701</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length    7.592112     7.614735     8.761284    4.231300</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width     5.356899     5.365701     4.231300    1.438255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    41.866473     8.020925     7.857190    4.156117</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length    8.020925    44.052601     8.144179    4.311835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length    7.857190     8.144179     8.387895    3.727074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width     4.156117     4.311835     3.727074    1.263539</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vivid"  "matrix" "array" </span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
