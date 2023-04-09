@@ -129,12 +129,12 @@ rf <- randomForest(y ~ ., data = myData)
 
 
 To utilize `vivid`, the initial step involves computing variable importance and interactions for a fitted model. The vivi function performs this calculation, producing a square, symmetrical matrix that contains variable importance on the diagonal and variable interactions on the off-diagonal. To calculate the pair-wise interaction strength interactions Friedman's model agnostic, unnormalized $H$-Statistic^[Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.] is used. 
-The unnormalized version of the $H$-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of $H$ are on the scale of the response (for regression). For the importance, either a selected embedded importance measure can be used (as seen in section 5) or an agnostic permutation method^[Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.] can be selected. 
+The unnormalized version of the $H$-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of $H$ are on the scale of the response (for regression). For the importance, either a selected embedded importance measure can be used (as seen in section 4) or an agnostic permutation method^[Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.] can be selected. 
 
 
 
 
-The vivi function requires three inputs: a fitted machine learning model, a data frame used in the model's training, and the name of the response variable for the fit. The resulting matrix will have importance and interaction values for all variables in the data frame, excluding the response variable. By default, if no embedded variable importance method is available or selected, an agnostic permutation method is applied. For clarity, this is shown in the `importanceType = 'agnostic'` argument below. For an example of using embedded methods, see Section 5.
+The vivi function requires three inputs: a fitted machine learning model, a data frame used in the model's training, and the name of the response variable for the fit. The resulting matrix will have importance and interaction values for all variables in the data frame, excluding the response variable. By default, if no embedded variable importance method is available or selected, an agnostic permutation method is applied. For clarity, this is shown in the `importanceType = 'agnostic'` argument below. For an example of using embedded methods, see Section 4.
 
 Any variables that are not used by the supplied model will have their importance and interaction values set to zero. While the `viviHeatmap` and `viviNetwork` visualization functions (seen below) are tailored for displaying the results of vivi calculations, they can also work with any square matrix that has identical row and column names. (Note, the symmetry assumption is not required for `viviHeatmap` and `viviNetwork` uses interaction values from the lower-triangular part of the matrix only.)
 
@@ -427,7 +427,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 </center>
 
 
-# Section 5: Using different importance metrics
+# Section 4: Using different importance metrics
 
 In the following we show examples of how to select different (embedded) importance metrics for use with the `vivi` function.  To illustrate the process we use a random forest model fit using the `randomForest` and `ranger` packages. 
 
@@ -462,7 +462,7 @@ viviRangEmbedded <- vivi(fit = rang,
                          importanceType = "impurity")
 ```
 
-# Section 4: Classification example
+# Section 5: Classification example
   
 In this section, we briefly describe how to apply the above visualisations to a classification example using the `iris` data set. 
 
