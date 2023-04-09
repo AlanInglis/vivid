@@ -118,26 +118,25 @@ myData <- genFriedman(noFeatures = 9, noSamples = 350, sigma = 1)
 
 ## Model fit 
 
-Here we create two model fits. We create a random forest fit from the `randomForest` package. 
+Here we fit the model. We create a random forest fit from the `randomForest` package. 
 
 ```{r, eval = FALSE}
 set.seed(1701)
-rf <- randomForest(y ~ ., data = myData, importance = TRUE)
+rf <- randomForest(y ~ ., data = myData)
 ```
-Note that for a `randomForest` model, if `importance = TRUE`, then multiple importance metrics are returned. In order to choose a specific metric for use with `vivid`, it is necessary to specify one of the importance metrics returned by the random forest as the argument for the `importanceType` parameter in the `vivi` function (as shown below).
 
 ## vivi function 
 
 
 To utilize `vivid`, the initial step involves computing variable importance and interactions for a fitted model. The vivi function performs this calculation, producing a square, symmetrical matrix that contains variable importance on the diagonal and variable interactions on the off-diagonal. To calculate the pair-wise interaction strength interactions Friedman's model agnostic, unnormalized $H$-Statistic^[Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.] is used. 
-The unnormalized version of the $H$-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of $H$ are on the scale of the response (for regression). For the importance, either a selected embedded importance measure can be used or an agnostic permutation method^[Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.] can be selected (examples of which are shown below). 
+The unnormalized version of the $H$-statistic was chosen to have a more direct comparison of interaction effects across pairs of variables and the results of $H$ are on the scale of the response (for regression). For the importance, either a selected embedded importance measure can be used (as seen in section 5) or an agnostic permutation method^[Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.] can be selected. 
 
 
 
 
-The vivi function requires three inputs: a fitted machine learning model, a data frame used in the model's training, and the name of the response variable for the fit. The resulting matrix will have importance and interaction values for all variables in the data frame, excluding the response variable. 
+The vivi function requires three inputs: a fitted machine learning model, a data frame used in the model's training, and the name of the response variable for the fit. The resulting matrix will have importance and interaction values for all variables in the data frame, excluding the response variable. By default, if no embedded variable importance method is available or selected, an agnostic permutation method is applied. For clarity, this is shown in the `importanceType = 'agnostic'` argument below. For an example of using embedded methods, see Section 5.
 
-Any variables that are not used by the supplied model will have their importance and interaction values set to `NA`. While the `viviHeatmap` and `viviNetwork` visualization functions (seen below) are tailored for displaying the results of vivi calculations, they can also work with any square matrix that has identical row and column names. (Note, the symmetry assumption is not required for `viviHeatmap` and `viviNetwork` uses interaction values from the lower-triangular part of the matrix only.)
+Any variables that are not used by the supplied model will have their importance and interaction values set to zero. While the `viviHeatmap` and `viviNetwork` visualization functions (seen below) are tailored for displaying the results of vivi calculations, they can also work with any square matrix that has identical row and column names. (Note, the symmetry assumption is not required for `viviHeatmap` and `viviNetwork` uses interaction values from the lower-triangular part of the matrix only.)
 
 This function works with multiple model fits and results in a matrix which can be supplied to the plotting functions. The predict function argument uses `condvis2::CVpredict` by default, which works for many fit classes. To see a description of all function arguments use: `?vivid::vivi()`
 
@@ -148,10 +147,9 @@ viviRf  <- vivi(fit = rf,
                 data = myData, 
                 response = "y",
                 gridSize = 50,
-                importanceType = "%IncMSE",
+                importanceType = "agnostic",
                 nmax = 500,
                 reorder = TRUE,
-                class = 1,
                 predictFun = NULL,
                 numPerm = 4,
                 showVimpError = FALSE)
@@ -227,34 +225,52 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <caption><span id="fig4:fig4">Figure 4: </span>Network plot of a random forest fit using custom layout.</caption>
  </center>
   
-Finally, for the network plot to highlight any relationships in the model fit, we can cluster variables together using the `cluster` argument. This argument can either accept a vector of cluster memberships for nodes or an `igraph` package clustering function.
+Finally, for the network plot to highlight any relationships in the model fit, we can cluster variables together using the `cluster` argument. This argument can either accept a vector of cluster memberships for nodes or an `igraph` package clustering function. In the following example, we manually select variables with VIVI values in the top 20\%. This selection allows us to focus only on the variables with the most impact on the response. The variables that remain are $x1$ to $x5$. We then perform a hierarchical clustering treating variable interactions as similarities, with the goal of grouping together high-interaction variables. Here we manually select the number of groups we want to show via the `cutree` function (which cuts clustered data into a desired number of groups). Finally we rearrange the layout using `igraph`. Here, `igraph::layout_as_star` places the first variable (deemed most relevant using the VIVI seriation process) at the center, which in Figure 5 emphasizes its key role as the most important predictor which also has the strongest interactions.
 
 ```{r, eval = FALSE}
 set.seed(1701)
-viviNetwork(mat = viviRf, cluster = igraph::cluster_fast_greedy)
+# clustered and filtered network for rf
+intVals <- viviRf
+diag(intVals) <- NA 
+
+
+# select VIVI values in top 20%
+impTresh <- quantile(diag(viviRf),.8)
+intThresh <- quantile(intVals,.8,na.rm=TRUE)
+sv <- which(diag(viviRf) > impTresh |
+              apply(intVals, 1, max, na.rm=TRUE) > intThresh)
+
+h <- hclust(-as.dist(viviRf[sv,sv]), method="single")
+
+viviNetwork(viviRf[sv,sv],
+            cluster = cutree(h, k = 3), # specify number of groups
+            layout = igraph::layout_as_star)
 ```
 
 
-```{r, echo = F,  out.width = '70%', fig.align='center'}
+```{r, echo = F,  out.width = '80%', fig.align='center'}
 knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfnet_cluster.png")
 ```
 <center>
 <caption><span id="fig5:fig5">Figure 5: </span>Clustered network plot of a random forest fit.</caption>
 </center>
+
+In Figure 5, after applying a hierarchical clustering, we can see the strongest mutual interactions have been grouped together. Namley; $x1$, $x2$, and $x4$. The remaining variables are individually clustered. 
   
   
 ### Univariate Partial Dependence Plot
   
 The `pdpVars` function constructs a grid of univariate PDPs with ICE curves for selected variables. We use ICE curves to assist in the identification of linear or non-linear effects. The fit, data frame used to train the model, and the name of the response variable are required inputs.
 
-In the example below, we select the first five variables from our created `vivid` matrix to display.
+In the example below, we select the first five variables from our created `vivid` matrix to display and set the number of ICE curves to be displayed to be 100, via the `nIce` argument.
 
 ```{r, eval = FALSE}
 top5 <- colnames(viviRf)[1:5]
 pdpVars(data = myData,
         fit = rf,
         response = 'y',
-        vars = top5)
+        vars = top5,
+        nIce = 100)
 ```
 
 
@@ -409,7 +425,43 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <center>
 <caption><span id="fig11:fig11">Figure 11: </span>Heatmap for the GBM fit on the Friedman data.</caption>
 </center>
+
+
+# Section 5: Using different importance metrics
+
+In the following we show examples of how to select different (embedded) importance metrics for use with the `vivi` function.  To illustrate the process we use a random forest model fit using the `randomForest` and `ranger` packages. 
+
+To begin we fit the `randomForest` model.
+
+```{r, eval = FALSE}
+set.seed(1701)
+rfEmbedded <- randomForest(y ~ ., data = myData, importance = TRUE)
+```
   
+Note that for a `randomForest` model, if the argument `importance = TRUE`, then multiple importance metrics are returned. In this case, as we have a regression random forest, the returned importance metrics are the percent increase in mean squared error (\%IncMSE) and the increase in node purity (IncNodePurity). In order to choose a specific metric for use with `vivid`, it is necessary to specify one of the importance metrics returned by the random forest as the argument for the `importanceType` parameter in the `vivi` function. In the code below we select the \%IncMSE as the importance metric. 
+
+```{r, eval = FALSE}
+viviRfEmbedded <- vivi(fit = rfEmbedded, 
+                       data = myData, 
+                       response = "y",
+                       importanceType = "%IncMSE")
+```
+  
+For a `ranger` random forest model, the importance metric must be specified when fitting the model. In the code below, we select the `impurity` as the importance metric.
+
+```{r, eval = FALSE}
+rang <- ranger(y~., data = myData, importance = 'impurity')
+```
+
+Then when calling the `vivi` function, the `importanceType` argument is set to the same selected importance metric. 
+
+```{r, eval = FALSE}
+viviRangEmbedded <- vivi(fit = rang, 
+                         data = myData, 
+                         response = "y",
+                         importanceType = "impurity")
+```
+
 # Section 4: Classification example
   
 In this section, we briefly describe how to apply the above visualisations to a classification example using the `iris` data set. 
