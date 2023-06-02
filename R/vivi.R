@@ -25,7 +25,7 @@
 #' @param class Category for classification, a factor level, or a number indicating which factor level.
 #' @param predictFun Function of (fit, data) to extract numeric predictions from fit. Uses condvis2::CVpredict by default, which works for many fit classes.
 #' @param normalized Should Friedman's H-statistic be normalized or not. Default is FALSE.
-#' @param numPerm Number of permutations to preform. Default is 4.
+#' @param numPerm Number of permutations to perform for agnostic importance. Default is 4.
 #' @param showVimpError Logical. If TRUE, and `numPerm > 1` then a tibble containing the variable names, their importance values,
 #' and the standard error for each importance is printed to the console.
 #' @return A matrix of interaction values, with importance on the diagonal.
@@ -225,27 +225,25 @@ vividImportance.default <- function(fit,
   )
 
 
-
-
-  # extract importance
+  # Extract importance
   suppressWarnings(
     imp <- light_importance(fl, m_repetitions = numPerm)
   )
+  # Column names and order in imp$data:
+  #   label  metric  variable  value  error  (flashlight < 1.0.0)
+  #   label_ metric_ variable_ value_ error_ (flashlight >=1.0.0)
+  impDf <- imp$data[, 3:5]
+  names(impDf) <- c('Variable', 'Importance', 'Std_Error')
 
-  if(showVimpError){
-    impDf <- imp$data[,c(3:5)]
-    names(impDf) <- c('Variable', 'Importance', 'Std_Error')
+  if(showVimpError) {
     print(impDf)
   }
 
-
-
-  importance <- imp$data[, 3:4]
-  if (any(is.nan(importance$value))) {
-    importance$value <- 1
+  if (any(is.nan(impDf$Importance))) {
+    impDf$Importance <- 1
     message("Flashlight importance works for numeric and numeric binary response only; setting importance to 1.")
   }
-  importance <- setNames(importance$value, as.character(importance$variable)) # turn into named vector
+  importance <- setNames(impDf$Importance, as.character(impDf$Variable)) # turn into named vector
 
   return(importance)
 }
@@ -513,14 +511,21 @@ vividInteraction.default <- function(fit,
     normalize = normalized, n_max = nmax
   )$data
 
+  # Column names and order in res:
+  #   label  variable  value  error  (flashlight < 1.0.0)
+  #   label_ variable_ value_ error_ (flashlight >=1.0.0)
+
+  variable <- res[[2L]]
+  value <- res[[3L]]
+
   # reorder
-  res[["variable"]] <- reorder(res[["variable"]], res[["value"]])
+  variable <- reorder(variable, value)
 
   # create matrix of values
-  vars2 <- t(simplify2array(strsplit(as.character(res[["variable"]]), ":"))) # split/get feature names
+  vars2 <- t(simplify2array(strsplit(as.character(variable), ":"))) # split/get feature names
   mat <- matrix(0, length(ovars), length(ovars)) # create matrix
   rownames(mat) <- colnames(mat) <- ovars # set names
-  mat[vars2] <- res[["value"]] # set values
+  mat[vars2] <- value # set values
   mat[lower.tri(mat)] <- t(mat)[lower.tri(mat)]
   return(mat)
 }
