@@ -187,12 +187,14 @@ vividImportance <- function(fit, data, response = NULL,
                             importanceType = NULL,
                             predictFun = NULL,
                             numPerm = 4,
-                            showVimpError = FALSE, ...) {
+                            showVimpError = FALSE,
+                            ...) {
   if (importanceType == "agnostic") {
     vividImportance.default(fit, data, response = response,
                             predictFun = predictFun,
                             numPerm = 4,
-                            showVimpError = FALSE, ...)
+                            showVimpError = FALSE,
+                            ...)
   } else {
     UseMethod("vividImportance", fit)
   }
