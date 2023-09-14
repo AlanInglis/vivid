@@ -4,71 +4,84 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="vivid">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vivid: Variable Importance and Variable Interaction Displays • vivid</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="vivid: Variable Importance and Variable Interaction Displays">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="vivid: Variable Importance and Variable Interaction Displays">
 <meta property="og:description" content="vivid">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
-    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
+<body data-spy="scroll" data-target="#toc">
+    <div class="container template-article">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">vivid</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.8</span>
+      </span>
+    </div>
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
-    <a class="navbar-brand me-2" href="../index.html">vivid</a>
-
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.8</small>
-
-    
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+<li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
 </li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/vividVignette.html">vivid: Variable Importance and Variable Interaction Displays</a>
-  </div>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/vividVignette.html">vivid: Variable Importance and Variable Interaction Displays</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav"></ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
-
-    
+<!--/.nav-collapse -->
   </div>
-</nav><div class="container template-article">
+<!--/.container -->
+</div>
+<!--/.navbar -->
 
+      
 
-
-
-<div class="row">
-  <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>vivid: Variable Importance and Variable Interaction Displays</h1>
+      </header><script src="vividVignette_files/header-attrs-2.24/header-attrs.js"></script><div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header toc-ignore">
+      <h1 data-toc-skip>vivid: Variable Importance and Variable
+Interaction Displays</h1>
             
       
       
-      <div class="d-none name"><code>vividVignette.Rmd</code></div>
+      <div class="hidden name"><code>vividVignette.Rmd</code></div>
+
     </div>
 
     
@@ -79,12 +92,12 @@ img {
   border: 0;
   }
 </style>
-<div class="section level2">
-<h2 id="section-1-introduction">Section 1: Introduction<a class="anchor" aria-label="anchor" href="#section-1-introduction"></a>
-</h2>
-<div class="section level3">
-<h3 id="introduction-to-vivid">Introduction to vivid<a class="anchor" aria-label="anchor" href="#introduction-to-vivid"></a>
-</h3>
+<div id="section-1-introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-1-introduction" class="anchor"></a>Section 1: Introduction</h2>
+<div id="introduction-to-vivid" class="section level3">
+<h3 class="hasAnchor">
+<a href="#introduction-to-vivid" class="anchor"></a>Introduction to vivid</h3>
 <!-- badges: start -->
 <p><img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew2.png" width="240" height="276" align="right"><!-- badges: end --></p>
 <p>Variable importance (VImp), variable interaction measures (VInt) and
@@ -106,9 +119,9 @@ and VInt together, we use the shorthand VIVI. For more information
 related to visualising variable importance and interactions in machine
 learning models see our published work[1].</p>
 </div>
-<div class="section level3">
-<h3 id="install-instructions">Install instructions<a class="anchor" aria-label="anchor" href="#install-instructions"></a>
-</h3>
+<div id="install-instructions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#install-instructions" class="anchor"></a>Install instructions</h3>
 <p>Some of the plots used by <code>vivid</code> are built upon the
 <code>zenplots</code> package which requires the <code>graph</code>
 package from BioConductor. To install the <code>graph</code> and
@@ -124,20 +137,20 @@ package in R with the commands:</p>
 <code>remotes::install_github('AlanInglis/vividPackage')</code></p>
 <p>We then load the <code>vivid</code> package via:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://alaninglis.github.io/vivid/">vivid</a></span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://alaninglis.github.io/vivid/">vivid</a></span><span class="op">)</span> </span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-2-background">Section 2: Background<a class="anchor" aria-label="anchor" href="#section-2-background"></a>
-</h2>
+<div id="section-2-background" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-2-background" class="anchor"></a>Section 2: Background</h2>
 <p>VIVI metrics can be categorized into two types: those that are
 model-specific (embedded) and those that are model-agnostic. Here we
 provide a brief background on variable importance, variable
 interactions, and partial dependence and discuss their use in
 <code>vivid</code>.</p>
-<div class="section level3">
-<h3 id="variable-importance">Variable Importance<a class="anchor" aria-label="anchor" href="#variable-importance"></a>
-</h3>
+<div id="variable-importance" class="section level3">
+<h3 class="hasAnchor">
+<a href="#variable-importance" class="anchor"></a>Variable Importance</h3>
 <p>The importance value of a variable measures the extent to which it
 impacts the model’s output. Embedded methods weave variable importance
 directly into the machine learning algorithm. For instance, machine
@@ -203,9 +216,9 @@ parsnip[18]. See Section <code>Model Fits</code> for more details on
 using different models with <code>vivid</code>.</li>
 </ol>
 </div>
-<div class="section level3">
-<h3 id="partial-dependence">Partial Dependence<a class="anchor" aria-label="anchor" href="#partial-dependence"></a>
-</h3>
+<div id="partial-dependence" class="section level3">
+<h3 class="hasAnchor">
+<a href="#partial-dependence" class="anchor"></a>Partial Dependence</h3>
 <p>Friedman (2000)[19] introduced Partial Dependence Plots (PDPs) as a
 model-agnostic method to visualize the relationship between a chosen
 predictor and the model outcome, while averaging out the effects of
@@ -230,9 +243,9 @@ machine learning model. For one or two variables, the partial dependence
 functions <span class="math inline">\(f_S(\mathbf{x}_S)\)</span> are
 plotted (a so-called PDP) to display the marginal fits.</p>
 </div>
-<div class="section level3">
-<h3 id="variable-interactions">Variable Interactions<a class="anchor" aria-label="anchor" href="#variable-interactions"></a>
-</h3>
+<div id="variable-interactions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#variable-interactions" class="anchor"></a>Variable Interactions</h3>
 <p>For VInts, the H-statistic by Friedman and Popescu (2008)[22] is a
 model-agnostic measure that gauges interactions using partial
 dependence. It contrasts the joint effects of a variable pair with the
@@ -258,12 +271,12 @@ H_{jk}=\sqrt{\frac{1}{n}\sum^n_{i=1}[f_{jk}(x_{ij},x_{ik})-f_j(x_{ij})-f_k(x_{ik
 \end{equation}\]</span></p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-3-data-and-model">Section 3: Data and Model<a class="anchor" aria-label="anchor" href="#section-3-data-and-model"></a>
-</h2>
-<div class="section level3">
-<h3 id="data-used-in-this-vignette">Data used in this vignette<a class="anchor" aria-label="anchor" href="#data-used-in-this-vignette"></a>
-</h3>
+<div id="section-3-data-and-model" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-3-data-and-model" class="anchor"></a>Section 3: Data and Model</h2>
+<div id="data-used-in-this-vignette" class="section level3">
+<h3 class="hasAnchor">
+<a href="#data-used-in-this-vignette" class="anchor"></a>Data used in this vignette</h3>
 <p>The data used in the following examples is simulated from the
 Friedman benchmark problem[23]. This benchmark problem is commonly used
 for testing purposes. The output is created according to the
@@ -279,30 +292,30 @@ therefore <span class="math inline">\(x_6\)</span> to <span class="math inline">
 by the above equation, the only interaction is between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span></p>
 <p>Create the data:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
 <span><span class="va">genFriedman</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">noFeatures</span> <span class="op">=</span> <span class="fl">10</span>, <span class="va">noSamples</span> <span class="op">=</span> <span class="fl">100</span>, <span class="va">sigma</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
 <span>  <span class="co"># Create dataframe with named columns</span></span>
-<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">noSamples</span> <span class="op">*</span> <span class="va">noFeatures</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">noSamples</span><span class="op">)</span>, </span>
+<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">noSamples</span> <span class="op">*</span> <span class="va">noFeatures</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">noSamples</span><span class="op">)</span>, </span>
 <span>                               stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, </span>
-<span>                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">noFeatures</span><span class="op">)</span><span class="op">)</span></span>
+<span>                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">noFeatures</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co"># Equation: y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε</span></span>
 <span>  </span>
-<span>  <span class="va">df</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="va">pi</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="va">df</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="va">pi</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fl">20</span> <span class="op">*</span> <span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x3</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> </span>
 <span>    <span class="fl">10</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x4</span> <span class="op">+</span> </span>
 <span>    <span class="fl">5</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x5</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">noSamples</span>, sd <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span> <span class="co"># error</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">noSamples</span>, sd <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span> <span class="co"># error</span></span>
 <span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">myData</span> <span class="op">&lt;-</span> <span class="fu">genFriedman</span><span class="op">(</span>noFeatures <span class="op">=</span> <span class="fl">9</span>, noSamples <span class="op">=</span> <span class="fl">350</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="model-fit">Model Fit<a class="anchor" aria-label="anchor" href="#model-fit"></a>
-</h3>
+<div id="model-fit" class="section level3">
+<h3 class="hasAnchor">
+<a href="#model-fit" class="anchor"></a>Model Fit</h3>
 <p>Part of the intention behind <code>vivid</code> was to create a
 package that facilitated ease of use coupled with the flexibility to use
 the agnostic VIVI methods on a wide range of machine learning (ML)
@@ -312,17 +325,17 @@ algorithms. For brevity, for the following examples, we create a random
 forest fit from the <code>randomForest</code> package to use with
 <code>vivid</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span> <span class="co"># for model fit</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">randomForest</a></span><span class="op">)</span> <span class="co"># for model fit</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-4-vivi">Section 4: vivi<a class="anchor" aria-label="anchor" href="#section-4-vivi"></a>
-</h2>
-<div class="section level3">
-<h3 id="vivi-function">vivi function<a class="anchor" aria-label="anchor" href="#vivi-function"></a>
-</h3>
+<div id="section-4-vivi" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-4-vivi" class="anchor"></a>Section 4: vivi</h2>
+<div id="vivi-function" class="section level3">
+<h3 class="hasAnchor">
+<a href="#vivi-function" class="anchor"></a>vivi function</h3>
 <p>The <code>vivi</code> function calculates both the importance and
 interactions using S3 methods. By default, the agnostic importance and
 interaction scores in vivid are computed using the generalized predict
@@ -357,7 +370,7 @@ symmetry assumption is not required for <code>viviHeatmap</code> and
 lower-triangular part of the matrix only.) To see a description of all
 function arguments use: <code>?vivid::vivi()</code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">viviRf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, </span>
 <span>                data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>                response <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -370,19 +383,19 @@ function arguments use: <code>?vivid::vivi()</code></p>
 <span>                showVimpError <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-5-visualisations">Section 5: Visualisations<a class="anchor" aria-label="anchor" href="#section-5-visualisations"></a>
-</h2>
-<div class="section level3">
-<h3 id="visualizing-the-results">Visualizing the results<a class="anchor" aria-label="anchor" href="#visualizing-the-results"></a>
-</h3>
+<div id="section-5-visualisations" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-5-visualisations" class="anchor"></a>Section 5: Visualisations</h2>
+<div id="visualizing-the-results" class="section level3">
+<h3 class="hasAnchor">
+<a href="#visualizing-the-results" class="anchor"></a>Visualizing the results</h3>
 <p>NOTE: If viewing this vignette from the vivid CRAN page, then some
 images may not format correctly. It is recommended to view this vignette
 on GitHub via the following link: <a href="https://alaninglis.github.io/vivid/articles/vividVignette.html" class="uri">https://alaninglis.github.io/vivid/articles/vividVignette.html</a></p>
 </div>
-<div class="section level3">
-<h3 id="heatmap-plot">Heatmap plot<a class="anchor" aria-label="anchor" href="#heatmap-plot"></a>
-</h3>
+<div id="heatmap-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#heatmap-plot" class="anchor"></a>Heatmap plot</h3>
 <p>The <code>viviHeatmap</code> function generates a heatmap that
 displays variable importance and interactions, with importance values on
 the diagonal and interaction values on the off-diagonal. The function
@@ -414,9 +427,9 @@ predicting <span class="math inline">\(y\)</span>.
 </caption>
 </center>
 </div>
-<div class="section level3">
-<h3 id="network-plot">Network plot<a class="anchor" aria-label="anchor" href="#network-plot"></a>
-</h3>
+<div id="network-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#network-plot" class="anchor"></a>Network plot</h3>
 <p>With <code>viviNetwork</code>, a network graph is produced to
 visualize both importance and interactions. Similar to
 <code>viviHeatmap</code>, this function only requires a
@@ -463,7 +476,7 @@ argument accepts any <code>igraph</code> layout function or a numeric
 matrix with two columns, one row per node.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviRf</span>, </span>
-<span>            layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>            layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfnet_custom_layout.png" width="70%" style="display: block; margin: auto;"><center>
 <caption>
 <span id="fig4:fig4">Figure 4: </span>Network plot of a random forest
@@ -484,28 +497,28 @@ of grouping together high-interaction variables. Here we manually select
 the number of groups we want to show via the <code>cutree</code>
 function (which cuts clustered data into a desired number of groups).
 Finally we rearrange the layout using <code>igraph</code>. Here,
-<code><a href="https://r.igraph.org/reference/layout_as_star.html" class="external-link">igraph::layout_as_star</a></code> places the first variable (deemed
+<code><a href="https://r.igraph.org/reference/layout_as_star.html">igraph::layout_as_star</a></code> places the first variable (deemed
 most relevant using the VIVI seriation process) at the center, which in
 Figure 5 emphasizes its key role as the most important predictor which
 also has the strongest interactions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="co"># clustered and filtered network for rf</span></span>
 <span><span class="va">intVals</span> <span class="op">&lt;-</span> <span class="va">viviRf</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span> </span>
 <span></span>
 <span></span>
 <span><span class="co"># select VIVI values in top 20%</span></span>
-<span><span class="va">impTresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span>,<span class="fl">.8</span><span class="op">)</span></span>
-<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">intVals</span>,<span class="fl">.8</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">impTresh</span> <span class="op">|</span></span>
-<span>              <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">1</span>, <span class="va">max</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">intThresh</span><span class="op">)</span></span>
+<span><span class="va">impTresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span>,<span class="fl">.8</span><span class="op">)</span></span>
+<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">intVals</span>,<span class="fl">.8</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">impTresh</span> <span class="op">|</span></span>
+<span>              <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">1</span>, <span class="va">max</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">intThresh</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"single"</span><span class="op">)</span></span>
+<span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">as.dist</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"single"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span>,</span>
-<span>            cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">h</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="co"># specify number of groups</span></span>
-<span>            layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/layout_as_star.html" class="external-link">layout_as_star</a></span><span class="op">)</span></span></code></pre></div>
+<span>            cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html">cutree</a></span><span class="op">(</span><span class="va">h</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="co"># specify number of groups</span></span>
+<span>            layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/layout_as_star.html">layout_as_star</a></span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfnet_cluster.png" width="80%" style="display: block; margin: auto;"><center>
 <caption>
 <span id="fig5:fig5">Figure 5: </span>Clustered network plot of a random
@@ -516,9 +529,9 @@ forest fit.
 strongest mutual interactions have been grouped together. Namley; <span class="math inline">\(x1\)</span>, <span class="math inline">\(x2\)</span>, and <span class="math inline">\(x4\)</span>. The remaining variables are
 individually clustered.</p>
 </div>
-<div class="section level3">
-<h3 id="univariate-partial-dependence-plot">Univariate Partial Dependence Plot<a class="anchor" aria-label="anchor" href="#univariate-partial-dependence-plot"></a>
-</h3>
+<div id="univariate-partial-dependence-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#univariate-partial-dependence-plot" class="anchor"></a>Univariate Partial Dependence Plot</h3>
 <p>The <code>pdpVars</code> function constructs a grid of univariate
 PDPs with ICE curves for selected variables. We use ICE curves to assist
 in the identification of linear or non-linear effects. The fit, data
@@ -529,7 +542,7 @@ created <code>vivid</code> matrix to display and set the number of ICE
 curves to be displayed to be 100, via the <code>nIce</code>
 argument.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="fu"><a href="../reference/pdpVars.html">pdpVars</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>,</span>
 <span>        fit <span class="op">=</span> <span class="va">rf</span>,</span>
 <span>        response <span class="op">=</span> <span class="st">'y'</span>,</span>
@@ -546,9 +559,9 @@ some impact on the response.
 </caption>
 </center>
 </div>
-<div class="section level3">
-<h3 id="generalized-partial-dependence-pairs-plot">Generalized partial dependence pairs plot<a class="anchor" aria-label="anchor" href="#generalized-partial-dependence-pairs-plot"></a>
-</h3>
+<div id="generalized-partial-dependence-pairs-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#generalized-partial-dependence-pairs-plot" class="anchor"></a>Generalized partial dependence pairs plot</h3>
 <p>By employing a matrix layout, the pdpPairs function generates a
 generalized pairs partial dependence plot (GPDP) that encompasses
 univariate partial dependence (with ICE curves) on the diagonal,
@@ -561,13 +574,13 @@ function arguments, see <code><a href="../reference/pdpPairs.html">?vivid::pdpPa
 example, we select the first five variables to display and set the
 number of shown ICE curves to 100.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>         fit <span class="op">=</span>  <span class="va">rf</span>, </span>
 <span>         response <span class="op">=</span> <span class="st">"y"</span>, </span>
 <span>         nmax <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>         gridSize <span class="op">=</span> <span class="fl">10</span>,         </span>
-<span>         vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span>,</span>
+<span>         vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span>,</span>
 <span>         nIce <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfGPGP_subset.png" width="80%" style="display: block; margin: auto;"><center>
 <caption>
@@ -577,9 +590,9 @@ the univariate and bivariate PDPs, we can see that <span class="math inline">\(x
 </caption>
 </center>
 </div>
-<div class="section level3">
-<h3 id="partial-dependence-zenplot">Partial dependence ‘Zenplot’<a class="anchor" aria-label="anchor" href="#partial-dependence-zenplot"></a>
-</h3>
+<div id="partial-dependence-zenplot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#partial-dependence-zenplot" class="anchor"></a>Partial dependence ‘Zenplot’</h3>
 <p>The <code>pdpZen</code> function utilizes a space-saving technique
 based on graph Eulerians, introduced by Hierholzer and Wiener in
 1873[25] to create partial dependence plots. We refer to these plots as
@@ -593,7 +606,7 @@ zigzag layout. This format is useful when dealing with high-dimensional
 predictor space.</p>
 <p>To begin, we show a ZPDP using all the variables in the model.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpZen.html">pdpZen</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, fit <span class="op">=</span> <span class="va">rf</span>, response <span class="op">=</span> <span class="st">"y"</span>, nmax <span class="op">=</span> <span class="fl">500</span>, gridSize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfzen_all.png" width="60%" style="display: block; margin: auto;"><center>
 <caption>
@@ -610,13 +623,13 @@ from the data. The argument <code>zpath</code> specifies the variables
 to be plotted, defaulting to all dataset variables aside from the
 response.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpZen.html">pdpZen</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>       fit <span class="op">=</span> <span class="va">rf</span>, </span>
 <span>       response <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>       nmax <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>       gridSize <span class="op">=</span> <span class="fl">10</span>, </span>
-<span>       zpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>       zpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/rfzen_subset.png" width="70%" style="display: block; margin: auto;"><center>
 <caption>
 <span id="fig9:fig9">Figure 9: </span>Zen partial dependence plot for
@@ -650,13 +663,13 @@ matrix.)</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set zpaths with different parameters</span></span>
 <span><span class="va">intVals</span> <span class="op">&lt;-</span> <span class="va">viviRf</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
-<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">.90</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">.90</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">zpSw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/zPath.html">zPath</a></span><span class="op">(</span>viv <span class="op">=</span> <span class="va">viviRf</span>, cutoff <span class="op">=</span> <span class="va">intThresh</span>, connect <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">'strictly.weighted'</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpZen.html">pdpZen</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>       fit <span class="op">=</span> <span class="va">rf</span>, </span>
 <span>       response <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -672,12 +685,12 @@ the Friedman data. The sorting method is defined by the
 </center>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-6-custom-predict-function">Section 6: Custom Predict Function<a class="anchor" aria-label="anchor" href="#section-6-custom-predict-function"></a>
-</h2>
-<div class="section level3">
-<h3 id="example-using-the-predict-function">Example using the predict function<a class="anchor" aria-label="anchor" href="#example-using-the-predict-function"></a>
-</h3>
+<div id="section-6-custom-predict-function" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-6-custom-predict-function" class="anchor"></a>Section 6: Custom Predict Function</h2>
+<div id="example-using-the-predict-function" class="section level3">
+<h3 class="hasAnchor">
+<a href="#example-using-the-predict-function" class="anchor"></a>Example using the predict function</h3>
 <p>We supply an internal custom predict function called
 <code>CVpredictfun</code> to both importance and interaction
 calculations. <code>CVpredictfun</code> is a wrapper around
@@ -694,9 +707,9 @@ small example of using such a fit with <code>vivid</code> by using the
 <code>xgboost</code> package to create a gradient boosting machine
 (GBM). To begin we build the model.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost" class="external-link">"xgboost"</a></span><span class="op">)</span></span>
-<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">10</span><span class="op">]</span><span class="op">)</span>,</span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost">"xgboost"</a></span><span class="op">)</span></span>
+<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">10</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>                nrounds <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>                verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>We then build the <code>vivid</code> matrix for the GBM fit using a
@@ -707,9 +720,9 @@ the response variable should be included when generating the predict
 function for <code>xgboost</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># predict function for GBM</span></span>
-<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">viviGBst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">gbst</span>,</span>
 <span>                 data <span class="op">=</span> <span class="va">myData</span>,</span>
 <span>                 response <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -730,25 +743,25 @@ Friedman data.
 </center>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-7-embedded-vimps">Section 7: Embedded Vimps<a class="anchor" aria-label="anchor" href="#section-7-embedded-vimps"></a>
-</h2>
-<div class="section level3">
-<h3 id="using-embedded-importance-metrics">Using embedded importance metrics<a class="anchor" aria-label="anchor" href="#using-embedded-importance-metrics"></a>
-</h3>
+<div id="section-7-embedded-vimps" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-7-embedded-vimps" class="anchor"></a>Section 7: Embedded Vimps</h2>
+<div id="using-embedded-importance-metrics" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-embedded-importance-metrics" class="anchor"></a>Using embedded importance metrics</h3>
 <p>In the following we show examples of how to select different
 (embedded) importance metrics for use with the <code>vivi</code>
 function. To illustrate the process we use a random forest model fit
 using the <code>randomForest</code> and <code>ranger</code>
 packages.</p>
 </div>
-<div class="section level3">
-<h3 id="in-randomforest">In randomForest<a class="anchor" aria-label="anchor" href="#in-randomforest"></a>
-</h3>
+<div id="in-randomforest" class="section level3">
+<h3 class="hasAnchor">
+<a href="#in-randomforest" class="anchor"></a>In randomForest</h3>
 <p>To begin we fit the <code>randomForest</code> model.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Note that for a <code>randomForest</code> model, if the argument
 <code>importance = TRUE</code>, then multiple importance metrics are
 returned. In this case, as we have a regression random forest, the
@@ -765,15 +778,15 @@ the %IncMSE as the importance metric.</p>
 <span>                       response <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>                       importanceType <span class="op">=</span> <span class="st">"%IncMSE"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="in-ranger">In ranger<a class="anchor" aria-label="anchor" href="#in-ranger"></a>
-</h3>
+<div id="in-ranger" class="section level3">
+<h3 class="hasAnchor">
+<a href="#in-ranger" class="anchor"></a>In ranger</h3>
 <p>For a <code>ranger</code> random forest model, the importance metric
 must be specified when fitting the model. In the code below, we select
 the <code>impurity</code> as the importance metric.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger" class="external-link">"ranger"</a></span><span class="op">)</span></span>
-<span><span class="va">rang</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="st">'impurity'</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger">"ranger"</a></span><span class="op">)</span></span>
+<span><span class="va">rang</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="st">'impurity'</span><span class="op">)</span></span></code></pre></div>
 <p>Then when calling the <code>vivi</code> function, the
 <code>importanceType</code> argument is set to the same selected
 importance metric.</p>
@@ -784,12 +797,12 @@ importance metric.</p>
 <span>                         importanceType <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-8-model-fits">Section 8: Model Fits<a class="anchor" aria-label="anchor" href="#section-8-model-fits"></a>
-</h2>
-<div class="section level3">
-<h3 id="models-used">Models Used<a class="anchor" aria-label="anchor" href="#models-used"></a>
-</h3>
+<div id="section-8-model-fits" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-8-model-fits" class="anchor"></a>Section 8: Model Fits</h2>
+<div id="models-used" class="section level3">
+<h3 class="hasAnchor">
+<a href="#models-used" class="anchor"></a>Models Used</h3>
 <p>This section is designed as a quick-stop guide of how to use some of
 the more popular machine learning R packages with <code>vivid</code>.
 The visualisations are omitted here as the goal is to familiarize the
@@ -812,11 +825,11 @@ be supplied. The packages (and models) shown here are:</p>
 <code>air quality</code> dataset, with <em>Ozone</em> as the response.
 First we remove any missing values:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">aq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="caret---neural-network">caret - Neural Network<a class="anchor" aria-label="anchor" href="#caret---neural-network"></a>
-</h3>
+<div id="caret---neural-network" class="section level3">
+<h3 class="hasAnchor">
+<a href="#caret---neural-network" class="anchor"></a>caret - Neural Network</h3>
 <p>The <code>caret</code> package (short for Classification And
 REgression Training) in R provides a unified interface to streamline the
 process of creating predictive models. In the following example, we use
@@ -825,103 +838,103 @@ the <code>nnet</code> package. As <code>caret</code> is catered for in
 <code>vivid</code>, there is no need for a custom predict function
 here.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/topepo/caret/" class="external-link">"caret"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/topepo/caret/">"caret"</a></span><span class="op">)</span></span>
 <span><span class="co"># build caret nnet model</span></span>
-<span><span class="va">nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html" class="external-link">train</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, method <span class="op">=</span> <span class="st">"nnet"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, linout <span class="op">=</span> <span class="cn">TRUE</span>, maxit <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
+<span><span class="va">nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html">train</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, method <span class="op">=</span> <span class="st">"nnet"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, linout <span class="op">=</span> <span class="cn">TRUE</span>, maxit <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">nn</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="randomforest---random-forest">randomForest - Random Forest<a class="anchor" aria-label="anchor" href="#randomforest---random-forest"></a>
-</h3>
+<div id="randomforest---random-forest" class="section level3">
+<h3 class="hasAnchor">
+<a href="#randomforest---random-forest" class="anchor"></a>randomForest - Random Forest</h3>
 <p>The <code>randomForest</code> package in R implements the Random
 Forest algorithm for classification and regression, a popular ensemble
 method that builds multiple decision trees during training and
 aggregates their results for predictions.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">"randomForest"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
 <span><span class="co"># build  random forest model</span></span>
-<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span><span class="op">)</span></span>
+<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">rf</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="ranger---random-forest">ranger - Random Forest<a class="anchor" aria-label="anchor" href="#ranger---random-forest"></a>
-</h3>
+<div id="ranger---random-forest" class="section level3">
+<h3 class="hasAnchor">
+<a href="#ranger---random-forest" class="anchor"></a>ranger - Random Forest</h3>
 <p>The <code>ranger</code> package in R is a fast implementation of
 Random Forests, leveraging optimized C++ code for efficiency.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger" class="external-link">"ranger"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger">"ranger"</a></span><span class="op">)</span></span>
 <span><span class="co"># build  ranger random forest model</span></span>
-<span><span class="va">rngr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span><span class="op">)</span></span>
+<span><span class="va">rngr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">rngr</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="e1071---support-vector-machine">e1071 - Support Vector Machine<a class="anchor" aria-label="anchor" href="#e1071---support-vector-machine"></a>
-</h3>
+<div id="e1071---support-vector-machine" class="section level3">
+<h3 class="hasAnchor">
+<a href="#e1071---support-vector-machine" class="anchor"></a>e1071 - Support Vector Machine</h3>
 <p>The <code>e1071</code> package in R provides functions for various
 machine learning algorithms including support vector machines
 (SVMs).</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"e1071"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"e1071"</span><span class="op">)</span></span>
 <span><span class="co"># build SVM model</span></span>
-<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/e1071/man/svm.html" class="external-link">svm</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, kernel <span class="op">=</span> <span class="st">"radial"</span><span class="op">)</span></span>
+<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/e1071/man/svm.html">svm</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, kernel <span class="op">=</span> <span class="st">"radial"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">sv</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="gbm---generalized-boosted-model">gbm - Generalized Boosted Model<a class="anchor" aria-label="anchor" href="#gbm---generalized-boosted-model"></a>
-</h3>
+<div id="gbm---generalized-boosted-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#gbm---generalized-boosted-model" class="anchor"></a>gbm - Generalized Boosted Model</h3>
 <p>The <code>gbm</code> package in R stands for Generalized Boosted
 Models. It offers an efficient implementation of gradient boosting
 algorithms for classification, regression, and other machine learning
 tasks.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/gbm-developers/gbm" class="external-link">"gbm"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/gbm-developers/gbm">"gbm"</a></span><span class="op">)</span></span>
 <span><span class="co"># build gbm model</span></span>
-<span><span class="va">gm</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/gbm/man/gbm.html" class="external-link">gbm</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, distribution <span class="op">=</span> <span class="st">"gaussian"</span>, n.trees <span class="op">=</span> <span class="fl">100</span>, interaction.depth <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">gm</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/gbm/man/gbm.html">gbm</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, distribution <span class="op">=</span> <span class="st">"gaussian"</span>, n.trees <span class="op">=</span> <span class="fl">100</span>, interaction.depth <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">gm</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="mlr3---k-nearest-neighbours">mlr3 - k-nearest Neighbours<a class="anchor" aria-label="anchor" href="#mlr3---k-nearest-neighbours"></a>
-</h3>
+<div id="mlr3---k-nearest-neighbours" class="section level3">
+<h3 class="hasAnchor">
+<a href="#mlr3---k-nearest-neighbours" class="anchor"></a>mlr3 - k-nearest Neighbours</h3>
 <p>The <code>mlr3</code> package in R offers a modern, object-oriented
 framework for machine learning tasks in R, providing tools for data
 preprocessing, model training, evaluation, and tuning. Here, we fit a
 k-nearest neighbours model to the data.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3.mlr-org.com" class="external-link">"mlr3"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3learners.mlr-org.com" class="external-link">"mlr3learners"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3.mlr-org.com">"mlr3"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3learners.mlr-org.com">"mlr3learners"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define a regression task</span></span>
-<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="va"><a href="https://mlr3.mlr-org.com/reference/TaskRegr.html" class="external-link">TaskRegr</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"airquality"</span>, backend <span class="op">=</span> <span class="va">aq</span>, target <span class="op">=</span> <span class="st">"Ozone"</span><span class="op">)</span></span>
+<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="va"><a href="https://mlr3.mlr-org.com/reference/TaskRegr.html">TaskRegr</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"airquality"</span>, backend <span class="op">=</span> <span class="va">aq</span>, target <span class="op">=</span> <span class="st">"Ozone"</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Train a gradient boosting model using mlr3</span></span>
-<span><span class="va">learner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html" class="external-link">lrn</a></span><span class="op">(</span><span class="st">"regr.kknn"</span><span class="op">)</span></span>
+<span><span class="va">learner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.kknn"</span><span class="op">)</span></span>
 <span><span class="va">m3</span> <span class="op">&lt;-</span> <span class="va">learner</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">m3</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="bartmachine---bart">bartMachine - BART<a class="anchor" aria-label="anchor" href="#bartmachine---bart"></a>
-</h3>
+<div id="bartmachine---bart" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bartmachine---bart" class="anchor"></a>bartMachine - BART</h3>
 <p>The <code>bartMachine</code> package in R provides an implementation
 of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian
 model which uses decision trees as the underlying model.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"bartMachine"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"bartMachine"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># build bartMachine model</span></span>
-<span><span class="va">bm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bartMachine/man/bartMachine.html" class="external-link">bartMachine</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">aq</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, </span>
+<span><span class="va">bm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bartMachine/man/bartMachine.html">bartMachine</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">aq</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, </span>
 <span>                  y <span class="op">=</span> <span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, </span>
 <span>                  num_trees <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>                  num_burn_in <span class="op">=</span> <span class="fl">50</span>,</span>
@@ -930,9 +943,9 @@ model which uses decision trees as the underlying model.</p>
 <span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">bm</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="xgboost---gradient-boosting">xgboost - Gradient Boosting<a class="anchor" aria-label="anchor" href="#xgboost---gradient-boosting"></a>
-</h3>
+<div id="xgboost---gradient-boosting" class="section level3">
+<h3 class="hasAnchor">
+<a href="#xgboost---gradient-boosting" class="anchor"></a>xgboost - Gradient Boosting</h3>
 <p>The <code>xgboost</code> package (short for eXtreme Gradient
 Boosting) is an implementation of gradient boosting that supports
 regression and classification. As seen in Section
@@ -944,57 +957,57 @@ the response). When producing the custom predict function, the structure
 must match that in the below example. Note that the term
 <code>data</code> must be used and not the actual name of the data.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost" class="external-link">"xgboost"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost">"xgboost"</a></span><span class="op">)</span></span>
 <span><span class="co"># build xgboost model</span></span>
-<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
+<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>                nrounds <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>                verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># predict function for GBM</span></span>
-<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">gbst</span>, response <span class="op">=</span> <span class="st">'Ozone'</span>,  predictFun <span class="op">=</span> <span class="va">pFun</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="keras---neural-network">keras - Neural Network<a class="anchor" aria-label="anchor" href="#keras---neural-network"></a>
-</h3>
+<div id="keras---neural-network" class="section level3">
+<h3 class="hasAnchor">
+<a href="#keras---neural-network" class="anchor"></a>keras - Neural Network</h3>
 <p>The <code>keras</code> package in R is an interface to the original
 <code>keras</code> Python library. It allows R users to build and train
 neural network models using the high-level Keras API. To use
 <code>keras</code> the data must first be normalised. A custom predict
 function must be made for use with <code>vivid</code>.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://tensorflow.rstudio.com/" class="external-link">"keras"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tensorflow.rstudio.com/">"keras"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Normalize the data</span></span>
 <span><span class="va">normalize_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="op">(</span><span class="va">data</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="op">(</span><span class="va">data</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">aqn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">aq</span>, <span class="va">normalize_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">aqn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">aq</span>, <span class="va">normalize_data</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Define model architecture</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html" class="external-link">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html" class="external-link">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">aqn</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html" class="external-link">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">aqn</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># predict function for keras</span></span>
-<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">model</span>, response <span class="op">=</span> <span class="st">'Ozone'</span>, predictFun <span class="op">=</span> <span class="va">pFun</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-9-classification">Section 9: Classification<a class="anchor" aria-label="anchor" href="#section-9-classification"></a>
-</h2>
-<div class="section level3">
-<h3 id="classification-example">Classification example<a class="anchor" aria-label="anchor" href="#classification-example"></a>
-</h3>
+<div id="section-9-classification" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-9-classification" class="anchor"></a>Section 9: Classification</h2>
+<div id="classification-example" class="section level3">
+<h3 class="hasAnchor">
+<a href="#classification-example" class="anchor"></a>Classification example</h3>
 <p>In this section, we briefly describe how to apply the above
 visualisations to a classification example using the <code>iris</code>
 data set.</p>
@@ -1002,15 +1015,15 @@ data set.</p>
 “Species” as the response and create the vivi matrix setting the
 category for classification to be “setosa” using <code>class</code>.</p>
 </div>
-<div class="section level3">
-<h3 id="vivi">vivi<a class="anchor" aria-label="anchor" href="#vivi"></a>
-</h3>
+<div id="vivi" class="section level3">
+<h3 class="hasAnchor">
+<a href="#vivi" class="anchor"></a>vivi</h3>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>                    importance <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
 <span><span class="va">viviClassif</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rfClassif</span>, </span>
 <span>                     data <span class="op">=</span> <span class="va">iris</span>, </span>
 <span>                     response <span class="op">=</span> <span class="st">"Species"</span>,</span>
@@ -1019,9 +1032,9 @@ category for classification to be “setosa” using <code>class</code>.</p>
 <span>                     reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                     class <span class="op">=</span> <span class="st">"setosa"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="heatmap">Heatmap<a class="anchor" aria-label="anchor" href="#heatmap"></a>
-</h3>
+<div id="heatmap" class="section level3">
+<h3 class="hasAnchor">
+<a href="#heatmap" class="anchor"></a>Heatmap</h3>
 <p>Next we plot the heatmap and network plot of the iris data.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span>
@@ -1033,15 +1046,15 @@ in (b) of random forest fit on the iris data
 </caption>
 </center>
 </div>
-<div class="section level3">
-<h3 id="gpdp">GPDP<a class="anchor" aria-label="anchor" href="#gpdp"></a>
-</h3>
+<div id="gpdp" class="section level3">
+<h3 class="hasAnchor">
+<a href="#gpdp" class="anchor"></a>GPDP</h3>
 <p>As mentioned above, as PDPs are evaluated on a grid and can
 extrapolate where there is no data. To solve this issue we calculate a
 convex hull around the data and remove any points that fall outside the
 convex hull, as shown below.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">iris</span>, </span>
 <span>         fit <span class="op">=</span> <span class="va">rfClassif</span>, </span>
 <span>         response <span class="op">=</span> <span class="st">"Species"</span>,</span>
@@ -1057,9 +1070,9 @@ the iris data with extrapolated data removed.
 </center>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-10-full-script">Section 10: Full Script<a class="anchor" aria-label="anchor" href="#section-10-full-script"></a>
-</h2>
+<div id="section-10-full-script" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-10-full-script" class="anchor"></a>Section 10: Full Script</h2>
 <p>This section consolidates the Sections <code>Data and Model</code>,
 <code>vivi</code>, <code>Visualisations</code>
 <code>Custom Predict Function</code>, and <code>Embedded Vimps</code>
@@ -1067,27 +1080,27 @@ into a single script to facilitate ease of viewing.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Load libraries</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span> </span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">"randomForest"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span> </span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create data based on the Friedman equation</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
 <span><span class="va">genFriedman</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">noFeatures</span> <span class="op">=</span> <span class="fl">10</span>, <span class="va">noSamples</span> <span class="op">=</span> <span class="fl">100</span>, <span class="va">sigma</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
 <span>  <span class="co"># Create dataframe with named columns</span></span>
-<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">noSamples</span> <span class="op">*</span> <span class="va">noFeatures</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">noSamples</span><span class="op">)</span>, </span>
+<span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">noSamples</span> <span class="op">*</span> <span class="va">noFeatures</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">noSamples</span><span class="op">)</span>, </span>
 <span>                               stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, </span>
-<span>                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">noFeatures</span><span class="op">)</span><span class="op">)</span></span>
+<span>                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">noFeatures</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co"># Equation: y = 10sin(πx1x2) + 20(x3−0.5)^2 + 10x4 + 5x5 + ε</span></span>
 <span>  </span>
-<span>  <span class="va">df</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="va">pi</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="va">df</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="va">pi</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fl">20</span> <span class="op">*</span> <span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x3</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> </span>
 <span>    <span class="fl">10</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x4</span> <span class="op">+</span> </span>
 <span>    <span class="fl">5</span> <span class="op">*</span> <span class="va">df</span><span class="op">$</span><span class="va">x5</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">noSamples</span>, sd <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span> <span class="co"># error</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">noSamples</span>, sd <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span> <span class="co"># error</span></span>
 <span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">myData</span> <span class="op">&lt;-</span> <span class="fu">genFriedman</span><span class="op">(</span>noFeatures <span class="op">=</span> <span class="fl">9</span>, noSamples <span class="op">=</span> <span class="fl">350</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </span>
@@ -1095,13 +1108,13 @@ into a single script to facilitate ease of viewing.</p>
 <span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span></span>
 <span>  </span>
 <span><span class="co"># Fit random forest using randomForest package</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span><span class="op">-</span></span>
 <span></span>
 <span><span class="co"># Run vivid</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">viviRf</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rf</span>, </span>
 <span>                data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>                response <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -1122,8 +1135,8 @@ into a single script to facilitate ease of viewing.</p>
 <span></span>
 <span><span class="co"># 1.1: Heatmap with custom colour palettes and a small border around the diagonal importance values</span></span>
 <span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviRf</span>,</span>
-<span>            intPal <span class="op">=</span> <span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="https://colorspace.R-Forge.R-project.org/reference/hcl_palettes.html" class="external-link">sequential_hcl</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Oslo"</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
-<span>            impPal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="https://colorspace.R-Forge.R-project.org/reference/hcl_palettes.html" class="external-link">sequential_hcl</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Reds 3"</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>            intPal <span class="op">=</span> <span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="https://colorspace.R-Forge.R-project.org/reference/hcl_palettes.html">sequential_hcl</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Oslo"</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
+<span>            impPal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="https://colorspace.R-Forge.R-project.org/reference/hcl_palettes.html">sequential_hcl</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Reds 3"</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            border <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 2.0: Network</span></span>
@@ -1135,27 +1148,27 @@ into a single script to facilitate ease of viewing.</p>
 <span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviRf</span>, intThreshold <span class="op">=</span> <span class="fl">0.12</span>, removeNode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 2.3: Network clustered and with interactions thresholded</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="co"># clustered and filtered network for rf</span></span>
 <span><span class="va">intVals</span> <span class="op">&lt;-</span> <span class="va">viviRf</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span> </span>
 <span></span>
 <span></span>
 <span><span class="co"># select VIVI values in top 20%</span></span>
-<span><span class="va">impTresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span>,<span class="fl">.8</span><span class="op">)</span></span>
-<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">intVals</span>,<span class="fl">.8</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">impTresh</span> <span class="op">|</span></span>
-<span>              <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">1</span>, <span class="va">max</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">intThresh</span><span class="op">)</span></span>
+<span><span class="va">impTresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span>,<span class="fl">.8</span><span class="op">)</span></span>
+<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">intVals</span>,<span class="fl">.8</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">impTresh</span> <span class="op">|</span></span>
+<span>              <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">1</span>, <span class="va">max</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">intThresh</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"single"</span><span class="op">)</span></span>
+<span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">as.dist</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"single"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot</span></span>
 <span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">[</span><span class="va">sv</span>,<span class="va">sv</span><span class="op">]</span>,</span>
-<span>            cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">h</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="co"># specify number of groups</span></span>
-<span>            layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/layout_as_star.html" class="external-link">layout_as_star</a></span><span class="op">)</span></span>
+<span>            cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html">cutree</a></span><span class="op">(</span><span class="va">h</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="co"># specify number of groups</span></span>
+<span>            layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/layout_as_star.html">layout_as_star</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 3.0: PDP of the top 5 variables extracted from the vivi matrix and number of ICe curves set to 100</span></span>
-<span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">viviRf</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="fu"><a href="../reference/pdpVars.html">pdpVars</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>,</span>
 <span>        fit <span class="op">=</span> <span class="va">rf</span>,</span>
 <span>        response <span class="op">=</span> <span class="st">'y'</span>,</span>
@@ -1163,57 +1176,57 @@ into a single script to facilitate ease of viewing.</p>
 <span>        nIce <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 4.0: GPDP of the variables x1 to x5, with 100 ICE curves shown. </span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>         fit <span class="op">=</span>  <span class="va">rf</span>, </span>
 <span>         response <span class="op">=</span> <span class="st">"y"</span>, </span>
 <span>         nmax <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>         gridSize <span class="op">=</span> <span class="fl">10</span>,         </span>
-<span>         vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span>,</span>
+<span>         vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span>,</span>
 <span>         nIce <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 5.0: ZPDP of all variables</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpZen.html">pdpZen</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, fit <span class="op">=</span> <span class="va">rf</span>, response <span class="op">=</span> <span class="st">"y"</span>, nmax <span class="op">=</span> <span class="fl">500</span>, gridSize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 5.1: ZPDP where the `zpath` argument specifies the variables to be plotted. In this case, x1 to x5.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpZen.html">pdpZen</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>       fit <span class="op">=</span> <span class="va">rf</span>, </span>
 <span>       response <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>       nmax <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>       gridSize <span class="op">=</span> <span class="fl">10</span>, </span>
-<span>       zpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span><span class="op">)</span></span>
+<span>       zpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 5.2: ZPDP with the zpaths set with different parameters using the `zPath` function.</span></span>
 <span><span class="va">intVals</span> <span class="op">&lt;-</span> <span class="va">viviRf</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
-<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">.90</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">intVals</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span><span class="va">intThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">intVals</span>, <span class="fl">.90</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">zpSw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/zPath.html">zPath</a></span><span class="op">(</span>viv <span class="op">=</span> <span class="va">viviRf</span>, cutoff <span class="op">=</span> <span class="va">intThresh</span>, connect <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">'strictly.weighted'</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpZen.html">pdpZen</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">myData</span>, </span>
 <span>       fit <span class="op">=</span> <span class="va">rf</span>, </span>
 <span>       response <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>       nmax <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>       gridSize <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>       zpath <span class="op">=</span> <span class="va">zpSw</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="using-a-custom-predict-function">Using a custom predict function<a class="anchor" aria-label="anchor" href="#using-a-custom-predict-function"></a>
-</h3>
+<div id="using-a-custom-predict-function" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-a-custom-predict-function" class="anchor"></a>Using a custom predict function</h3>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost" class="external-link">"xgboost"</a></span><span class="op">)</span></span>
-<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">10</span><span class="op">]</span><span class="op">)</span>,</span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost">"xgboost"</a></span><span class="op">)</span></span>
+<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">10</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>                nrounds <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>                verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># predict function for GBM</span></span>
-<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># run vivid</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">viviGBst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">gbst</span>,</span>
 <span>                 data <span class="op">=</span> <span class="va">myData</span>,</span>
 <span>                 response <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -1226,18 +1239,18 @@ into a single script to facilitate ease of viewing.</p>
 <span><span class="co"># plot heatmap</span></span>
 <span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviGBst</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="using-embedded-variable-importance">Using embedded variable importance<a class="anchor" aria-label="anchor" href="#using-embedded-variable-importance"></a>
-</h3>
+<div id="using-embedded-variable-importance" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-embedded-variable-importance" class="anchor"></a>Using embedded variable importance</h3>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">"randomForest"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger" class="external-link">"ranger"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger">"ranger"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># randomForest</span></span>
 <span><span class="co"># Note importance must be set to TRUE to use embedded importance scores. </span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Using % increase in MSE as the importance metric in vivid</span></span>
 <span><span class="va">viviRfEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rfEmbedded</span>, </span>
@@ -1250,7 +1263,7 @@ into a single script to facilitate ease of viewing.</p>
 <span></span>
 <span><span class="co"># ranger</span></span>
 <span><span class="co"># Note the importance metric is selected directly in ranger</span></span>
-<span><span class="va">rang</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="st">'impurity'</span><span class="op">)</span></span>
+<span><span class="va">rang</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span>, importance <span class="op">=</span> <span class="st">'impurity'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Run vivid</span></span>
 <span><span class="va">viviRangEmbedded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rang</span>, </span>
@@ -1261,18 +1274,18 @@ into a single script to facilitate ease of viewing.</p>
 <span><span class="co"># Plot Heatmap</span></span>
 <span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviRangEmbedded</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="classification">Classification<a class="anchor" aria-label="anchor" href="#classification"></a>
-</h3>
+<div id="classification" class="section level3">
+<h3 class="hasAnchor">
+<a href="#classification" class="anchor"></a>Classification</h3>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">"randomForest"</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
-<span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>                    importance <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">101</span><span class="op">)</span></span>
 <span><span class="va">viviClassif</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>fit <span class="op">=</span> <span class="va">rfClassif</span>, </span>
 <span>                     data <span class="op">=</span> <span class="va">iris</span>, </span>
 <span>                     response <span class="op">=</span> <span class="st">"Species"</span>,</span>
@@ -1283,7 +1296,7 @@ into a single script to facilitate ease of viewing.</p>
 <span></span>
 <span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">iris</span>, </span>
 <span>         fit <span class="op">=</span> <span class="va">rfClassif</span>, </span>
 <span>         response <span class="op">=</span> <span class="st">"Species"</span>,</span>
@@ -1293,47 +1306,47 @@ into a single script to facilitate ease of viewing.</p>
 <span>         nmax <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> </span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="section-11-references">Section 11: References<a class="anchor" aria-label="anchor" href="#section-11-references"></a>
-</h2>
+<div id="section-11-references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#section-11-references" class="anchor"></a>Section 11: References</h2>
 <ol style="list-style-type: decimal">
 <li><p>Alan Inglis and Andrew Parnell and Catherine B. Hurley (2022)
 Visualizing Variable Importance and Variable Interaction Effects in
 Machine Learning Models. Journal of Computational and Graphical
 Statistics (3), pages 1-13</p></li>
 <li><p>Breiman, Leo. 2001. “Random Forests.” Machine Learning 45 (1):
-5–32. <a href="https://doi.org/10.1023/A" class="external-link uri">https://doi.org/10.1023/A</a>: 1010933404324.</p></li>
+5–32. <a href="https://doi.org/10.1023/A" class="uri">https://doi.org/10.1023/A</a>: 1010933404324.</p></li>
 <li><p>Friedman, J. H. 2000. “Greedy Function Approximation: A Gradient
-Boosting Machine.” The Annals of Statistics 29 (November). <a href="https://doi.org/10.1214/aos/1013203451" class="external-link uri">https://doi.org/10.1214/aos/1013203451</a>.</p></li>
+Boosting Machine.” The Annals of Statistics 29 (November). <a href="https://doi.org/10.1214/aos/1013203451" class="uri">https://doi.org/10.1214/aos/1013203451</a>.</p></li>
 <li><p>Chipman, Hugh A, Edward I George, and Robert E McCulloch. 2010.
 “BART: Bayesian Additive Regression Trees.” The Annals of Applied
 Statistics 4 (1): 266–98.</p></li>
 <li><p>Paluszynska, Aleksandra, Przemyslaw Biecek, and Yue Jiang. 2020.
 randomForestExplainer: Explaining and Visualizing Random Forests in
-Terms of Variable Importance. <a href="https://CRAN.R-project.org/" class="external-link uri">https://CRAN.R-project.org/</a>
+Terms of Variable Importance. <a href="https://CRAN.R-project.org/" class="uri">https://CRAN.R-project.org/</a>
 package=randomForestExplainer.</p></li>
 <li><p>Ishwaran, Hemant, Udaya B Kogalur, Eiran Z Gorodeski, Andy J
 Minn, and Michael S Lauer. 2010. “High-Dimensional Variable Selection
 for Survival Data.” Journal of the American Statistical Associa- tion
 105 (489): 205–17.</p></li>
 <li><p>Probst, Philipp. 2020. varImp: RF Variable Importance for
-Arbitrary Measures. <a href="https://CRAN.R-project" class="external-link uri">https://CRAN.R-project</a>. org/package=varImp.</p></li>
+Arbitrary Measures. <a href="https://CRAN.R-project" class="uri">https://CRAN.R-project</a>. org/package=varImp.</p></li>
 <li><p>Strobl, Carolin, Anne-Laure Boulesteix, Thomas Kneib, Thomas
 Augustin, and Achim Zeileis. 2008. “Conditional Variable Importance for
-Random Forests.” BMC Bioinformatics 9 (307). <a href="https://doi" class="external-link uri">https://doi</a>. org/10.1186/1471-2105-9-307</p></li>
+Random Forests.” BMC Bioinformatics 9 (307). <a href="https://doi" class="uri">https://doi</a>. org/10.1186/1471-2105-9-307</p></li>
 <li><p>Maksymiuk, Szymon, Ewelina Karbowiak, and Przemyslaw Biecek.
-2021. EIX: Explain Interactions in ’XGBoost’. <a href="https://CRAN.R-project.org/package=EIX" class="external-link uri">https://CRAN.R-project.org/package=EIX</a>.</p></li>
+2021. EIX: Explain Interactions in ’XGBoost’. <a href="https://CRAN.R-project.org/package=EIX" class="uri">https://CRAN.R-project.org/package=EIX</a>.</p></li>
 <li><p>Molnar, Christoph, Bernd Bischl, and Giuseppe Casalicchio. 2018.
 “Iml: An r Package for Interpretable Machine Learning.” JOSS 3 (26):
-786. <a href="https://doi.org/10.21105/joss.00786" class="external-link uri">https://doi.org/10.21105/joss.00786</a>.</p></li>
+786. <a href="https://doi.org/10.21105/joss.00786" class="uri">https://doi.org/10.21105/joss.00786</a>.</p></li>
 <li><p>Mayer M (2023). <em>flashlight: Shed Light on Black Box Machine
-Learning Models</em>. R package version 0.9.0, <a href="https://CRAN.R-project.org/package=flashlight" class="external-link uri">https://CRAN.R-project.org/package=flashlight</a>.</p></li>
+Learning Models</em>. R package version 0.9.0, <a href="https://CRAN.R-project.org/package=flashlight" class="uri">https://CRAN.R-project.org/package=flashlight</a>.</p></li>
 <li><p>Biecek, Przemyslaw. 2018. “DALEX: Explainers for Complex
 Predictive Models in R.” Journal of Machine Learning Research 19 (84):
-1–5. <a href="https://jmlr.org/papers/v19/18-416.html" class="external-link uri">https://jmlr.org/papers/v19/18-416.html</a>.</p></li>
+1–5. <a href="https://jmlr.org/papers/v19/18-416.html" class="uri">https://jmlr.org/papers/v19/18-416.html</a>.</p></li>
 <li><p>Greenwell, Brandon M., and Bradley C. Boehmke. 2020. “Variable
 Importance Plots—an Introduction to the vip Package.” The R Journal 12
-(1): 343–66. <a href="https://doi.org/10.32614/RJ-2020-013" class="external-link uri">https://doi.org/10.32614/RJ-2020-013</a>.</p></li>
+(1): 343–66. <a href="https://doi.org/10.32614/RJ-2020-013" class="uri">https://doi.org/10.32614/RJ-2020-013</a>.</p></li>
 <li><p>Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but
 many are Useful: Variable Importance for Black-Box, Proprietary, or
 Misspecified Prediction Models, using Model Class Reliance.
@@ -1345,21 +1358,21 @@ Wiener (2002). Classification and Regression by randomForest. R News
 2(3), 18–22.</p></li>
 <li><p>Bischl B, Lang M, Kotthoff L, Schiffner J, Richter J, Studerus E,
 Casalicchio G, Jones Z (2016). “mlr: Machine Learning in R.” <em>Journal
-of Machine Learning Research</em>, <em>17</em>(170), 1-5. <a href="https://jmlr.org/papers/v17/15-066.html" class="external-link uri">https://jmlr.org/papers/v17/15-066.html</a>.</p></li>
+of Machine Learning Research</em>, <em>17</em>(170), 1-5. <a href="https://jmlr.org/papers/v17/15-066.html" class="uri">https://jmlr.org/papers/v17/15-066.html</a>.</p></li>
 <li><p>Lang M, Binder M, Richter J, Schratz P, Pfisterer F, Coors S, Au
 Q, Casalicchio G, Kotthoff L, Bischl B (2019). “mlr3: A modern
 object-oriented machine learning framework in R.” <em>Journal of Open
 Source Software</em>. <a href="doi:10.21105/joss.01903" class="uri">doi:10.21105/joss.01903</a></p></li>
 <li><p>Kuhn M, Vaughan D (2023). <em>parsnip: A Common API to Modeling
-and Analysis Functions</em>. R package version 1.1.1, <a href="https://CRAN.R-project.org/package=parsnip" class="external-link uri">https://CRAN.R-project.org/package=parsnip</a>.</p></li>
+and Analysis Functions</em>. R package version 1.1.1, <a href="https://CRAN.R-project.org/package=parsnip" class="uri">https://CRAN.R-project.org/package=parsnip</a>.</p></li>
 <li><p>Friedman, J. H. 2000. “Greedy Function Approximation: A Gradient
-Boosting Machine.” The Annals of Statistics 29 (November). <a href="https://doi.org/10.1214/aos/1013203451" class="external-link uri">https://doi.org/10.1214/aos/1013203451</a>.</p></li>
+Boosting Machine.” The Annals of Statistics 29 (November). <a href="https://doi.org/10.1214/aos/1013203451" class="uri">https://doi.org/10.1214/aos/1013203451</a>.</p></li>
 <li><p>Goldstein, Alex, Adam Kapelner, Justin Bleich, and Emil Pitkin.
 2015. “Peeking Inside the Black Box: Visualizing Statistical Learning
 with Plots of Individual Conditional Expectation.” Journal of
-Computational and Graphical Statistics 24 (1): 44–65. <a href="https://doi.org/10.1080/10618600.2014" class="external-link uri">https://doi.org/10.1080/10618600.2014</a>. 907095.</p></li>
+Computational and Graphical Statistics 24 (1): 44–65. <a href="https://doi.org/10.1080/10618600.2014" class="uri">https://doi.org/10.1080/10618600.2014</a>. 907095.</p></li>
 <li><p>Greenwell, Brandon M. 2017. “pdp: An r Package for Constructing
-Partial Dependence Plots.” The R Journal 9 (1): 421–36. <a href="https://journal.r-project.org/archive/2017/RJ-2017-016/index.html" class="external-link uri">https://journal.r-project.org/archive/2017/RJ-2017-016/index.html</a>.</p></li>
+Partial Dependence Plots.” The R Journal 9 (1): 421–36. <a href="https://journal.r-project.org/archive/2017/RJ-2017-016/index.html" class="uri">https://journal.r-project.org/archive/2017/RJ-2017-016/index.html</a>.</p></li>
 <li><p>Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning
 via rule ensembles.” The Annals of Applied Statistics. JSTOR,
 916–54.</p></li>
@@ -1381,28 +1394,31 @@ Condvis2: Interactive Conditional Visualization for Supervised and
 Unsupervised Models in Shiny.</p></li>
 </ol>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside>
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
+
 </div>
 
 
 
-    <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Alan Inglis, Andrew Parnell, Catherine Hurley.</p>
+      <footer><div class="copyright">
+  <p>Developed by Alan Inglis, Andrew Parnell, Catherine Hurley.</p>
 </div>
 
-<div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<div class="pkgdown">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
-    </footer>
+      </footer>
 </div>
 
   
 
-  
 
   </body>
 </html>
