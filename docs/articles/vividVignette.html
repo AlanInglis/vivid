@@ -80,13 +80,11 @@ img {
   }
 </style>
 <div class="section level2">
-<h2 class="tabset tabset-fade" id="section"></h2>
+<h2 id="section-1-introduction">Section 1: Introduction<a class="anchor" aria-label="anchor" href="#section-1-introduction"></a>
+</h2>
 <div class="section level3">
-<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h3 id="introduction-to-vivid">Introduction to vivid<a class="anchor" aria-label="anchor" href="#introduction-to-vivid"></a>
 </h3>
-<div class="section level4">
-<h4 id="introduction-to-vivid">Introduction to vivid<a class="anchor" aria-label="anchor" href="#introduction-to-vivid"></a>
-</h4>
 <!-- badges: start -->
 <p><img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew2.png" width="240" height="276" align="right"><!-- badges: end --></p>
 <p>Variable importance (VImp), variable interaction measures (VInt) and
@@ -108,9 +106,9 @@ and VInt together, we use the shorthand VIVI. For more information
 related to visualising variable importance and interactions in machine
 learning models see our published work[1].</p>
 </div>
-<div class="section level4">
-<h4 id="install-instructions">Install instructions<a class="anchor" aria-label="anchor" href="#install-instructions"></a>
-</h4>
+<div class="section level3">
+<h3 id="install-instructions">Install instructions<a class="anchor" aria-label="anchor" href="#install-instructions"></a>
+</h3>
 <p>Some of the plots used by <code>vivid</code> are built upon the
 <code>zenplots</code> package which requires the <code>graph</code>
 package from BioConductor. To install the <code>graph</code> and
@@ -129,21 +127,17 @@ package in R with the commands:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://alaninglis.github.io/vivid/">vivid</a></span><span class="op">)</span> </span></code></pre></div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
-</h3>
-<div class="section level4">
-<h4 id="background-1">Background<a class="anchor" aria-label="anchor" href="#background-1"></a>
-</h4>
+<div class="section level2">
+<h2 id="section-2-background">Section 2: Background<a class="anchor" aria-label="anchor" href="#section-2-background"></a>
+</h2>
 <p>VIVI metrics can be categorized into two types: those that are
 model-specific (embedded) and those that are model-agnostic. Here we
 provide a brief background on variable importance, variable
 interactions, and partial dependence and discuss their use in
 <code>vivid</code>.</p>
-</div>
-<div class="section level4">
-<h4 id="variable-importance">Variable Importance<a class="anchor" aria-label="anchor" href="#variable-importance"></a>
-</h4>
+<div class="section level3">
+<h3 id="variable-importance">Variable Importance<a class="anchor" aria-label="anchor" href="#variable-importance"></a>
+</h3>
 <p>The importance value of a variable measures the extent to which it
 impacts the model’s output. Embedded methods weave variable importance
 directly into the machine learning algorithm. For instance, machine
@@ -209,9 +203,9 @@ parsnip[18]. See Section <code>Model Fits</code> for more details on
 using different models with <code>vivid</code>.</li>
 </ol>
 </div>
-<div class="section level4">
-<h4 id="partial-dependence">Partial Dependence<a class="anchor" aria-label="anchor" href="#partial-dependence"></a>
-</h4>
+<div class="section level3">
+<h3 id="partial-dependence">Partial Dependence<a class="anchor" aria-label="anchor" href="#partial-dependence"></a>
+</h3>
 <p>Friedman (2000)[19] introduced Partial Dependence Plots (PDPs) as a
 model-agnostic method to visualize the relationship between a chosen
 predictor and the model outcome, while averaging out the effects of
@@ -236,9 +230,9 @@ machine learning model. For one or two variables, the partial dependence
 functions <span class="math inline">\(f_S(\mathbf{x}_S)\)</span> are
 plotted (a so-called PDP) to display the marginal fits.</p>
 </div>
-<div class="section level4">
-<h4 id="variable-interactions">Variable Interactions<a class="anchor" aria-label="anchor" href="#variable-interactions"></a>
-</h4>
+<div class="section level3">
+<h3 id="variable-interactions">Variable Interactions<a class="anchor" aria-label="anchor" href="#variable-interactions"></a>
+</h3>
 <p>For VInts, the H-statistic by Friedman and Popescu (2008)[22] is a
 model-agnostic measure that gauges interactions using partial
 dependence. It contrasts the joint effects of a variable pair with the
@@ -264,12 +258,12 @@ H_{jk}=\sqrt{\frac{1}{n}\sum^n_{i=1}[f_{jk}(x_{ij},x_{ik})-f_j(x_{ij})-f_k(x_{ik
 \end{equation}\]</span></p>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-3-data-and-model">Section 3: Data and Model<a class="anchor" aria-label="anchor" href="#section-3-data-and-model"></a>
+</h2>
 <div class="section level3">
-<h3 id="data-and-model">Data and Model<a class="anchor" aria-label="anchor" href="#data-and-model"></a>
+<h3 id="data-used-in-this-vignette">Data used in this vignette<a class="anchor" aria-label="anchor" href="#data-used-in-this-vignette"></a>
 </h3>
-<div class="section level4">
-<h4 id="data-used-in-this-vignette">Data used in this vignette:<a class="anchor" aria-label="anchor" href="#data-used-in-this-vignette"></a>
-</h4>
 <p>The data used in the following examples is simulated from the
 Friedman benchmark problem[23]. This benchmark problem is commonly used
 for testing purposes. The output is created according to the
@@ -306,9 +300,9 @@ by the above equation, the only interaction is between <span class="math inline"
 <span></span>
 <span><span class="va">myData</span> <span class="op">&lt;-</span> <span class="fu">genFriedman</span><span class="op">(</span>noFeatures <span class="op">=</span> <span class="fl">9</span>, noSamples <span class="op">=</span> <span class="fl">350</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="model-fit">Model Fit<a class="anchor" aria-label="anchor" href="#model-fit"></a>
-</h4>
+<div class="section level3">
+<h3 id="model-fit">Model Fit<a class="anchor" aria-label="anchor" href="#model-fit"></a>
+</h3>
 <p>Part of the intention behind <code>vivid</code> was to create a
 package that facilitated ease of use coupled with the flexibility to use
 the agnostic VIVI methods on a wide range of machine learning (ML)
@@ -323,12 +317,12 @@ forest fit from the <code>randomForest</code> package to use with
 <span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">myData</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-4-vivi">Section 4: vivi<a class="anchor" aria-label="anchor" href="#section-4-vivi"></a>
+</h2>
 <div class="section level3">
-<h3 id="vivi">vivi<a class="anchor" aria-label="anchor" href="#vivi"></a>
+<h3 id="vivi-function">vivi function<a class="anchor" aria-label="anchor" href="#vivi-function"></a>
 </h3>
-<div class="section level4">
-<h4 id="vivi-function">vivi function<a class="anchor" aria-label="anchor" href="#vivi-function"></a>
-</h4>
 <p>The <code>vivi</code> function calculates both the importance and
 interactions using S3 methods. By default, the agnostic importance and
 interaction scores in vivid are computed using the generalized predict
@@ -376,19 +370,19 @@ function arguments use: <code>?vivid::vivi()</code></p>
 <span>                showVimpError <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-5-visualisations">Section 5: Visualisations<a class="anchor" aria-label="anchor" href="#section-5-visualisations"></a>
+</h2>
 <div class="section level3">
-<h3 id="visualisations">Visualisations<a class="anchor" aria-label="anchor" href="#visualisations"></a>
+<h3 id="visualizing-the-results">Visualizing the results<a class="anchor" aria-label="anchor" href="#visualizing-the-results"></a>
 </h3>
-<div class="section level4">
-<h4 id="visualizing-the-results">Visualizing the results<a class="anchor" aria-label="anchor" href="#visualizing-the-results"></a>
-</h4>
 <p>NOTE: If viewing this vignette from the vivid CRAN page, then some
 images may not format correctly. It is recommended to view this vignette
 on GitHub via the following link: <a href="https://alaninglis.github.io/vivid/articles/vividVignette.html" class="uri">https://alaninglis.github.io/vivid/articles/vividVignette.html</a></p>
 </div>
-<div class="section level4">
-<h4 id="heatmap-plot">Heatmap plot<a class="anchor" aria-label="anchor" href="#heatmap-plot"></a>
-</h4>
+<div class="section level3">
+<h3 id="heatmap-plot">Heatmap plot<a class="anchor" aria-label="anchor" href="#heatmap-plot"></a>
+</h3>
 <p>The <code>viviHeatmap</code> function generates a heatmap that
 displays variable importance and interactions, with importance values on
 the diagonal and interaction values on the off-diagonal. The function
@@ -420,9 +414,9 @@ predicting <span class="math inline">\(y\)</span>.
 </caption>
 </center>
 </div>
-<div class="section level4">
-<h4 id="network-plot">Network plot<a class="anchor" aria-label="anchor" href="#network-plot"></a>
-</h4>
+<div class="section level3">
+<h3 id="network-plot">Network plot<a class="anchor" aria-label="anchor" href="#network-plot"></a>
+</h3>
 <p>With <code>viviNetwork</code>, a network graph is produced to
 visualize both importance and interactions. Similar to
 <code>viviHeatmap</code>, this function only requires a
@@ -522,9 +516,9 @@ forest fit.
 strongest mutual interactions have been grouped together. Namley; <span class="math inline">\(x1\)</span>, <span class="math inline">\(x2\)</span>, and <span class="math inline">\(x4\)</span>. The remaining variables are
 individually clustered.</p>
 </div>
-<div class="section level4">
-<h4 id="univariate-partial-dependence-plot">Univariate Partial Dependence Plot<a class="anchor" aria-label="anchor" href="#univariate-partial-dependence-plot"></a>
-</h4>
+<div class="section level3">
+<h3 id="univariate-partial-dependence-plot">Univariate Partial Dependence Plot<a class="anchor" aria-label="anchor" href="#univariate-partial-dependence-plot"></a>
+</h3>
 <p>The <code>pdpVars</code> function constructs a grid of univariate
 PDPs with ICE curves for selected variables. We use ICE curves to assist
 in the identification of linear or non-linear effects. The fit, data
@@ -552,9 +546,9 @@ some impact on the response.
 </caption>
 </center>
 </div>
-<div class="section level4">
-<h4 id="generalized-partial-dependence-pairs-plot">Generalized partial dependence pairs plot<a class="anchor" aria-label="anchor" href="#generalized-partial-dependence-pairs-plot"></a>
-</h4>
+<div class="section level3">
+<h3 id="generalized-partial-dependence-pairs-plot">Generalized partial dependence pairs plot<a class="anchor" aria-label="anchor" href="#generalized-partial-dependence-pairs-plot"></a>
+</h3>
 <p>By employing a matrix layout, the pdpPairs function generates a
 generalized pairs partial dependence plot (GPDP) that encompasses
 univariate partial dependence (with ICE curves) on the diagonal,
@@ -583,9 +577,9 @@ the univariate and bivariate PDPs, we can see that <span class="math inline">\(x
 </caption>
 </center>
 </div>
-<div class="section level4">
-<h4 id="partial-dependence-zenplot">Partial dependence ‘Zenplot’<a class="anchor" aria-label="anchor" href="#partial-dependence-zenplot"></a>
-</h4>
+<div class="section level3">
+<h3 id="partial-dependence-zenplot">Partial dependence ‘Zenplot’<a class="anchor" aria-label="anchor" href="#partial-dependence-zenplot"></a>
+</h3>
 <p>The <code>pdpZen</code> function utilizes a space-saving technique
 based on graph Eulerians, introduced by Hierholzer and Wiener in
 1873[25] to create partial dependence plots. We refer to these plots as
@@ -678,12 +672,12 @@ the Friedman data. The sorting method is defined by the
 </center>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-6-custom-predict-function">Section 6: Custom Predict Function<a class="anchor" aria-label="anchor" href="#section-6-custom-predict-function"></a>
+</h2>
 <div class="section level3">
-<h3 id="custom-predict-function">Custom Predict Function<a class="anchor" aria-label="anchor" href="#custom-predict-function"></a>
+<h3 id="example-using-the-predict-function">Example using the predict function<a class="anchor" aria-label="anchor" href="#example-using-the-predict-function"></a>
 </h3>
-<div class="section level4">
-<h4 id="example-using-the-predict-function">Example using the predict function<a class="anchor" aria-label="anchor" href="#example-using-the-predict-function"></a>
-</h4>
 <p>We supply an internal custom predict function called
 <code>CVpredictfun</code> to both importance and interaction
 calculations. <code>CVpredictfun</code> is a wrapper around
@@ -736,21 +730,21 @@ Friedman data.
 </center>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-7-embedded-vimps">Section 7: Embedded Vimps<a class="anchor" aria-label="anchor" href="#section-7-embedded-vimps"></a>
+</h2>
 <div class="section level3">
-<h3 id="embedded-vimps">Embedded Vimps<a class="anchor" aria-label="anchor" href="#embedded-vimps"></a>
+<h3 id="using-embedded-importance-metrics">Using embedded importance metrics<a class="anchor" aria-label="anchor" href="#using-embedded-importance-metrics"></a>
 </h3>
-<div class="section level4">
-<h4 id="using-embedded-importance-metrics">Using embedded importance metrics<a class="anchor" aria-label="anchor" href="#using-embedded-importance-metrics"></a>
-</h4>
 <p>In the following we show examples of how to select different
 (embedded) importance metrics for use with the <code>vivi</code>
 function. To illustrate the process we use a random forest model fit
 using the <code>randomForest</code> and <code>ranger</code>
 packages.</p>
 </div>
-<div class="section level4">
-<h4 id="in-randomforest">In randomForest<a class="anchor" aria-label="anchor" href="#in-randomforest"></a>
-</h4>
+<div class="section level3">
+<h3 id="in-randomforest">In randomForest<a class="anchor" aria-label="anchor" href="#in-randomforest"></a>
+</h3>
 <p>To begin we fit the <code>randomForest</code> model.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
@@ -771,9 +765,9 @@ the %IncMSE as the importance metric.</p>
 <span>                       response <span class="op">=</span> <span class="st">"y"</span>,</span>
 <span>                       importanceType <span class="op">=</span> <span class="st">"%IncMSE"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="in-ranger">In ranger<a class="anchor" aria-label="anchor" href="#in-ranger"></a>
-</h4>
+<div class="section level3">
+<h3 id="in-ranger">In ranger<a class="anchor" aria-label="anchor" href="#in-ranger"></a>
+</h3>
 <p>For a <code>ranger</code> random forest model, the importance metric
 must be specified when fitting the model. In the code below, we select
 the <code>impurity</code> as the importance metric.</p>
@@ -790,12 +784,12 @@ importance metric.</p>
 <span>                         importanceType <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-8-model-fits">Section 8: Model Fits<a class="anchor" aria-label="anchor" href="#section-8-model-fits"></a>
+</h2>
 <div class="section level3">
-<h3 id="model-fits">Model Fits<a class="anchor" aria-label="anchor" href="#model-fits"></a>
+<h3 id="models-used">Models Used<a class="anchor" aria-label="anchor" href="#models-used"></a>
 </h3>
-<div class="section level4">
-<h4 id="models-used">Models Used<a class="anchor" aria-label="anchor" href="#models-used"></a>
-</h4>
 <p>This section is designed as a quick-stop guide of how to use some of
 the more popular machine learning R packages with <code>vivid</code>.
 The visualisations are omitted here as the goal is to familiarize the
@@ -820,9 +814,9 @@ First we remove any missing values:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="caret---neural-network">caret - Neural Network<a class="anchor" aria-label="anchor" href="#caret---neural-network"></a>
-</h4>
+<div class="section level3">
+<h3 id="caret---neural-network">caret - Neural Network<a class="anchor" aria-label="anchor" href="#caret---neural-network"></a>
+</h3>
 <p>The <code>caret</code> package (short for Classification And
 REgression Training) in R provides a unified interface to streamline the
 process of creating predictive models. In the following example, we use
@@ -838,9 +832,9 @@ here.</p>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">nn</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="randomforest---random-forest">randomForest - Random Forest<a class="anchor" aria-label="anchor" href="#randomforest---random-forest"></a>
-</h4>
+<div class="section level3">
+<h3 id="randomforest---random-forest">randomForest - Random Forest<a class="anchor" aria-label="anchor" href="#randomforest---random-forest"></a>
+</h3>
 <p>The <code>randomForest</code> package in R implements the Random
 Forest algorithm for classification and regression, a popular ensemble
 method that builds multiple decision trees during training and
@@ -853,9 +847,9 @@ aggregates their results for predictions.</p>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">rf</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="ranger---random-forest">ranger - Random Forest<a class="anchor" aria-label="anchor" href="#ranger---random-forest"></a>
-</h4>
+<div class="section level3">
+<h3 id="ranger---random-forest">ranger - Random Forest<a class="anchor" aria-label="anchor" href="#ranger---random-forest"></a>
+</h3>
 <p>The <code>ranger</code> package in R is a fast implementation of
 Random Forests, leveraging optimized C++ code for efficiency.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -866,9 +860,9 @@ Random Forests, leveraging optimized C++ code for efficiency.</p>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">rngr</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="e1071---support-vector-machine">e1071 - Support Vector Machine<a class="anchor" aria-label="anchor" href="#e1071---support-vector-machine"></a>
-</h4>
+<div class="section level3">
+<h3 id="e1071---support-vector-machine">e1071 - Support Vector Machine<a class="anchor" aria-label="anchor" href="#e1071---support-vector-machine"></a>
+</h3>
 <p>The <code>e1071</code> package in R provides functions for various
 machine learning algorithms including support vector machines
 (SVMs).</p>
@@ -880,9 +874,9 @@ machine learning algorithms including support vector machines
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">sv</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="gbm---generalized-boosted-model">gbm - Generalized Boosted Model<a class="anchor" aria-label="anchor" href="#gbm---generalized-boosted-model"></a>
-</h4>
+<div class="section level3">
+<h3 id="gbm---generalized-boosted-model">gbm - Generalized Boosted Model<a class="anchor" aria-label="anchor" href="#gbm---generalized-boosted-model"></a>
+</h3>
 <p>The <code>gbm</code> package in R stands for Generalized Boosted
 Models. It offers an efficient implementation of gradient boosting
 algorithms for classification, regression, and other machine learning
@@ -895,9 +889,9 @@ tasks.</p>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">gm</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="mlr3---k-nearest-neighbours">mlr3 - k-nearest Neighbours<a class="anchor" aria-label="anchor" href="#mlr3---k-nearest-neighbours"></a>
-</h4>
+<div class="section level3">
+<h3 id="mlr3---k-nearest-neighbours">mlr3 - k-nearest Neighbours<a class="anchor" aria-label="anchor" href="#mlr3---k-nearest-neighbours"></a>
+</h3>
 <p>The <code>mlr3</code> package in R offers a modern, object-oriented
 framework for machine learning tasks in R, providing tools for data
 preprocessing, model training, evaluation, and tuning. Here, we fit a
@@ -917,9 +911,9 @@ k-nearest neighbours model to the data.</p>
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">m3</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="bartmachine---bart">bartMachine - BART<a class="anchor" aria-label="anchor" href="#bartmachine---bart"></a>
-</h4>
+<div class="section level3">
+<h3 id="bartmachine---bart">bartMachine - BART<a class="anchor" aria-label="anchor" href="#bartmachine---bart"></a>
+</h3>
 <p>The <code>bartMachine</code> package in R provides an implementation
 of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian
 model which uses decision trees as the underlying model.</p>
@@ -936,9 +930,9 @@ model which uses decision trees as the underlying model.</p>
 <span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">bm</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="xgboost---gradient-boosting">xgboost - Gradient Boosting<a class="anchor" aria-label="anchor" href="#xgboost---gradient-boosting"></a>
-</h4>
+<div class="section level3">
+<h3 id="xgboost---gradient-boosting">xgboost - Gradient Boosting<a class="anchor" aria-label="anchor" href="#xgboost---gradient-boosting"></a>
+</h3>
 <p>The <code>xgboost</code> package (short for eXtreme Gradient
 Boosting) is an implementation of gradient boosting that supports
 regression and classification. As seen in Section
@@ -963,9 +957,9 @@ must match that in the below example. Note that the term
 <span><span class="co"># vivid</span></span>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">gbst</span>, response <span class="op">=</span> <span class="st">'Ozone'</span>,  predictFun <span class="op">=</span> <span class="va">pFun</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="keras---neural-network">keras - Neural Network<a class="anchor" aria-label="anchor" href="#keras---neural-network"></a>
-</h4>
+<div class="section level3">
+<h3 id="keras---neural-network">keras - Neural Network<a class="anchor" aria-label="anchor" href="#keras---neural-network"></a>
+</h3>
 <p>The <code>keras</code> package in R is an interface to the original
 <code>keras</code> Python library. It allows R users to build and train
 neural network models using the high-level Keras API. To use
@@ -995,12 +989,12 @@ function must be made for use with <code>vivid</code>.</p>
 <span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">model</span>, response <span class="op">=</span> <span class="st">'Ozone'</span>, predictFun <span class="op">=</span> <span class="va">pFun</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
+<div class="section level2">
+<h2 id="section-9-classification">Section 9: Classification<a class="anchor" aria-label="anchor" href="#section-9-classification"></a>
+</h2>
 <div class="section level3">
-<h3 id="classification">Classification<a class="anchor" aria-label="anchor" href="#classification"></a>
+<h3 id="classification-example">Classification example<a class="anchor" aria-label="anchor" href="#classification-example"></a>
 </h3>
-<div class="section level4">
-<h4 id="classification-example">Classification example<a class="anchor" aria-label="anchor" href="#classification-example"></a>
-</h4>
 <p>In this section, we briefly describe how to apply the above
 visualisations to a classification example using the <code>iris</code>
 data set.</p>
@@ -1008,9 +1002,9 @@ data set.</p>
 “Species” as the response and create the vivi matrix setting the
 category for classification to be “setosa” using <code>class</code>.</p>
 </div>
-<div class="section level4">
-<h4 id="vivi-1">vivi<a class="anchor" aria-label="anchor" href="#vivi-1"></a>
-</h4>
+<div class="section level3">
+<h3 id="vivi">vivi<a class="anchor" aria-label="anchor" href="#vivi"></a>
+</h3>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -1025,9 +1019,9 @@ category for classification to be “setosa” using <code>class</code>.</p>
 <span>                     reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                     class <span class="op">=</span> <span class="st">"setosa"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="heatmap">Heatmap<a class="anchor" aria-label="anchor" href="#heatmap"></a>
-</h4>
+<div class="section level3">
+<h3 id="heatmap">Heatmap<a class="anchor" aria-label="anchor" href="#heatmap"></a>
+</h3>
 <p>Next we plot the heatmap and network plot of the iris data.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span>
@@ -1039,9 +1033,9 @@ in (b) of random forest fit on the iris data
 </caption>
 </center>
 </div>
-<div class="section level4">
-<h4 id="gpdp">GPDP<a class="anchor" aria-label="anchor" href="#gpdp"></a>
-</h4>
+<div class="section level3">
+<h3 id="gpdp">GPDP<a class="anchor" aria-label="anchor" href="#gpdp"></a>
+</h3>
 <p>As mentioned above, as PDPs are evaluated on a grid and can
 extrapolate where there is no data. To solve this issue we calculate a
 convex hull around the data and remove any points that fall outside the
@@ -1063,9 +1057,9 @@ the iris data with extrapolated data removed.
 </center>
 </div>
 </div>
-<div class="section level3">
-<h3 id="full-script">Full Script<a class="anchor" aria-label="anchor" href="#full-script"></a>
-</h3>
+<div class="section level2">
+<h2 id="section-10-full-script">Section 10: Full Script<a class="anchor" aria-label="anchor" href="#section-10-full-script"></a>
+</h2>
 <p>This section consolidates the Sections <code>Data and Model</code>,
 <code>vivi</code>, <code>Visualisations</code>
 <code>Custom Predict Function</code>, and <code>Embedded Vimps</code>
@@ -1204,9 +1198,9 @@ into a single script to facilitate ease of viewing.</p>
 <span>       nmax <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>       gridSize <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>       zpath <span class="op">=</span> <span class="va">zpSw</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="using-a-custom-predict-function">Using a custom predict function<a class="anchor" aria-label="anchor" href="#using-a-custom-predict-function"></a>
-</h4>
+<div class="section level3">
+<h3 id="using-a-custom-predict-function">Using a custom predict function<a class="anchor" aria-label="anchor" href="#using-a-custom-predict-function"></a>
+</h3>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost" class="external-link">"xgboost"</a></span><span class="op">)</span></span>
@@ -1232,9 +1226,9 @@ into a single script to facilitate ease of viewing.</p>
 <span><span class="co"># plot heatmap</span></span>
 <span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviGBst</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="using-embedded-variable-importance">Using embedded variable importance<a class="anchor" aria-label="anchor" href="#using-embedded-variable-importance"></a>
-</h4>
+<div class="section level3">
+<h3 id="using-embedded-variable-importance">Using embedded variable importance<a class="anchor" aria-label="anchor" href="#using-embedded-variable-importance"></a>
+</h3>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">"randomForest"</a></span><span class="op">)</span></span>
@@ -1267,9 +1261,9 @@ into a single script to facilitate ease of viewing.</p>
 <span><span class="co"># Plot Heatmap</span></span>
 <span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviRangEmbedded</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="classification-1">Classification<a class="anchor" aria-label="anchor" href="#classification-1"></a>
-</h4>
+<div class="section level3">
+<h3 id="classification">Classification<a class="anchor" aria-label="anchor" href="#classification"></a>
+</h3>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">"randomForest"</a></span><span class="op">)</span></span>
@@ -1299,9 +1293,9 @@ into a single script to facilitate ease of viewing.</p>
 <span>         nmax <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> </span></code></pre></div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h3>
+<div class="section level2">
+<h2 id="section-11-references">Section 11: References<a class="anchor" aria-label="anchor" href="#section-11-references"></a>
+</h2>
 <ol style="list-style-type: decimal">
 <li><p>Alan Inglis and Andrew Parnell and Catherine B. Hurley (2022)
 Visualizing Variable Importance and Variable Interaction Effects in
@@ -1386,7 +1380,6 @@ Software 95 (4): 1–44.</p></li>
 Condvis2: Interactive Conditional Visualization for Supervised and
 Unsupervised Models in Shiny.</p></li>
 </ol>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
