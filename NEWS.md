@@ -1,6 +1,5 @@
-# vivid 0.2.7
+# vivid 0.2.8
 
-* Added more examples to documentation and clarified documentation text
-* Added more examples to the vignette
-* Fixed typos in vignette
+* Updated package to work with new version of `flashlight`
+* Updated vignette to include more examples of using `vivid` with different model types
 
