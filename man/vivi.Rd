@@ -45,7 +45,7 @@ return agnostic importance values.}
 
 \item{normalized}{Should Friedman's H-statistic be normalized or not. Default is FALSE.}
 
-\item{numPerm}{Number of permutations to preform. Default is 4.}
+\item{numPerm}{Number of permutations to perform for agnostic importance. Default is 4.}
 
 \item{showVimpError}{Logical. If TRUE, and \code{numPerm > 1} then a tibble containing the variable names, their importance values,
 and the standard error for each importance is printed to the console.}
