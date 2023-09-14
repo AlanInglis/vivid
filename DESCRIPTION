@@ -1,6 +1,6 @@
 Package: vivid
 Title: Variable Importance and Variable Interaction Displays
-Version: 0.2.7
+Version: 0.2.8
 Authors@R: c(
     person(given = "Alan", family = "Inglis", email = "alan.n.inglis@gmail.com", role = c("aut", "cre")),
     person(given = "Andrew", family = "Parnell", email = "andrew.parnell@mu.ie", role = "aut"),
@@ -48,6 +48,6 @@ Suggests:
     xgboost
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 URL: https://alaninglis.github.io/vivid/
