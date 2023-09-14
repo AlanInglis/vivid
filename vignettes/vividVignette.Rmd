@@ -2,7 +2,7 @@
 title: "vivid: Variable Importance and Variable Interaction Displays"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{vivid}
+  %\VignetteIndexEntry{vivid: Variable Importance and Variable Interaction Displays}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
@@ -25,17 +25,17 @@ img {
   }
 </style>
 
+
   
 ```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
 library(vivid)
 ```
 
-#  {.tabset .tabset-fade}
+# {.tabset .tabset-fade}
 
 ## Introduction
 
-### Introduction
-
+### Introduction to vivid
 <!-- badges: start -->
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/badge/vividLogoNew2.png" width="240" height="276" align="right" />
   <!-- badges: end -->
@@ -44,7 +44,7 @@ library(vivid)
 Variable importance (VImp), variable interaction measures (VInt) and partial dependence plots (PDPs) are important summaries in the interpretation of statistical and machine learning models. In this vignette we describe new visualization techniques for exploring these model summaries. We construct heatmap and graph-based displays showing variable importance and interaction jointly, which are carefully designed to highlight important aspects of the fit. We describe a new matrix-type layout showing all single and bivariate partial dependence plots, and an alternative layout based on graph Eulerians focusing on key subsets. Our new visualisations are model-agnostic and are applicable to regression and classification supervised learning settings. They enhance interpretation even in situations where the number of variables is large and the interaction structure complex. Our R package `vivid` (variable importance and variable interaction displays) provides an implementation. When referring to VImp and VInt together, we use the shorthand VIVI. For more information related to visualising variable importance and interactions in machine learning models see our published work[1].
 
 
-#### Install instructions
+### Install instructions
 Some of the plots used by `vivid` are built upon the `zenplots` package which requires the `graph` package from BioConductor. To install the `graph` and `zenplots` packages use:
   
 `if (!requireNamespace("graph", quietly = TRUE)){` 
@@ -75,11 +75,9 @@ library(vivid)
 
 ## Background
 
-### Section 1: Background
-
 VIVI metrics can be categorized into two types: those that are model-specific (embedded) and those that are model-agnostic. Here we provide a brief background on variable importance, variable interactions, and partial dependence and discuss their use in `vivid`.
 
-#### Variable Importance
+### Variable Importance
 The importance value of a variable measures the extent to which it impacts the model's output. Embedded methods weave variable importance directly into the machine learning algorithm. For instance, machine learning methods like random forests (RF)[2] and gradient boosting machines (GBM)[3] utilize their tree-based architecture to evaluate the performance of the model. Similarly, Bayesian additive regression tree models (BART)[4] adopt an embedded approach to yield VIVI metrics by measuring the proportion of splitting rules for for individual or paired variables in the trees. 
 
 The package `randomForestExplainer`[5] offers a toolkit for deciphering the inner workings of a random forest. It applies the minimal depth concept[6] to gauge both the significance and interaction strength by observing a variable's location within the trees. Moreover, the `varImp` package[7] facilitates the computation of importance scores for the `party` package's conditional inference random forest[8]. For gradient boosted machines, the `EIX`[9] package can be used to calculate VIVI, and graphically represent the findings.
@@ -112,7 +110,7 @@ In `vivid` we provide the functionality to calculate either an agnostic or model
   
 2. For model-specific variable importance, we provide individual methods to access importance scores for some of the most popular model fitting R packages, namely; ranger[15], mlr[16], mlr3[17], and parsnip[18]. See Section `Model Fits` for more details on using different models with `vivid`.
   
-#### Partial Dependence
+### Partial Dependence
 
 Friedman (2000)[19] introduced Partial Dependence Plots (PDPs) as a model-agnostic method to visualize the relationship between a chosen predictor and the model outcome, while averaging out the effects of other predictors. Individual Conditional Expectation (ICE) curves, introduced by Goldstein et al. (2015)[20], depict the relationship between a specific predictor and the model outcome by setting other predictors at certain observation levels. Essentially, PDPs represent the averaged outcome of all ICE curves in the dataset. The iml, DALEX, flashlight, and pdp[21] R packages offer PDP functionalities, while the ICEbox package[20] caters to ICE curves and their variations. The partial dependence of the model fit function $g$ on predictor variables $S$ (where $S$ is a subset of the $p$ predictor variables) is estimated as:
 
@@ -126,7 +124,7 @@ f_S(\mathbf{x}_S)=\frac{1}{n}\sum^n_{i=1}g(\mathbf{x}_s,\mathbf{x}_{C_i})
 where $C$ denotes predictors other than those in $S$, ${x_{C_1},x_{C_2},...,x_{C_n}}$ are the values of
 $x_C$ occurring in the training set of n observations, and $g()$ gives the predictions from the machine learning model. For one or two variables, the partial dependence functions $f_S(\mathbf{x}_S)$ are plotted (a so-called PDP) to display the marginal fits.
 
-#### Variable Interactions
+### Variable Interactions
 
 For VInts, the H-statistic by Friedman and Popescu (2008)[22] is a model-agnostic measure that gauges interactions using partial dependence. It contrasts the joint effects of a variable pair with the sum of their marginal effects.. This is implemented in the `iml` and `flashlight` packages and is defined as:
 
@@ -151,9 +149,7 @@ H_{jk}=\sqrt{\frac{1}{n}\sum^n_{i=1}[f_{jk}(x_{ij},x_{ik})-f_j(x_{ij})-f_k(x_{ik
 
 ## Data and Model
 
-### Section 1: Data and Model
-
-#### Data used in this vignette:
+### Data used in this vignette
 
 The data used in the following examples is simulated from the Friedman benchmark problem[23]. This benchmark problem is commonly used for testing purposes. The output is created according to the equation:
   
@@ -193,7 +189,7 @@ myData <- genFriedman(noFeatures = 9, noSamples = 350, sigma = 1)
 
 
 
-#### Model Fits
+### Model Fit
 
 Part of the intention behind `vivid` was to create a package that facilitated ease of use coupled with the flexibility to use the agnostic VIVI methods on a wide range of machine learning (ML) models. Section `Model Fits` provides practical examples of how to use `vivid` with some of the more popular ML algorithms. For brevity, for the following examples, we create a random forest fit from the `randomForest` package to use with `vivid`.
 
@@ -234,12 +230,12 @@ viviRf  <- vivi(fit = rf,
 
 ## Visualisations
 
-### Section 2: Visualizing the results
+### Visualizing the results
 
 NOTE: If viewing this vignette from the vivid CRAN page, then some
 images may not format correctly. It is recommended to view this vignette on GitHub via the following link: https://alaninglis.github.io/vivid/articles/vividVignette.html
 
-#### Heatmap plot
+### Heatmap plot
 
 The `viviHeatmap` function generates a heatmap that displays variable importance and interactions, with importance values on the diagonal and interaction values on the off-diagonal. The function only requires a `vivid` matrix as input, which does not need to be symmetrical. Additionally, color palettes can be specified for both importance and interactions via the `impPal` and `intPal` arguments. By default, we have opted for single-hue, color-blind friendly sequential color palettes developed by Zeileis et al[24]. These palettes represent low and high VIVI values with low and high luminance colors, respectively, which can aid in highlighting pertinent values.
 
@@ -257,7 +253,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <caption><span id="fig1:fig1">Figure 1: </span>Heatmap of a random forest fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal. $x_1$ and $x_2$ show a strong interaction with $x_4$ being the most important for predicting $y$.</caption>
   </center>
   
-#### Network plot
+### Network plot
   
 With `viviNetwork`, a network graph is produced to visualize both importance and interactions. Similar to `viviHeatmap`, this function only requires a `vivid` matrix as input and uses visual elements, such as size and color, to depict the magnitude of importance and interaction values. The graph displays each variable as a node, where its size and color reflect its importance (larger and darker nodes indicate higher importance). Pairwise interactions are displayed through connecting edges, where thicker and darker edges indicate higher interaction values.
 
@@ -338,7 +334,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 In Figure 5, after applying a hierarchical clustering, we can see the strongest mutual interactions have been grouped together. Namley; $x1$, $x2$, and $x4$. The remaining variables are individually clustered. 
   
   
-#### Univariate Partial Dependence Plot
+### Univariate Partial Dependence Plot
   
 The `pdpVars` function constructs a grid of univariate PDPs with ICE curves for selected variables. We use ICE curves to assist in the identification of linear or non-linear effects. The fit, data frame used to train the model, and the name of the response variable are required inputs.
 
@@ -362,7 +358,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <caption><span id="fig6:fig6">Figure 6: </span>Partial dependence plots (black line) with individual conditional expectation curves (colored lines) of a random forest fit on the Friedman data. The changing partial dependence and ICE curves of $x1$, $x2$, and $x4$ indicate that these variables have some impact on the response.</caption>
 </center>
   
-#### Generalized partial dependence pairs plot
+### Generalized partial dependence pairs plot
 
 By employing a matrix layout, the pdpPairs function generates a generalized pairs partial dependence plot (GPDP) that encompasses univariate partial dependence (with ICE curves) on the diagonal, bivariate partial dependence on the upper diagonal, and a scatterplot of raw variable values on the lower diagonal, where all colours are assigned to points and ICE curves by the predicted $\hat{y}$ value. As with the univariate PDP, the fit, data frame used to train the model, and the name of the response variable are required inputs. For a full description of all the function arguments, see `?vivid::pdpPairs`. In the following example, we select the first five variables to display and set the number of shown  ICE curves to 100.
 
@@ -385,7 +381,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <caption><span id="fig7:fig7">Figure 7: </span>Filtered generalized pairs partial dependence plot for a random forest fit on the Friedman data. From both the univariate and bivariate PDPs, we can see that $x1$, $x2$, and $x4$ have an impact on the response.</caption>
 </center>
   
-#### Partial dependence 'Zenplot'
+### Partial dependence 'Zenplot'
   
 The `pdpZen` function utilizes a space-saving technique based on graph Eulerians, introduced by Hierholzer and Wiener in 1873[25] to create partial dependence plots. We refer to these plots as zen-partial dependence plots (ZPDP). These plots are based on zigzag expanded navigation plots, also known as zenplots, which are available in the zenplots package[26]. Zenplots were designed to showcase paired graphs of high-dimensional data with a focus on the most significant 2D displays. In our version, we display bivariate PDPs that emphasize variables with the most significant interaction values in a compact zigzag layout. This format is useful when dealing with high-dimensional predictor space.
 
@@ -461,7 +457,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
   
 ## Custom Predict Function
 
-### Section 3: Example using the predict function
+### Example using the predict function
   
 We supply an internal custom predict function called `CVpredictfun` to both importance and interaction calculations. `CVpredictfun` is a wrapper around `CVpredict` from the `condvis2` package[27]. `CVpredict` accepts a broad range of fit classes thus streamlining the process of calculating variable importance and interactions. In situations where the fit class is not handled by `CVpredict`, supplying a custom predict function to the `vivi` function by way of the `predictFun` argument allows the agnostic VIVI values to be calculated. For an example of using `vivid` with many different types of models, see the Section `Model Fits` In the following, we provide a small example of using such a fit with `vivid` by using the `xgboost` package to create a gradient boosting machine (GBM). To begin we build the model.
 
@@ -509,9 +505,11 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 
 ## Embedded Vimps
 
-### Section 4: Using embedded importance metrics
+### Using embedded importance metrics
 
 In the following we show examples of how to select different (embedded) importance metrics for use with the `vivi` function.  To illustrate the process we use a random forest model fit using the `randomForest` and `ranger` packages. 
+
+### In randomForest
 
 To begin we fit the `randomForest` model.
 
@@ -529,6 +527,8 @@ viviRfEmbedded <- vivi(fit = rfEmbedded,
                        importanceType = "%IncMSE")
 ```
   
+### In ranger
+
 For a `ranger` random forest model, the importance metric must be specified when fitting the model. In the code below, we select the `impurity` as the importance metric.
 
 ```{r, eval = FALSE}
@@ -546,6 +546,8 @@ viviRangEmbedded <- vivi(fit = rang,
 ```
 
 ## Model Fits
+
+### Models Used
 This section is designed as a quick-stop guide of how to use some of the more popular machine learning R packages with `vivid`. The visualisations are omitted here as the goal is to familiarize the user with implementing `vivid`. As previously discussed, `vivid` will work out-of-the-box with several of these R packages, however, with others, a custom predict function will have to be supplied. The packages (and models) shown here are:
 
 * caret - Neural Network
@@ -565,7 +567,7 @@ For simplicity, in this section we use the popular `air quality` dataset, with _
 aq <- na.omit(airquality)
 ```
 
-#### caret - Neural Network
+### caret - Neural Network
 The `caret` package (short for Classification And REgression Training) in R provides a unified interface to streamline the process of creating predictive models. In the following example, we use the `caret` package to utilize a neural network model fit via the `nnet` package. As `caret` is catered for in `vivid`, there is no need for a custom predict function here. 
 ```{r, eval = FALSE}
 library("caret")
@@ -576,7 +578,7 @@ nn <- train(Ozone ~ ., data = aq, method = "nnet", trace = FALSE, linout = TRUE,
 vivi(data = aq, fit = nn, response = 'Ozone')
 ```
 
-#### randomForest - Random Forest
+### randomForest - Random Forest
 The `randomForest` package in R implements the Random Forest algorithm for classification and regression, a popular ensemble method that builds multiple decision trees during training and aggregates their results for predictions.
 ```{r, eval = FALSE}
 library("randomForest")
@@ -587,7 +589,7 @@ rf <- randomForest(Ozone ~ ., data = aq)
 vivi(data = aq, fit = rf, response = 'Ozone')
 ```
 
-#### ranger - Random Forest
+### ranger - Random Forest
 The `ranger` package in R is a fast implementation of Random Forests, leveraging optimized C++ code for efficiency.
 ```{r, eval = FALSE}
 library("ranger")
@@ -598,7 +600,7 @@ rngr <- ranger(Ozone ~ ., data = aq)
 vivi(data = aq, fit = rngr, response = 'Ozone')
 ```
 
-#### e1071 - Support Vector Machine
+### e1071 - Support Vector Machine
 The `e1071` package in R provides functions for various machine learning algorithms including support vector machines (SVMs). 
 ```{r, eval = FALSE}
 library("e1071")
@@ -609,7 +611,7 @@ sv <- svm(Ozone ~ ., data = aq, kernel = "radial")
 vivi(data = aq, fit = sv, response = 'Ozone')
 ```
 
-#### gbm - Generalized Boosted Model
+### gbm - Generalized Boosted Model
 The `gbm` package in R stands for Generalized Boosted Models. It offers an efficient implementation of gradient boosting algorithms for classification, regression, and other machine learning tasks.
 ```{r, eval = FALSE}
 library("gbm")
@@ -620,7 +622,7 @@ gm <-  gbm(Ozone ~ ., data = aq, distribution = "gaussian", n.trees = 100, inter
 vivi(data = aq, fit = gm, response = 'Ozone')
 ```
 
-#### mlr3 - k-nearest Neighbours
+### mlr3 - k-nearest Neighbours
 The `mlr3` package in R offers a modern, object-oriented framework for machine learning tasks in R, providing tools for data preprocessing, model training, evaluation, and tuning. Here, we fit a k-nearest neighbours model to the data.
 ```{r, eval = FALSE}
 library("mlr3")
@@ -638,7 +640,7 @@ m3 <- learner$train(task)
 vivi(data = aq, fit = m3, response = 'Ozone')
 ```
 
-#### bartMachine - BART
+### bartMachine - BART
 The `bartMachine` package in R provides an implementation of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian model which uses decision trees as the underlying model.
 ```{r, eval = FALSE}
 library("bartMachine")
@@ -654,7 +656,7 @@ bm <- bartMachine(X = aq[,2:6],
 vivi(data = aq, fit = bm, response = 'Ozone')
 ```
 
-#### xgboost - Gradient Boosting
+### xgboost - Gradient Boosting
 The `xgboost` package (short for eXtreme Gradient Boosting) is an implementation of gradient boosting that supports regression and classification. As seen in Section `Custom Predict Function`, the `xgboost` package requires the user to supply a custom predict function to work with `vivid`. When setting the `data` argument in `xgboost`, remember to include all the variables (including the response). When producing the custom predict function, the structure must match that in the below example. Note that the term `data` must be used and not the actual name of the data. 
 
 ```{r, eval = FALSE}
@@ -675,7 +677,7 @@ vivi(data = aq, fit = gbst, response = 'Ozone',  predictFun = pFun)
 
 
 
-####  keras - Neural Network
+###  keras - Neural Network
 The `keras` package in R is an interface to the original `keras` Python library. It allows R users to build and train neural network models using the high-level Keras API. To use `keras` the data must first be normalised. A custom predict function must be made for use with `vivid`.
 ```{r, eval = FALSE}
 library("keras")
@@ -704,12 +706,13 @@ vivi(data = aq, fit = model, response = 'Ozone', predictFun = pFun)
 
 ## Classification
 
-### Section 5: Classification example
+### Classification example
   
 In this section, we briefly describe how to apply the above visualisations to a classification example using the `iris` data set. 
 
 To begin we fit a `ranger` random forest model with "Species" as the response and create the vivi matrix setting the category for classification to be "setosa" using `class`.
 
+### vivi
 ```{r, eval = FALSE}
 set.seed(1701)
 rfClassif <- ranger(Species~ ., data = iris, probability = T, 
@@ -726,6 +729,7 @@ viviClassif  <- vivi(fit = rfClassif,
 ```
 
 
+### Heatmap
 Next we plot the heatmap and network plot of the iris data.
 
 ```{r, eval = FALSE}
@@ -741,6 +745,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/mast
 <caption><span id="fig12:fig12">Figure 12: </span>Heatmap in (a) and Network plot in (b) of random forest fit on the iris data</caption>
 </center>
   
+### GPDP
 As mentioned above, as PDPs are evaluated on a grid and can extrapolate where there is no data. To solve this issue we calculate a convex hull around the data and remove any points that fall outside the convex hull, as shown below.
 
 ```{r, eval = FALSE}
