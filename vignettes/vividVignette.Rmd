@@ -632,7 +632,7 @@ library("mlr3learners")
 task <- TaskRegr$new(id = "airquality", backend = aq, target = "Ozone")
 
 
-# Train a gradient boosting model using mlr3
+# Train a k-nearest neighbours model using mlr3
 learner <- lrn("regr.kknn")
 m3 <- learner$train(task)
 
@@ -678,29 +678,61 @@ vivi(data = aq, fit = gbst, response = 'Ozone',  predictFun = pFun)
 
 
 ###  keras - Neural Network
-The `keras` package in R is an interface to the original `keras` Python library. It allows R users to build and train neural network models using the high-level Keras API. To use `keras` the data must first be normalised. A custom predict function must be made for use with `vivid`.
+The `keras` package in R is an interface to the original `keras` Python library. It allows R users to build and train neural network models using the high-level Keras API. To use `keras` the data must first be normalised. Due to the complexity custom model fits in `keras`, producing a custom predict function to use with `vivid` may require some work. In the example below, we show how to use `vivid` when building a `keras` model composed of a linear stack of layers (i.e., using ` keras_model_sequential`). Additionally, currently the PDP plots in `vivid` only work for the development version on GitHub.
 ```{r, eval = FALSE}
 library("keras")
 
+# Set up data
+train_data <- aq %>%
+  as.matrix()
+train_targets <- aq$Ozone
+
 # Normalize the data
-normalize_data <- function(data) {
-  return((data - min(data)) / (max(data) - min(data)))
-}
-
-aqn <- as.data.frame(lapply(aq, normalize_data))
-
+mean <- apply(train_data, 2, mean)                                  
+std <- apply(train_data, 2, sd)
+aqTrain <- scale(train_data, center = mean, scale = std)  
 
 # Define model architecture
-model <- keras_model_sequential() %>%
-  layer_dense(units = 8, activation = 'relu', input_shape = ncol(aqn) - 1) %>%
-  layer_dense(units = 1)
+build_model <- function() {                                
+  model <- keras_model_sequential() %>%
+    layer_dense(units = 64, activation = "relu",
+                input_shape = dim(aqTrain)[[2]]) %>%
+    layer_dense(units = 64, activation = "relu") %>%
+    layer_dense(units = 1)
+  model %>% compile(
+    optimizer = "rmsprop",
+    loss = "mse",
+    metrics = c("mae")
+  )
+}
 
+# Train the final model
+model <- build_model()
+model %>% fit(train_data, train_targets, epochs = 80, 
+               batch_size = 16, verbose = 0)
+
+# Create usable data frame from scaled data
+aqFinal <- as.data.frame(aqTrain)
 
 # predict function for keras
-pFun <- function(fit, data, ...) predict(fit, as.matrix(data[, -1]))
-
+ vi_fun <- function(fit, data,...) {
+   predict(fit, x = as.matrix(data))
+ }
+ 
 # vivid
-vivi(data = aq, fit = model, response = 'Ozone', predictFun = pFun)
+vi <- vivi(data = aqFinal, 
+           fit = model,
+           response = 'Ozone',
+           predictFun = vi_fun)
+
+# PDPs
+pdpPairs(data = aqFinal, 
+         fit =  model, 
+         response = "Ozone", 
+         nmax = 500, 
+         gridSize = 10,         
+         nIce = 100,
+         predictFun = vi_fun)
 
 ```
 
