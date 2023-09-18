@@ -138,7 +138,15 @@ pdpPairs <- function(data,
   if (classif) {
     pdplist1$fit <- predictFun(fit, pdplist1, prob = probability)
   } else {
-    pdplist1$fit <- predictFun(fit, pdplist1)
+    # only for use with keras models
+    if (any(sapply(class(fit), function(x) grepl("keras", x)))) {
+      numberCol <- ncol(pdplist1)
+      pdplist1Keras <- pdplist1[,-c(numberCol-2, numberCol-1, numberCol)]
+      pdplist1$fit <- predictFun(fit, pdplist1Keras) # had to explicitly remove the extra colmns here
+    } else {
+      pdplist1$fit <- predictFun(fit, pdplist1)
+    }
+    #pdplist1$fit <- predictFun(fit, pdplist1)
   }
 
 
@@ -167,7 +175,15 @@ pdpPairs <- function(data,
   if (classif) {
     pdplist$fit <- predictFun(fit, pdplist, prob = probability)
   } else {
-    pdplist$fit <- predictFun(fit, pdplist)
+    # only for use with keras models
+    if (any(sapply(class(fit), function(x) grepl("keras", x)))) {
+      numberColumn <- ncol(pdplist)
+      pdplistKeras <- pdplist[,-c(numberColumn-2, numberColumn-1, numberColumn)]
+      pdplist$fit <- predictFun(fit, pdplistKeras) # had to explicitly remove the extra colmns here
+    } else {
+      pdplist$fit <- predictFun(fit, pdplist)
+    }
+    #pdplist$fit <- predictFun(fit, pdplist)
   }
   pdplist <- split(pdplist, pdplist$.pid)
 

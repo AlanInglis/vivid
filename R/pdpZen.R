@@ -156,7 +156,15 @@ pdpZen <- function(data,
   if (classif) {
     pdplist$fit <- predictFun(fit, pdplist, prob = probability)
   } else {
-    pdplist$fit <- predictFun(fit, pdplist)
+    # only for use with keras models
+    if (any(sapply(class(fit), function(x) grepl("keras", x)))) {
+      numberCol <- ncol(pdplist)
+      pdplistKeras <- pdplist[,-c(numberCol-1, numberCol)]
+      pdplist$fit <- predictFun(fit, pdplistKeras) # had to explicitly remove the extra colmns here
+    } else {
+      pdplist$fit <- predictFun(fit, pdplist)
+    }
+    #pdplist$fit <- predictFun(fit, pdplist)
   }
   pdplist <- split(pdplist, pdplist$.pid)
 
