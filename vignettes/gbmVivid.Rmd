@@ -1,0 +1,123 @@
+---
+title: "gbm - Generalized Boosted Model"
+output: html_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{gbm - Generalized Boosted Model}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "vig/"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+<!-- avoid border around images -->
+<style>
+img {
+  border: 0;
+  }
+</style>
+
+These guides are designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`. In the following example, we use the air quality data for regression.
+
+### GBM
+
+The `gbm` package in R stands for Generalized Boosted Models. It offers an efficient implementation of gradient boosting algorithms for classification, regression, and other machine learning tasks.
+
+```{r, message=FALSE}
+library('vivid')
+library('gbm')
+```
+
+
+
+### Regression
+
+```{r, eval=FALSE}
+
+# load data
+aq <- na.omit(airquality)
+
+# build SVM model
+gb <-  gbm(Ozone ~ ., 
+           data = aq, 
+           distribution = "gaussian")
+
+# vivi matrix
+vi <- vivi(data = aq, fit = gb, response = 'Ozone')
+```
+
+
+<!-- #### Heatmap -->
+<!-- ```{r, gb_r_heat,  out.width = '100%', eval=FALSE} -->
+<!-- viviHeatmap(mat = vi) -->
+<!-- ``` -->
+
+<!-- ```{r, echo = F,  out.width = '100%'} -->
+<!-- knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/gb_r_heat-1.png") -->
+<!-- ``` -->
+<!-- <center> -->
+<!-- <caption><span id="fig1:fig1">Figure 1: </span>Heatmap of a GBM regression fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption> -->
+<!--   </center> -->
+
+#### PDP
+```{r, gb_r_pdp, out.width='100%', eval=FALSE}
+pdpPairs(data = aq, 
+         fit =  gb, 
+         response = "Ozone", 
+         nmax = 50, 
+         gridSize = 4,         
+         nIce = 10)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/gb_r_pdp-1.png")
+```
+<center>
+<caption><span id="fig1:fig1">Figure 1: </span>Generalized pairs partial dependence plot for a GBM regression fit.</caption>
+</center>
+
+
+
+<!-- ### Classification -->
+
+<!-- ```{r, eval=FALSE} -->
+
+<!-- # Load the iris dataset -->
+<!-- data(iris) -->
+
+<!-- # Train  -->
+<!-- gb <- gbm( -->
+<!--   Species ~ .,  -->
+<!--   data = iris,  -->
+<!--   distribution = "multinomial" -->
+<!-- ) -->
+
+
+<!-- # vivi matrix -->
+<!-- vi <- vivi(data = iris, fit = gb, response = 'Species') -->
+<!-- ``` -->
+
+
+<!-- #### Heatmap -->
+<!-- ```{r, gb_c_heat,  out.width = '100%', eval=FALSE} -->
+<!-- viviHeatmap(mat = vi) -->
+<!-- ``` -->
+
+<!-- ```{r, echo = F,  out.width = '100%'} -->
+<!-- knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/gb_c_heat-1.png") -->
+<!-- ``` -->
+<!-- <center> -->
+<!-- <caption><span id="fig3:fig3">Figure 3: </span>Heatmap of a GBM classification fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption> -->
+<!--   </center> -->
+
+
+

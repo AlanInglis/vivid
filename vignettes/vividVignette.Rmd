@@ -2,8 +2,8 @@
 title: "vivid: Variable Importance and Variable Interaction Displays"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{vivid: Variable Importance and Variable Interaction Displays}
   %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{vivid: Variable Importance and Variable Interaction Displays}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
   chunk_output_type: console
@@ -548,7 +548,8 @@ viviRangEmbedded <- vivi(fit = rang,
 ## Model Fits
 
 ### Models Used
-This section is designed as a quick-stop guide of how to use some of the more popular machine learning R packages with `vivid`. The visualisations are omitted here as the goal is to familiarize the user with implementing `vivid`. As previously discussed, `vivid` will work out-of-the-box with several of these R packages, however, with others, a custom predict function will have to be supplied. The packages (and models) shown here are:
+
+Additional examples are shown for several different machine learning models. These scripts are designed as a quick-stop guide of how to use some of the more popular machine learning R packages with `vivid` and to familiarize the user with implementing `vivid`. See individual vignette scripts for specific models. As previously discussed, `vivid` will work out-of-the-box with several of these R packages, however, with others, a custom predict function will have to be supplied. The packages (and models) shown here are:
 
 * caret - Neural Network
 * randomForest - Random Forest
@@ -562,179 +563,179 @@ This section is designed as a quick-stop guide of how to use some of the more po
 
  
 
-For simplicity, in this section we use the popular `air quality` dataset, with _Ozone_ as the response. First we remove any missing values:
-```{r, eval = FALSE}
-aq <- na.omit(airquality)
-```
+<!-- For simplicity, in this section we use the popular `air quality` dataset, with _Ozone_ as the response. First we remove any missing values: -->
+<!-- ```{r, eval = FALSE} -->
+<!-- aq <- na.omit(airquality) -->
+<!-- ``` -->
 
-### caret - Neural Network
-The `caret` package (short for Classification And REgression Training) in R provides a unified interface to streamline the process of creating predictive models. In the following example, we use the `caret` package to utilize a neural network model fit via the `nnet` package. As `caret` is catered for in `vivid`, there is no need for a custom predict function here. 
-```{r, eval = FALSE}
-library("caret")
-# build caret nnet model
-nn <- train(Ozone ~ ., data = aq, method = "nnet", trace = FALSE, linout = TRUE, maxit = 200)
+<!-- ### caret - Neural Network -->
+<!-- The `caret` package (short for Classification And REgression Training) in R provides a unified interface to streamline the process of creating predictive models. In the following example, we use the `caret` package to utilize a neural network model fit via the `nnet` package. As `caret` is catered for in `vivid`, there is no need for a custom predict function here.  -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("caret") -->
+<!-- # build caret nnet model -->
+<!-- nn <- train(Ozone ~ ., data = aq, method = "nnet", trace = FALSE, linout = TRUE, maxit = 200) -->
 
-# vivid
-vivi(data = aq, fit = nn, response = 'Ozone')
-```
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = nn, response = 'Ozone') -->
+<!-- ``` -->
 
-### randomForest - Random Forest
-The `randomForest` package in R implements the Random Forest algorithm for classification and regression, a popular ensemble method that builds multiple decision trees during training and aggregates their results for predictions.
-```{r, eval = FALSE}
-library("randomForest")
-# build  random forest model
-rf <- randomForest(Ozone ~ ., data = aq)
+<!-- ### randomForest - Random Forest -->
+<!-- The `randomForest` package in R implements the Random Forest algorithm for classification and regression, a popular ensemble method that builds multiple decision trees during training and aggregates their results for predictions. -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("randomForest") -->
+<!-- # build  random forest model -->
+<!-- rf <- randomForest(Ozone ~ ., data = aq) -->
 
-# vivid
-vivi(data = aq, fit = rf, response = 'Ozone')
-```
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = rf, response = 'Ozone') -->
+<!-- ``` -->
 
-### ranger - Random Forest
-The `ranger` package in R is a fast implementation of Random Forests, leveraging optimized C++ code for efficiency.
-```{r, eval = FALSE}
-library("ranger")
-# build  ranger random forest model
-rngr <- ranger(Ozone ~ ., data = aq)
+<!-- ### ranger - Random Forest -->
+<!-- The `ranger` package in R is a fast implementation of Random Forests, leveraging optimized C++ code for efficiency. -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("ranger") -->
+<!-- # build  ranger random forest model -->
+<!-- rngr <- ranger(Ozone ~ ., data = aq) -->
 
-# vivid
-vivi(data = aq, fit = rngr, response = 'Ozone')
-```
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = rngr, response = 'Ozone') -->
+<!-- ``` -->
 
-### e1071 - Support Vector Machine
-The `e1071` package in R provides functions for various machine learning algorithms including support vector machines (SVMs). 
-```{r, eval = FALSE}
-library("e1071")
-# build SVM model
-sv <- svm(Ozone ~ ., data = aq, kernel = "radial")
+<!-- ### e1071 - Support Vector Machine -->
+<!-- The `e1071` package in R provides functions for various machine learning algorithms including support vector machines (SVMs).  -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("e1071") -->
+<!-- # build SVM model -->
+<!-- sv <- svm(Ozone ~ ., data = aq, kernel = "radial") -->
 
-# vivid
-vivi(data = aq, fit = sv, response = 'Ozone')
-```
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = sv, response = 'Ozone') -->
+<!-- ``` -->
 
-### gbm - Generalized Boosted Model
-The `gbm` package in R stands for Generalized Boosted Models. It offers an efficient implementation of gradient boosting algorithms for classification, regression, and other machine learning tasks.
-```{r, eval = FALSE}
-library("gbm")
-# build gbm model
-gm <-  gbm(Ozone ~ ., data = aq, distribution = "gaussian", n.trees = 100, interaction.depth = 4)
+<!-- ### gbm - Generalized Boosted Model -->
+<!-- The `gbm` package in R stands for Generalized Boosted Models. It offers an efficient implementation of gradient boosting algorithms for classification, regression, and other machine learning tasks. -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("gbm") -->
+<!-- # build gbm model -->
+<!-- gm <-  gbm(Ozone ~ ., data = aq, distribution = "gaussian", n.trees = 100, interaction.depth = 4) -->
 
-# vivid
-vivi(data = aq, fit = gm, response = 'Ozone')
-```
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = gm, response = 'Ozone') -->
+<!-- ``` -->
 
-### mlr3 - k-nearest Neighbours
-The `mlr3` package in R offers a modern, object-oriented framework for machine learning tasks in R, providing tools for data preprocessing, model training, evaluation, and tuning. Here, we fit a k-nearest neighbours model to the data.
-```{r, eval = FALSE}
-library("mlr3")
-library("mlr3learners")
+<!-- ### mlr3 - k-nearest Neighbours -->
+<!-- The `mlr3` package in R offers a modern, object-oriented framework for machine learning tasks in R, providing tools for data preprocessing, model training, evaluation, and tuning. Here, we fit a k-nearest neighbours model to the data. -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("mlr3") -->
+<!-- library("mlr3learners") -->
 
-# Define a regression task
-task <- TaskRegr$new(id = "airquality", backend = aq, target = "Ozone")
-
-
-# Train a k-nearest neighbours model using mlr3
-learner <- lrn("regr.kknn")
-m3 <- learner$train(task)
-
-# vivid
-vivi(data = aq, fit = m3, response = 'Ozone')
-```
-
-### bartMachine - BART
-The `bartMachine` package in R provides an implementation of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian model which uses decision trees as the underlying model.
-```{r, eval = FALSE}
-library("bartMachine")
-
-# build bartMachine model
-bm <- bartMachine(X = aq[,2:6], 
-                  y = aq[,1], 
-                  num_trees = 20,
-                  num_burn_in = 50,
-                  num_iterations_after_burn_in = 100)
+<!-- # Define a regression task -->
+<!-- task <- TaskRegr$new(id = "airquality", backend = aq, target = "Ozone") -->
 
 
-vivi(data = aq, fit = bm, response = 'Ozone')
-```
+<!-- # Train a k-nearest neighbours model using mlr3 -->
+<!-- learner <- lrn("regr.kknn") -->
+<!-- m3 <- learner$train(task) -->
 
-### xgboost - Gradient Boosting
-The `xgboost` package (short for eXtreme Gradient Boosting) is an implementation of gradient boosting that supports regression and classification. As seen in Section `Custom Predict Function`, the `xgboost` package requires the user to supply a custom predict function to work with `vivid`. When setting the `data` argument in `xgboost`, remember to include all the variables (including the response). When producing the custom predict function, the structure must match that in the below example. Note that the term `data` must be used and not the actual name of the data. 
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = m3, response = 'Ozone') -->
+<!-- ``` -->
 
-```{r, eval = FALSE}
-library("xgboost")
-# build xgboost model
-gbst <- xgboost(data = as.matrix(aq[,1:6]),
-                label =  as.matrix(aq[,1]),
-                nrounds = 100,
-                verbose = 0)
+<!-- ### bartMachine - BART -->
+<!-- The `bartMachine` package in R provides an implementation of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian model which uses decision trees as the underlying model. -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("bartMachine") -->
 
-# predict function for GBM
-pFun <- function(fit, data, ...) predict(fit, as.matrix(data[,1:6]))
-
-# vivid
-vivi(data = aq, fit = gbst, response = 'Ozone',  predictFun = pFun)
-
-```
+<!-- # build bartMachine model -->
+<!-- bm <- bartMachine(X = aq[,2:6],  -->
+<!--                   y = aq[,1],  -->
+<!--                   num_trees = 20, -->
+<!--                   num_burn_in = 50, -->
+<!--                   num_iterations_after_burn_in = 100) -->
 
 
+<!-- vivi(data = aq, fit = bm, response = 'Ozone') -->
+<!-- ``` -->
 
-###  keras - Neural Network
-The `keras` package in R is an interface to the original `keras` Python library. It allows R users to build and train neural network models using the high-level Keras API. To use `keras` the data must first be normalised. Due to the complexity custom model fits in `keras`, producing a custom predict function to use with `vivid` may require some work. In the example below, we show how to use `vivid` when building a `keras` model composed of a linear stack of layers (i.e., using ` keras_model_sequential`). Additionally, currently the PDP plots in `vivid` only work for the development version on GitHub.
-```{r, eval = FALSE}
-library("keras")
+<!-- ### xgboost - Gradient Boosting -->
+<!-- The `xgboost` package (short for eXtreme Gradient Boosting) is an implementation of gradient boosting that supports regression and classification. As seen in Section `Custom Predict Function`, the `xgboost` package requires the user to supply a custom predict function to work with `vivid`. When setting the `data` argument in `xgboost`, remember to include all the variables (including the response). When producing the custom predict function, the structure must match that in the below example. Note that the term `data` must be used and not the actual name of the data.  -->
 
-# Set up data
-train_data <- aq %>%
-  as.matrix()
-train_targets <- aq$Ozone
+<!-- ```{r, eval = FALSE} -->
+<!-- library("xgboost") -->
+<!-- # build xgboost model -->
+<!-- gbst <- xgboost(data = as.matrix(aq[,1:6]), -->
+<!--                 label =  as.matrix(aq[,1]), -->
+<!--                 nrounds = 100, -->
+<!--                 verbose = 0) -->
 
-# Normalize the data
-mean <- apply(train_data, 2, mean)                                  
-std <- apply(train_data, 2, sd)
-aqTrain <- scale(train_data, center = mean, scale = std)  
+<!-- # predict function for GBM -->
+<!-- pFun <- function(fit, data, ...) predict(fit, as.matrix(data[,1:6])) -->
 
-# Define model architecture
-build_model <- function() {                                
-  model <- keras_model_sequential() %>%
-    layer_dense(units = 64, activation = "relu",
-                input_shape = dim(aqTrain)[[2]]) %>%
-    layer_dense(units = 64, activation = "relu") %>%
-    layer_dense(units = 1)
-  model %>% compile(
-    optimizer = "rmsprop",
-    loss = "mse",
-    metrics = c("mae")
-  )
-}
+<!-- # vivid -->
+<!-- vivi(data = aq, fit = gbst, response = 'Ozone',  predictFun = pFun) -->
 
-# Train the final model
-model <- build_model()
-model %>% fit(train_data, train_targets, epochs = 80, 
-               batch_size = 16, verbose = 0)
+<!-- ``` -->
 
-# Create usable data frame from scaled data
-aqFinal <- as.data.frame(aqTrain)
 
-# predict function for keras
- vi_fun <- function(fit, data,...) {
-   predict(fit, x = as.matrix(data))
- }
- 
-# vivid
-vi <- vivi(data = aqFinal, 
-           fit = model,
-           response = 'Ozone',
-           predictFun = vi_fun)
 
-# PDPs
-pdpPairs(data = aqFinal, 
-         fit =  model, 
-         response = "Ozone", 
-         nmax = 500, 
-         gridSize = 10,         
-         nIce = 100,
-         predictFun = vi_fun)
+<!-- ###  keras - Neural Network -->
+<!-- The `keras` package in R is an interface to the original `keras` Python library. It allows R users to build and train neural network models using the high-level Keras API. To use `keras` the data must first be normalised. Due to the complexity custom model fits in `keras`, producing a custom predict function to use with `vivid` may require some work. In the example below, we show how to use `vivid` when building a `keras` model composed of a linear stack of layers (i.e., using ` keras_model_sequential`). Additionally, currently the PDP plots in `vivid` only work for the development version on GitHub. -->
+<!-- ```{r, eval = FALSE} -->
+<!-- library("keras") -->
 
-```
+<!-- # Set up data -->
+<!-- train_data <- aq %>% -->
+<!--   as.matrix() -->
+<!-- train_targets <- aq$Ozone -->
+
+<!-- # Normalize the data -->
+<!-- mean <- apply(train_data, 2, mean)                                   -->
+<!-- std <- apply(train_data, 2, sd) -->
+<!-- aqTrain <- scale(train_data, center = mean, scale = std)   -->
+
+<!-- # Define model architecture -->
+<!-- build_model <- function() {                                 -->
+<!--   model <- keras_model_sequential() %>% -->
+<!--     layer_dense(units = 64, activation = "relu", -->
+<!--                 input_shape = dim(aqTrain)[[2]]) %>% -->
+<!--     layer_dense(units = 64, activation = "relu") %>% -->
+<!--     layer_dense(units = 1) -->
+<!--   model %>% compile( -->
+<!--     optimizer = "rmsprop", -->
+<!--     loss = "mse", -->
+<!--     metrics = c("mae") -->
+<!--   ) -->
+<!-- } -->
+
+<!-- # Train the final model -->
+<!-- model <- build_model() -->
+<!-- model %>% fit(train_data, train_targets, epochs = 80,  -->
+<!--                batch_size = 16, verbose = 0) -->
+
+<!-- # Create usable data frame from scaled data -->
+<!-- aqFinal <- as.data.frame(aqTrain) -->
+
+<!-- # predict function for keras -->
+<!--  vi_fun <- function(fit, data,...) { -->
+<!--    predict(fit, x = as.matrix(data)) -->
+<!--  } -->
+
+<!-- # vivid -->
+<!-- vi <- vivi(data = aqFinal,  -->
+<!--            fit = model, -->
+<!--            response = 'Ozone', -->
+<!--            predictFun = vi_fun) -->
+
+<!-- # PDPs -->
+<!-- pdpPairs(data = aqFinal,  -->
+<!--          fit =  model,  -->
+<!--          response = "Ozone",  -->
+<!--          nmax = 500,  -->
+<!--          gridSize = 10,          -->
+<!--          nIce = 100, -->
+<!--          predictFun = vi_fun) -->
+
+<!-- ``` -->
 
 ## Classification
 

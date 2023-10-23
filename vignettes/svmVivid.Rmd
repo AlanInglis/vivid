@@ -1,0 +1,127 @@
+---
+title: "e1071 - Support Vector Machine"
+output: html_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{e1071 - Support Vector Machine}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "vig/"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+<!-- avoid border around images -->
+<style>
+img {
+  border: 0;
+  }
+</style>
+
+These guides are designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`.  In the following examples, we use the air quality data for regression and the iris data for classification. 
+
+```{r, message=FALSE}
+library('vivid')
+library("e1071")
+```
+
+
+### e1071 - SUpport Vector Machine
+
+The `e1071` package in R provides functions for various machine learning algorithms including support vector machines (SVMs). 
+
+### Regression
+```{r, eval = F}
+#load data
+aq <- na.omit(airquality)
+
+# build SVM model
+sv <- svm(Ozone ~ ., data = aq, kernel = "radial")
+
+# vivid
+vi <- vivi(data = aq, fit = sv, response = 'Ozone')
+```
+
+
+#### Heatmap
+```{r, svm_r_heat,  out.width = '100%', eval = F}
+viviHeatmap(mat = vi)
+```
+
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/svm_r_heat-1.png")
+```
+<center>
+<caption><span id="fig1:fig1">Figure 1: </span>Heatmap of a SVM regression fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+
+#### PDP
+```{r, svm_r_pdp, out.width='100%', eval = F}
+pdpPairs(data = aq, 
+         fit =  sv, 
+         response = "Ozone", 
+         nmax = 500, 
+         gridSize = 20,         
+         nIce = 100)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/svm_r_pdp-1.png")
+```
+<center>
+<caption><span id="fig2:fig2">Figure 2: </span>Generalized pairs partial dependence plot for a SVM regression fit.</caption>
+</center>
+
+
+### Classification
+
+```{r, eval = F}
+
+# Load the iris dataset
+data(iris)
+
+# Train 
+sv <- svm(Species ~ ., data = iris, probability = T)
+
+vi <- vivi(data = iris, fit = sv, response = 'Species', class = 'setosa')
+```
+
+#### Heatmap
+```{r, svm_c_heat,  out.width = '100%', eval = F}
+viviHeatmap(mat = vi)
+```
+
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/svm_c_heat-1.png")
+```
+<center>
+<caption><span id="fig3:fig3">Figure 3: </span>Heatmap of a SVM classification fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+
+#### PDP
+```{r, svm_c_pdp, out.width='100%', eval = F}
+pdpPairs(data = iris, 
+         fit =  sv, 
+         response = "Species", 
+         nmax = 50, 
+         gridSize = 4,         
+         nIce = 10,
+         class = 'setosa')
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/svm_c_pdp-1.png")
+```
+<center>
+<caption><span id="fig4:fig4">Figure 4: </span>Generalized pairs partial dependence plot for a SVM classification fit.</caption>
+</center>
+

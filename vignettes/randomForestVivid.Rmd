@@ -1,0 +1,130 @@
+---
+title: "randomForest random forest"
+output: html_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{randomForest random forest}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "vig/"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+<!-- avoid border around images -->
+<style>
+img {
+  border: 0;
+  }
+</style>
+
+These guides are designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`.  In the following examples, we use the air quality data for regression and the iris data for classification. 
+
+### randomForest - Random Forest
+
+The `randomForest` package in R implements the Random Forest algorithm for classification and regression, a popular ensemble method that builds multiple decision trees during training and aggregates their results for predictions.
+
+```{r, message=FALSE}
+library('vivid')
+library("randomForest")
+```
+
+
+
+### Regression
+
+```{r, eval = F}
+# load data
+aq <- na.omit(airquality)
+
+# build rf model
+rf <- randomForest(Ozone ~ ., data = aq)
+
+# vivid
+vi <- vivi(data = aq, fit = rf, response = 'Ozone')
+```
+
+
+
+#### Heatmap
+```{r, rf_r_heat,  out.width = '100%', eval = F}
+viviHeatmap(mat = vi)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/rf_r_heat-1.png")
+```
+<center>
+<caption><span id="fig1:fig1">Figure 1: </span>Heatmap of a random forest regression fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+</center>
+
+#### PDP
+```{r, rf_r_pdp, out.width='100%', eval = F}
+pdpPairs(data = aq, 
+         fit =  rf, 
+         response = "Ozone", 
+         nmax = 500, 
+         gridSize = 20,         
+         nIce = 100)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/rf_r_pdp-1.png")
+```
+<center>
+<caption><span id="fig2:fig2">Figure 2: </span>Generalized pairs partial dependence plot for a random forest regression fit.</caption>
+</center>
+
+
+### Classification
+```{r, eval = F}
+
+# Load the iris dataset
+data(iris)
+
+# Train 
+rf <- randomForest(Species ~ ., data = iris)
+
+vi <- vivi(data = iris, fit = rf, response = 'Species', class = 'setosa')
+```
+
+
+#### Heatmap
+```{r, rf_c_heat,  out.width = '100%', eval = F}
+viviHeatmap(mat = vi)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/rf_c_heat-1.png")
+```
+<center>
+<caption><span id="fig3:fig3">Figure 3: </span>Heatmap of a random forest classification fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+
+#### PDP
+```{r, rf_c_pdp, out.width='100%', eval = F}
+
+pdpPairs(data = iris, 
+         fit =  rf, 
+         response = "Species", 
+         nmax = 50, 
+         gridSize = 4,         
+         nIce = 10,
+         class = 'setosa')
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/rf_c_pdp-1.png")
+```
+<center>
+<caption><span id="fig4:fig4">Figure 4: </span>Generalized pairs partial dependence plot for a random forest classification fit.</caption>
+</center>
+

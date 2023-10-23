@@ -1,0 +1,135 @@
+---
+title: "bartMachine - BART"
+output: html_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{bartMachine - BART}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "vig/"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+<!-- avoid border around images -->
+<style>
+img {
+  border: 0;
+  }
+</style>
+
+These guides are designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`.  In the following examples, we use the air quality data for regression and the iris data for classification. 
+
+### bartMachine - BART
+The `bartMachine` package in R provides an implementation of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian model which uses decision trees as the underlying model. To begin we load the packages and data.
+
+```{r, message=FALSE}
+library('vivid')
+library("bartMachine")
+```
+
+
+### Regression
+
+```{r, results='hide', message=FALSE, eval = F}
+# load data 
+aq <- na.omit(airquality)
+
+
+# build bartMachine model
+bm <- bartMachine(X = aq[,2:6], 
+                  y = aq[,1], 
+                  num_trees = 20,
+                  num_burn_in = 100,
+                  num_iterations_after_burn_in = 500)
+
+
+# vivi matrix
+vi <- vivi(data = aq, fit = bm, response = 'Ozone')
+```
+
+#### Heatmap
+```{r, bm_r_heat,  out.width = '100%', eval = F}
+viviHeatmap(mat = vi)
+```
+
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/bm_r_heat-1.png")
+```
+<center>
+<caption><span id="fig1:fig1">Figure 1: </span>Heatmap of a BART regression fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+
+#### PDP
+```{r, bm_r_pdp, out.width='100%', eval = F}
+pdpPairs(data = aq, 
+         fit =  bm, 
+         response = "Ozone", 
+         nmax = 500, 
+         gridSize = 10,         
+         nIce = 50)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/bm_r_pdp-1.png")
+```
+<center>
+<caption><span id="fig2:fig2">Figure 2: </span>Generalized pairs partial dependence plot for a BART regression fit.</caption>
+</center>
+
+### Classification
+```{r, , eval = F}
+# Get data and only use 2 factors
+data(iris)
+iris2 = iris[51:150,]
+iris2$Species = factor(iris2$Species)
+
+bm <- build_bart_machine(iris2[ ,1:4], iris2$Species,
+                         num_trees = 20,
+                         num_burn_in = 100,
+                         num_iterations_after_burn_in = 500)
+
+# vivid
+vi <- vivi(data = iris2, fit = bm, response = 'Species')
+```
+
+
+#### Heatmap
+```{r, bm_c_heat,  out.width = '100%',  eval = F}
+viviHeatmap(mat = vi)
+```
+
+  
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/bm_c_heat-1.png")
+```
+<center>
+<caption><span id="fig3:fig3">Figure 3: </span>Heatmap of a BART classification fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+  
+  
+#### PDP
+```{r, bm_c_pdp, out.width='100%', eval = F}
+pdpPairs(data = iris2, 
+         fit =  bm, 
+         response = "Species", 
+         nmax = 500, 
+         gridSize = 10,         
+         nIce = 50)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/bm_c_pdp-1.png")
+```
+<center>
+<caption><span id="fig4:fig4">Figure 4: </span>Generalized pairs partial dependence plot for a BART classification fit.</caption>
+</center>

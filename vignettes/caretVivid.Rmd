@@ -1,0 +1,142 @@
+---
+title: "caret neural network"
+output: html_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{caret neural network}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "vig/"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+<!-- avoid border around images -->
+<style>
+img {
+  border: 0;
+  }
+</style>
+
+These guides are designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`.  In the following examples, we use the air quality data for regression and the iris data for classification. 
+  
+```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
+library('vivid')
+library('caret')
+```
+
+
+
+### caret - Neural Network
+
+
+The `caret` package (short for Classification And REgression Training) in R provides a unified interface to streamline the process of creating predictive models. In the following example, we use the `caret` package to utilize a neural network model fit via the `nnet` package. As `caret` is catered for in `vivid`, there is no need for a custom predict function here. 
+
+### Regression
+```{r, message=FALSE, warning=FALSE, eval = F}
+# load data 
+aq <- na.omit(airquality)
+
+# build caret nnet model
+nn <- train(Ozone ~ ., data = aq, method = "nnet", trace = FALSE, linout = TRUE, maxit = 200)
+
+# vivid
+vi <- vivi(data = aq, fit = nn, response = 'Ozone')
+
+```
+
+#### Heatmap
+```{r, caret_r_heat,  out.width = '100%', eval = F}
+viviHeatmap(mat = vi)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/caret_r_heat-1.png")
+```
+<center>
+<caption><span id="fig1:fig1">Figure 1: </span>Heatmap of a caret neural network regression fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+
+
+#### PDP
+```{r, caret_r_pdp, out.width='100%', eval = F}
+pdpPairs(data = aq, 
+         fit =  nn, 
+         response = "Ozone", 
+         nmax = 50, 
+         gridSize = 4,         
+         nIce = 10)
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/caret_r_pdp-1.png")
+```
+<center>
+<caption><span id="fig2:fig2">Figure 2: </span>Generalized pairs partial dependence plot for a caret neural network regression fit.</caption>
+</center>
+
+### Classification
+
+```{r, eval = F}
+# Load the necessary library
+library("caret")
+
+
+# Load the iris dataset
+data(iris)
+irisMod <- iris
+# Convert the Species to a binary classification: Setosa or not Setosa
+irisMod$Species <- as.factor(ifelse(irisMod$Species == "setosa", "setosa", "not_setosa"))
+
+
+# Train a neural network model
+nn <- train(Species ~ ., data = irisMod, method = "nnet", 
+               trControl = trainControl(method = "cv", number = 5), 
+               tuneLength = 1,
+               linout = FALSE, # this is set to FALSE for classification problems
+               trace = FALSE, 
+               maxit = 200)
+
+
+vi <- vivi(data = irisMod, fit = nn, response = 'Species')
+
+```
+
+
+#### Heatmap
+```{r, caret_c_heat, out.width='100%', eval = F}
+viviHeatmap(mat = vi)
+```
+  
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/caret_c_heat-1.png")
+```
+<center>
+<caption><span id="fig3:fig3">Figure 3: </span>Heatmap of a caret neural network classification fit displaying 2-way interaction strength on the off diagonal and individual variable importance on the diagonal.</caption>
+  </center>
+  
+#### PDP  
+```{r, caret_c_pdp, out.width='100%', eval = F}
+pdpPairs(data = irisMod, 
+         fit =  nn, 
+         response = "Species", 
+         nmax = 500, 
+         gridSize = 20,         
+         nIce = 100,
+         class = 'setosa')
+
+```
+
+```{r, echo = F,  out.width = '100%'}
+knitr::include_graphics("https://raw.githubusercontent.com/AlanInglis/vivid/master/vignettes/vig/caret_c_pdp-1.png")
+```
+<center>
+<caption><span id="fig4:fig4">Figure 4: </span>Generalized pairs partial dependence plot for a caret neural network classification fit.</caption>
+</center>
