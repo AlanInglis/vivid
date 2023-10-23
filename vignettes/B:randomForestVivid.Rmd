@@ -1,9 +1,9 @@
 ---
-title: "randomForest random forest"
+title: "randomForest - Random Forest"
 output: html_document
 vignette: >
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{randomForest random forest}
+  %\VignetteIndexEntry{randomForest - Random Forest}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
   chunk_output_type: console

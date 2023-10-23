@@ -1,9 +1,9 @@
 ---
-title: "caret neural network"
+title: "caret - Neural Network"
 output: html_document
 vignette: >
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{caret neural network}
+  %\VignetteIndexEntry{caret - Neural Network}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
   chunk_output_type: console
