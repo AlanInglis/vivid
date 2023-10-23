@@ -549,7 +549,7 @@ viviRangEmbedded <- vivi(fit = rang,
 
 ### Models Used
 
-Additional examples are shown for several different machine learning models. These scripts are designed as a quick-stop guide of how to use some of the more popular machine learning R packages with `vivid` and to familiarize the user with implementing `vivid`. See individual vignette scripts for specific models. As previously discussed, `vivid` will work out-of-the-box with several of these R packages, however, with others, a custom predict function will have to be supplied. The packages (and models) shown here are:
+Additional examples are shown for several different machine learning models (See Articles tab). These scripts are designed as a quick-stop guide of how to use some of the more popular machine learning R packages with `vivid` and to familiarize the user with implementing `vivid`. See individual vignette scripts for specific models. As previously discussed, `vivid` will work out-of-the-box with several of these R packages, however, with others, a custom predict function will have to be supplied. The packages (and models) shown here are:
 
 * caret - Neural Network
 * randomForest - Random Forest
