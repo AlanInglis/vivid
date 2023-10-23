@@ -31,7 +31,7 @@ library('vivid')
 library("keras")
 ```
 
-These guides are designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`. In the following example, we use the air quality data for regression.
+This guide is designed as a quick-stop reference of how to use some of the more popular machine learning R packages with `vivid`. In the following example, we use the air quality data for regression.
 
 
 ### keras - Neural Network
