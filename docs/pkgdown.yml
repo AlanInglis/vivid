@@ -3,16 +3,16 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   A:vividVignette: A:vividVignette.html
-  B_randomForestVivid: B_randomForestVivid.html
-  C_rangerVivid: C_rangerVivid.html
-  D_bartMachineVivid: D_bartMachineVivid.html
-  E_caretVivid: E_caretVivid.html
-  F_mlrVivid: F_mlrVivid.html
-  G_svmVivid: G_svmVivid.html
-  H_gbmVivid: H_gbmVivid.html
-  I_kerasVivid: I_kerasVivid.html
-  J_xgbVivid: J_xgbVivid.html
-last_built: 2023-10-23T19:57Z
+  B:randomForestVivid: B:randomForestVivid.html
+  C:rangerVivid: C:rangerVivid.html
+  D:bartMachineVivid: D:bartMachineVivid.html
+  E:caretVivid: E:caretVivid.html
+  F:mlrVivid: F:mlrVivid.html
+  G:svmVivid: G:svmVivid.html
+  H:gbmVivid: H:gbmVivid.html
+  I:kerasVivid: I:kerasVivid.html
+  J:xgbVivid: J:xgbVivid.html
+last_built: 2023-10-23T20:03Z
 urls:
   reference: https://alaninglis.github.io/vivid//reference
   article: https://alaninglis.github.io/vivid//articles
