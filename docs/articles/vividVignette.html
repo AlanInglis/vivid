@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>vivid: Variable Importance and Variable Interaction Displays • vivid</title>
+<title>A: vivid: Variable Importance and Variable Interaction Displays • vivid</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="vivid: Variable Importance and Variable Interaction Displays">
+<script src="../pkgdown.js"></script><meta property="og:title" content="A: vivid: Variable Importance and Variable Interaction Displays">
 <meta property="og:description" content="vivid">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,7 +54,34 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/vividVignette.html">vivid: Variable Importance and Variable Interaction Displays</a>
+      <a href="../articles/bartMachineVivid.html">D: bartMachine - BART</a>
+    </li>
+    <li>
+      <a href="../articles/caretVivid.html">E: caret neural network</a>
+    </li>
+    <li>
+      <a href="../articles/gbmVivid.html">H: gbm - Generalized Boosted Model</a>
+    </li>
+    <li>
+      <a href="../articles/kerasVivid.html">I: keras - Neural Network</a>
+    </li>
+    <li>
+      <a href="../articles/mlrVivid.html">F: mlr3 - k-nearest Neighbours</a>
+    </li>
+    <li>
+      <a href="../articles/randomForestVivid.html">B: randomForest random forest</a>
+    </li>
+    <li>
+      <a href="../articles/rangerVivid.html">C: ranger random forest</a>
+    </li>
+    <li>
+      <a href="../articles/svmVivid.html">G: e1071 - Support Vector Machine</a>
+    </li>
+    <li>
+      <a href="../articles/vividVignette.html">A: vivid: Variable Importance and Variable Interaction Displays</a>
+    </li>
+    <li>
+      <a href="../articles/xgbVivid.html">J: xgboost - Gradient Boosting</a>
     </li>
   </ul>
 </li>
@@ -75,7 +102,7 @@
       </header><script src="vividVignette_files/header-attrs-2.24/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>vivid: Variable Importance and Variable
+      <h1 data-toc-skip>A: vivid: Variable Importance and Variable
 Interaction Displays</h1>
             
       
@@ -92,6 +119,8 @@ img {
   border: 0;
   }
 </style>
+<div id="section" class="section level1 tabset tabset-fade">
+<h1 class="tabset tabset-fade"></h1>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -803,13 +832,15 @@ importance metric.</p>
 <div id="models-used" class="section level3">
 <h3 class="hasAnchor">
 <a href="#models-used" class="anchor"></a>Models Used</h3>
-<p>This section is designed as a quick-stop guide of how to use some of
-the more popular machine learning R packages with <code>vivid</code>.
-The visualisations are omitted here as the goal is to familiarize the
-user with implementing <code>vivid</code>. As previously discussed,
-<code>vivid</code> will work out-of-the-box with several of these R
-packages, however, with others, a custom predict function will have to
-be supplied. The packages (and models) shown here are:</p>
+<p>Additional examples are shown for several different machine learning
+models. These scripts are designed as a quick-stop guide of how to use
+some of the more popular machine learning R packages with
+<code>vivid</code> and to familiarize the user with implementing
+<code>vivid</code>. See individual vignette scripts for specific models.
+As previously discussed, <code>vivid</code> will work out-of-the-box
+with several of these R packages, however, with others, a custom predict
+function will have to be supplied. The packages (and models) shown here
+are:</p>
 <ul>
 <li>caret - Neural Network</li>
 <li>randomForest - Random Forest</li>
@@ -821,223 +852,7 @@ be supplied. The packages (and models) shown here are:</p>
 <li>bartMachine - BART</li>
 <li>keras - Neural Network</li>
 </ul>
-<p>For simplicity, in this section we use the popular
-<code>air quality</code> dataset, with <em>Ozone</em> as the response.
-First we remove any missing values:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="caret---neural-network" class="section level3">
-<h3 class="hasAnchor">
-<a href="#caret---neural-network" class="anchor"></a>caret - Neural Network</h3>
-<p>The <code>caret</code> package (short for Classification And
-REgression Training) in R provides a unified interface to streamline the
-process of creating predictive models. In the following example, we use
-the <code>caret</code> package to utilize a neural network model fit via
-the <code>nnet</code> package. As <code>caret</code> is catered for in
-<code>vivid</code>, there is no need for a custom predict function
-here.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/topepo/caret/">"caret"</a></span><span class="op">)</span></span>
-<span><span class="co"># build caret nnet model</span></span>
-<span><span class="va">nn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/caret/man/train.html">train</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, method <span class="op">=</span> <span class="st">"nnet"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, linout <span class="op">=</span> <span class="cn">TRUE</span>, maxit <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">nn</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="randomforest---random-forest" class="section level3">
-<h3 class="hasAnchor">
-<a href="#randomforest---random-forest" class="anchor"></a>randomForest - Random Forest</h3>
-<p>The <code>randomForest</code> package in R implements the Random
-Forest algorithm for classification and regression, a popular ensemble
-method that builds multiple decision trees during training and
-aggregates their results for predictions.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
-<span><span class="co"># build  random forest model</span></span>
-<span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">rf</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="ranger---random-forest" class="section level3">
-<h3 class="hasAnchor">
-<a href="#ranger---random-forest" class="anchor"></a>ranger - Random Forest</h3>
-<p>The <code>ranger</code> package in R is a fast implementation of
-Random Forests, leveraging optimized C++ code for efficiency.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger">"ranger"</a></span><span class="op">)</span></span>
-<span><span class="co"># build  ranger random forest model</span></span>
-<span><span class="va">rngr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">rngr</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="e1071---support-vector-machine" class="section level3">
-<h3 class="hasAnchor">
-<a href="#e1071---support-vector-machine" class="anchor"></a>e1071 - Support Vector Machine</h3>
-<p>The <code>e1071</code> package in R provides functions for various
-machine learning algorithms including support vector machines
-(SVMs).</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"e1071"</span><span class="op">)</span></span>
-<span><span class="co"># build SVM model</span></span>
-<span><span class="va">sv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/e1071/man/svm.html">svm</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, kernel <span class="op">=</span> <span class="st">"radial"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">sv</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="gbm---generalized-boosted-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gbm---generalized-boosted-model" class="anchor"></a>gbm - Generalized Boosted Model</h3>
-<p>The <code>gbm</code> package in R stands for Generalized Boosted
-Models. It offers an efficient implementation of gradient boosting
-algorithms for classification, regression, and other machine learning
-tasks.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/gbm-developers/gbm">"gbm"</a></span><span class="op">)</span></span>
-<span><span class="co"># build gbm model</span></span>
-<span><span class="va">gm</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/gbm/man/gbm.html">gbm</a></span><span class="op">(</span><span class="va">Ozone</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">aq</span>, distribution <span class="op">=</span> <span class="st">"gaussian"</span>, n.trees <span class="op">=</span> <span class="fl">100</span>, interaction.depth <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">gm</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="mlr3---k-nearest-neighbours" class="section level3">
-<h3 class="hasAnchor">
-<a href="#mlr3---k-nearest-neighbours" class="anchor"></a>mlr3 - k-nearest Neighbours</h3>
-<p>The <code>mlr3</code> package in R offers a modern, object-oriented
-framework for machine learning tasks in R, providing tools for data
-preprocessing, model training, evaluation, and tuning. Here, we fit a
-k-nearest neighbours model to the data.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3.mlr-org.com">"mlr3"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3learners.mlr-org.com">"mlr3learners"</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Define a regression task</span></span>
-<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="va"><a href="https://mlr3.mlr-org.com/reference/TaskRegr.html">TaskRegr</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"airquality"</span>, backend <span class="op">=</span> <span class="va">aq</span>, target <span class="op">=</span> <span class="st">"Ozone"</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="co"># Train a k-nearest neighbours model using mlr3</span></span>
-<span><span class="va">learner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.kknn"</span><span class="op">)</span></span>
-<span><span class="va">m3</span> <span class="op">&lt;-</span> <span class="va">learner</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">m3</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="bartmachine---bart" class="section level3">
-<h3 class="hasAnchor">
-<a href="#bartmachine---bart" class="anchor"></a>bartMachine - BART</h3>
-<p>The <code>bartMachine</code> package in R provides an implementation
-of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian
-model which uses decision trees as the underlying model.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"bartMachine"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># build bartMachine model</span></span>
-<span><span class="va">bm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bartMachine/man/bartMachine.html">bartMachine</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">aq</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, </span>
-<span>                  y <span class="op">=</span> <span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, </span>
-<span>                  num_trees <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>                  num_burn_in <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                  num_iterations_after_burn_in <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">bm</span>, response <span class="op">=</span> <span class="st">'Ozone'</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="xgboost---gradient-boosting" class="section level3">
-<h3 class="hasAnchor">
-<a href="#xgboost---gradient-boosting" class="anchor"></a>xgboost - Gradient Boosting</h3>
-<p>The <code>xgboost</code> package (short for eXtreme Gradient
-Boosting) is an implementation of gradient boosting that supports
-regression and classification. As seen in Section
-<code>Custom Predict Function</code>, the <code>xgboost</code> package
-requires the user to supply a custom predict function to work with
-<code>vivid</code>. When setting the <code>data</code> argument in
-<code>xgboost</code>, remember to include all the variables (including
-the response). When producing the custom predict function, the structure
-must match that in the below example. Note that the term
-<code>data</code> must be used and not the actual name of the data.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost">"xgboost"</a></span><span class="op">)</span></span>
-<span><span class="co"># build xgboost model</span></span>
-<span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                nrounds <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>                verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># predict function for GBM</span></span>
-<span><span class="va">pFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># vivid</span></span>
-<span><span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aq</span>, fit <span class="op">=</span> <span class="va">gbst</span>, response <span class="op">=</span> <span class="st">'Ozone'</span>,  predictFun <span class="op">=</span> <span class="va">pFun</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div id="keras---neural-network" class="section level3">
-<h3 class="hasAnchor">
-<a href="#keras---neural-network" class="anchor"></a>keras - Neural Network</h3>
-<p>The <code>keras</code> package in R is an interface to the original
-<code>keras</code> Python library. It allows R users to build and train
-neural network models using the high-level Keras API. To use
-<code>keras</code> the data must first be normalised. Due to the
-complexity custom model fits in <code>keras</code>, producing a custom
-predict function to use with <code>vivid</code> may require some work.
-In the example below, we show how to use <code>vivid</code> when
-building a <code>keras</code> model composed of a linear stack of layers
-(i.e., using <code>keras_model_sequential</code>). Additionally,
-currently the PDP plots in <code>vivid</code> only work for the
-development version on GitHub.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tensorflow.rstudio.com/">"keras"</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set up data</span></span>
-<span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">aq</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">train_targets</span> <span class="op">&lt;-</span> <span class="va">aq</span><span class="op">$</span><span class="va">Ozone</span></span>
-<span></span>
-<span><span class="co"># Normalize the data</span></span>
-<span><span class="va">mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">train_data</span>, <span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span>                                  </span>
-<span><span class="va">std</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">train_data</span>, <span class="fl">2</span>, <span class="va">sd</span><span class="op">)</span></span>
-<span><span class="va">aqTrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">train_data</span>, center <span class="op">=</span> <span class="va">mean</span>, scale <span class="op">=</span> <span class="va">std</span><span class="op">)</span>  </span>
-<span></span>
-<span><span class="co"># Define model architecture</span></span>
-<span><span class="va">build_model</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>                                </span>
-<span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">64</span>, activation <span class="op">=</span> <span class="st">"relu"</span>,</span>
-<span>                input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">aqTrain</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">64</span>, activation <span class="op">=</span> <span class="st">"relu"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span></span>
-<span>    optimizer <span class="op">=</span> <span class="st">"rmsprop"</span>,</span>
-<span>    loss <span class="op">=</span> <span class="st">"mse"</span>,</span>
-<span>    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mae"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Train the final model</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">build_model</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">train_data</span>, <span class="va">train_targets</span>, epochs <span class="op">=</span> <span class="fl">80</span>, </span>
-<span>               batch_size <span class="op">=</span> <span class="fl">16</span>, verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Create usable data frame from scaled data</span></span>
-<span><span class="va">aqFinal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">aqTrain</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># predict function for keras</span></span>
-<span> <span class="va">vi_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>   <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
-<span> <span class="op">}</span></span>
-<span> </span>
-<span><span class="co"># vivid</span></span>
-<span><span class="va">vi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/vivi.html">vivi</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aqFinal</span>, </span>
-<span>           fit <span class="op">=</span> <span class="va">model</span>,</span>
-<span>           response <span class="op">=</span> <span class="st">'Ozone'</span>,</span>
-<span>           predictFun <span class="op">=</span> <span class="va">vi_fun</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># PDPs</span></span>
-<span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aqFinal</span>, </span>
-<span>         fit <span class="op">=</span>  <span class="va">model</span>, </span>
-<span>         response <span class="op">=</span> <span class="st">"Ozone"</span>, </span>
-<span>         nmax <span class="op">=</span> <span class="fl">500</span>, </span>
-<span>         gridSize <span class="op">=</span> <span class="fl">10</span>,         </span>
-<span>         nIce <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>         predictFun <span class="op">=</span> <span class="va">vi_fun</span><span class="op">)</span></span></code></pre></div>
+<!-- For simplicity, in this section we use the popular `air quality` dataset, with _Ozone_ as the response. First we remove any missing values: --><!-- ```{r, eval = FALSE} --><!-- aq <- na.omit(airquality) --><!-- ``` --><!-- ### caret - Neural Network --><!-- The `caret` package (short for Classification And REgression Training) in R provides a unified interface to streamline the process of creating predictive models. In the following example, we use the `caret` package to utilize a neural network model fit via the `nnet` package. As `caret` is catered for in `vivid`, there is no need for a custom predict function here.  --><!-- ```{r, eval = FALSE} --><!-- library("caret") --><!-- # build caret nnet model --><!-- nn <- train(Ozone ~ ., data = aq, method = "nnet", trace = FALSE, linout = TRUE, maxit = 200) --><!-- # vivid --><!-- vivi(data = aq, fit = nn, response = 'Ozone') --><!-- ``` --><!-- ### randomForest - Random Forest --><!-- The `randomForest` package in R implements the Random Forest algorithm for classification and regression, a popular ensemble method that builds multiple decision trees during training and aggregates their results for predictions. --><!-- ```{r, eval = FALSE} --><!-- library("randomForest") --><!-- # build  random forest model --><!-- rf <- randomForest(Ozone ~ ., data = aq) --><!-- # vivid --><!-- vivi(data = aq, fit = rf, response = 'Ozone') --><!-- ``` --><!-- ### ranger - Random Forest --><!-- The `ranger` package in R is a fast implementation of Random Forests, leveraging optimized C++ code for efficiency. --><!-- ```{r, eval = FALSE} --><!-- library("ranger") --><!-- # build  ranger random forest model --><!-- rngr <- ranger(Ozone ~ ., data = aq) --><!-- # vivid --><!-- vivi(data = aq, fit = rngr, response = 'Ozone') --><!-- ``` --><!-- ### e1071 - Support Vector Machine --><!-- The `e1071` package in R provides functions for various machine learning algorithms including support vector machines (SVMs).  --><!-- ```{r, eval = FALSE} --><!-- library("e1071") --><!-- # build SVM model --><!-- sv <- svm(Ozone ~ ., data = aq, kernel = "radial") --><!-- # vivid --><!-- vivi(data = aq, fit = sv, response = 'Ozone') --><!-- ``` --><!-- ### gbm - Generalized Boosted Model --><!-- The `gbm` package in R stands for Generalized Boosted Models. It offers an efficient implementation of gradient boosting algorithms for classification, regression, and other machine learning tasks. --><!-- ```{r, eval = FALSE} --><!-- library("gbm") --><!-- # build gbm model --><!-- gm <-  gbm(Ozone ~ ., data = aq, distribution = "gaussian", n.trees = 100, interaction.depth = 4) --><!-- # vivid --><!-- vivi(data = aq, fit = gm, response = 'Ozone') --><!-- ``` --><!-- ### mlr3 - k-nearest Neighbours --><!-- The `mlr3` package in R offers a modern, object-oriented framework for machine learning tasks in R, providing tools for data preprocessing, model training, evaluation, and tuning. Here, we fit a k-nearest neighbours model to the data. --><!-- ```{r, eval = FALSE} --><!-- library("mlr3") --><!-- library("mlr3learners") --><!-- # Define a regression task --><!-- task <- TaskRegr$new(id = "airquality", backend = aq, target = "Ozone") --><!-- # Train a k-nearest neighbours model using mlr3 --><!-- learner <- lrn("regr.kknn") --><!-- m3 <- learner$train(task) --><!-- # vivid --><!-- vivi(data = aq, fit = m3, response = 'Ozone') --><!-- ``` --><!-- ### bartMachine - BART --><!-- The `bartMachine` package in R provides an implementation of Bayesian Additive Regression Trees (BART), a non-parametric Bayesian model which uses decision trees as the underlying model. --><!-- ```{r, eval = FALSE} --><!-- library("bartMachine") --><!-- # build bartMachine model --><!-- bm <- bartMachine(X = aq[,2:6],  --><!--                   y = aq[,1],  --><!--                   num_trees = 20, --><!--                   num_burn_in = 50, --><!--                   num_iterations_after_burn_in = 100) --><!-- vivi(data = aq, fit = bm, response = 'Ozone') --><!-- ``` --><!-- ### xgboost - Gradient Boosting --><!-- The `xgboost` package (short for eXtreme Gradient Boosting) is an implementation of gradient boosting that supports regression and classification. As seen in Section `Custom Predict Function`, the `xgboost` package requires the user to supply a custom predict function to work with `vivid`. When setting the `data` argument in `xgboost`, remember to include all the variables (including the response). When producing the custom predict function, the structure must match that in the below example. Note that the term `data` must be used and not the actual name of the data.  --><!-- ```{r, eval = FALSE} --><!-- library("xgboost") --><!-- # build xgboost model --><!-- gbst <- xgboost(data = as.matrix(aq[,1:6]), --><!--                 label =  as.matrix(aq[,1]), --><!--                 nrounds = 100, --><!--                 verbose = 0) --><!-- # predict function for GBM --><!-- pFun <- function(fit, data, ...) predict(fit, as.matrix(data[,1:6])) --><!-- # vivid --><!-- vivi(data = aq, fit = gbst, response = 'Ozone',  predictFun = pFun) --><!-- ``` --><!-- ###  keras - Neural Network --><!-- The `keras` package in R is an interface to the original `keras` Python library. It allows R users to build and train neural network models using the high-level Keras API. To use `keras` the data must first be normalised. Due to the complexity custom model fits in `keras`, producing a custom predict function to use with `vivid` may require some work. In the example below, we show how to use `vivid` when building a `keras` model composed of a linear stack of layers (i.e., using ` keras_model_sequential`). Additionally, currently the PDP plots in `vivid` only work for the development version on GitHub. --><!-- ```{r, eval = FALSE} --><!-- library("keras") --><!-- # Set up data --><!-- train_data <- aq %>% --><!--   as.matrix() --><!-- train_targets <- aq$Ozone --><!-- # Normalize the data --><!-- mean <- apply(train_data, 2, mean)                                   --><!-- std <- apply(train_data, 2, sd) --><!-- aqTrain <- scale(train_data, center = mean, scale = std)   --><!-- # Define model architecture --><!-- build_model <- function() {                                 --><!--   model <- keras_model_sequential() %>% --><!--     layer_dense(units = 64, activation = "relu", --><!--                 input_shape = dim(aqTrain)[[2]]) %>% --><!--     layer_dense(units = 64, activation = "relu") %>% --><!--     layer_dense(units = 1) --><!--   model %>% compile( --><!--     optimizer = "rmsprop", --><!--     loss = "mse", --><!--     metrics = c("mae") --><!--   ) --><!-- } --><!-- # Train the final model --><!-- model <- build_model() --><!-- model %>% fit(train_data, train_targets, epochs = 80,  --><!--                batch_size = 16, verbose = 0) --><!-- # Create usable data frame from scaled data --><!-- aqFinal <- as.data.frame(aqTrain) --><!-- # predict function for keras --><!--  vi_fun <- function(fit, data,...) { --><!--    predict(fit, x = as.matrix(data)) --><!--  } --><!-- # vivid --><!-- vi <- vivi(data = aqFinal,  --><!--            fit = model, --><!--            response = 'Ozone', --><!--            predictFun = vi_fun) --><!-- # PDPs --><!-- pdpPairs(data = aqFinal,  --><!--          fit =  model,  --><!--          response = "Ozone",  --><!--          nmax = 500,  --><!--          gridSize = 10,          --><!--          nIce = 100, --><!--          predictFun = vi_fun) --><!-- ``` -->
 </div>
 </div>
 <div id="classification" class="section level2">
@@ -1056,7 +871,7 @@ category for classification to be “setosa” using <code>class</code>.</p>
 <div id="vivi-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#vivi-1" class="anchor"></a>vivi</h3>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="va">rfClassif</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html">ranger</a></span><span class="op">(</span><span class="va">Species</span><span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, probability <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>                    importance <span class="op">=</span> <span class="st">"impurity"</span><span class="op">)</span></span>
@@ -1074,7 +889,7 @@ category for classification to be “setosa” using <code>class</code>.</p>
 <h3 class="hasAnchor">
 <a href="#heatmap" class="anchor"></a>Heatmap</h3>
 <p>Next we plot the heatmap and network plot of the iris data.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viviHeatmap.html">viviHeatmap</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/viviNetwork.html">viviNetwork</a></span><span class="op">(</span>mat <span class="op">=</span> <span class="va">viviClassif</span><span class="op">)</span></span></code></pre></div>
 <img src="https://raw.githubusercontent.com/AlanInglis/vivid/master/vividVigplots/classifVIVI.png" width="100%" style="display: block; margin: auto;"><center>
@@ -1091,7 +906,7 @@ in (b) of random forest fit on the iris data
 extrapolate where there is no data. To solve this issue we calculate a
 convex hull around the data and remove any points that fall outside the
 convex hull, as shown below.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1701</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pdpPairs.html">pdpPairs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">iris</span>, </span>
 <span>         fit <span class="op">=</span> <span class="va">rfClassif</span>, </span>
@@ -1115,7 +930,7 @@ the iris data with extrapolated data removed.
 <code>vivi</code>, <code>Visualisations</code>
 <code>Custom Predict Function</code>, and <code>Embedded Vimps</code>
 into a single script to facilitate ease of viewing.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Load libraries</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span> </span>
@@ -1252,7 +1067,7 @@ into a single script to facilitate ease of viewing.</p>
 <div id="using-a-custom-predict-function" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-a-custom-predict-function" class="anchor"></a>Using a custom predict function</h3>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/dmlc/xgboost">"xgboost"</a></span><span class="op">)</span></span>
 <span><span class="va">gbst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgboost</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">myData</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>,</span>
@@ -1280,7 +1095,7 @@ into a single script to facilitate ease of viewing.</p>
 <div id="using-embedded-variable-importance" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-embedded-variable-importance" class="anchor"></a>Using embedded variable importance</h3>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbs-hl/ranger">"ranger"</a></span><span class="op">)</span></span>
@@ -1315,7 +1130,7 @@ into a single script to facilitate ease of viewing.</p>
 <div id="classification-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#classification-1" class="anchor"></a>Classification</h3>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://alaninglis.github.io/vivid/">"vivid"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">"randomForest"</a></span><span class="op">)</span></span>
 <span></span>
@@ -1431,6 +1246,7 @@ Software 95 (4): 1–44.</p></li>
 Condvis2: Interactive Conditional Visualization for Supervised and
 Unsupervised Models in Shiny.</p></li>
 </ol>
+</div>
 </div>
   </div>
 

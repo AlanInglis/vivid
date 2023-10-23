@@ -37,6 +37,33 @@
     <loc>https://alaninglis.github.io/vivid//reference/zPath.html</loc>
   </url>
   <url>
-    <loc>https://alaninglis.github.io/vivid//articles/vividVignette.html</loc>
+    <loc>https://alaninglis.github.io/vivid//articles/A:vividVignette.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/B:randomForestVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/C:rangerVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/D:bartMachineVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/E:caretVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/F:mlrVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/G:svmVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/H:gbmVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/I:kerasVivid.html</loc>
+  </url>
+  <url>
+    <loc>https://alaninglis.github.io/vivid//articles/J:xgbVivid.html</loc>
   </url>
 </urlset>
