@@ -16,7 +16,8 @@ vivi(
   predictFun = NULL,
   normalized = FALSE,
   numPerm = 4,
-  showVimpError = FALSE
+  showVimpError = FALSE,
+  vars = NULL
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ return agnostic importance values.}
 
 \item{showVimpError}{Logical. If TRUE, and \code{numPerm > 1} then a tibble containing the variable names, their importance values,
 and the standard error for each importance is printed to the console.}
+
+\item{vars}{A vector of variable names to be assessed.}
 }
 \value{
 A matrix of interaction values, with importance on the diagonal.

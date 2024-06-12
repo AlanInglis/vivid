@@ -13,6 +13,7 @@
 #' @param fit A supervised machine learning model, which understands condvis2::CVpredict
 #' @param data Data frame used for fit.
 #' @param response The name of the response for the fit.
+#' @param vars A vector of variable names to be assessed.
 #' @param gridSize The size of the grid for evaluating the predictions.
 #' @param importanceType  Used to select the importance metric. By default, an agnostic importance
 #' measure is used. If an embedded metric is available, then setting this argument
@@ -60,7 +61,6 @@
 #'}
 #' @export
 
-
 # Main vivi function ------------------------------------------------------
 
 vivi <- function(data,
@@ -74,7 +74,9 @@ vivi <- function(data,
                  predictFun = NULL,
                  normalized = FALSE,
                  numPerm = 4,
-                 showVimpError = FALSE) {
+                 showVimpError = FALSE,
+                 vars = NULL) {
+
   # check for predict function
   classif <- is.factor(data[[response]]) | inherits(fit, "LearnerClassif")
   if (is.null(predictFun)) {
@@ -101,7 +103,8 @@ vivi <- function(data,
       importanceType = importanceType,
       predictFun = pFun1,
       numPerm = numPerm,
-      showVimpError = showVimpError
+      showVimpError = showVimpError,
+      vars = vars
     )
   } else {
     vImp <- vividImportance(
@@ -111,7 +114,8 @@ vivi <- function(data,
       importanceType = importanceType,
       predictFun = pFun,
       numPerm = numPerm,
-      showVimpError = showVimpError
+      showVimpError = showVimpError,
+      vars = vars
     )
   }
   vImp1 <- vector("numeric", length = ncol(data) - 1)
@@ -129,7 +133,8 @@ vivi <- function(data,
     nmax = nmax,
     gridSize = gridSize,
     predictFun = pFun,
-    normalized = normalized
+    normalized = normalized,
+    vars = vars
   )
 
   viviUpdate(vInt, vImp1, reorder = reorder)
@@ -188,12 +193,14 @@ vividImportance <- function(fit, data, response = NULL,
                             predictFun = NULL,
                             numPerm = 4,
                             showVimpError = FALSE,
+                            vars = NULL,
                             ...) {
   if (importanceType == "agnostic") {
     vividImportance.default(fit, data, response = response,
                             predictFun = predictFun,
                             numPerm = 4,
                             showVimpError = FALSE,
+                            vars = NULL,
                             ...)
   } else {
     UseMethod("vividImportance", fit)
@@ -213,6 +220,7 @@ vividImportance.default <- function(fit,
                                     predictFun = NULL,
                                     numPerm = 4,
                                     showVimpError = FALSE,
+                                    vars = NULL,
                                     ...) {
   message("Agnostic variable importance method used.")
 
@@ -229,7 +237,7 @@ vividImportance.default <- function(fit,
 
   # Extract importance
   suppressWarnings(
-    imp <- light_importance(fl, m_repetitions = numPerm)
+    imp <- light_importance(fl, m_repetitions = numPerm, v = vars)
   )
   # Column names and order in imp$data:
   #   label  metric  variable  value  error  (flashlight < 1.0.0)
@@ -262,6 +270,7 @@ vividImportance.ranger <- function(fit,
                                    predictFun = NULL,
                                    numPerm = 4,
                                    showVimpError = FALSE,
+                                   vars = NULL,
                                    ...) {
   # If no importance mode selected, then default! Else, extract importance type
   if (fit$importance.mode == "none") {
@@ -294,6 +303,7 @@ vividImportance.randomForest <- function(fit,
                                          predictFun = NULL,
                                          numPerm = 4,
                                          showVimpError = FALSE,
+                                         vars = NULL,
                                          ...) {
   fitImp <- dim(fit$importance)
   importanceData <- randomForest::importance(fit, scale = FALSE)
@@ -347,6 +357,7 @@ vividImportance.Learner <- function(fit,
                                     predictFun = NULL,
                                     numPerm = 4,
                                     showVimpError = FALSE,
+                                    vars = NULL,
                                     ...) {
   # if no importance mode selected, use default
   if (fit$packages == "ranger" && fit$model$importance.mode == "none") {
@@ -392,6 +403,7 @@ vividImportance.WrappedModel <- function(fit,
                                          predictFun = NULL,
                                          numPerm = 4,
                                          showVimpError = FALSE,
+                                         vars = NULL,
                                          ...) {
   data <- as.data.frame(data)
 
@@ -445,6 +457,7 @@ vividImportance.model_fit <- function(fit,
                                       predictFun = NULL,
                                       numPerm = 4,
                                       showVimpError = FALSE,
+                                      vars = NULL,
                                       ...) {
   vImp <- vip::vi_model(fit, type = importanceType)
   vImp <- vImp[, 1:2]
@@ -474,6 +487,7 @@ vividInteraction <- function(fit,
                              gridSize = 10,
                              predictFun = NULL,
                              normalized = FALSE,
+                             vars = NULL,
                              ...) {
   UseMethod("vividInteraction")
 }
@@ -491,6 +505,7 @@ vividInteraction.default <- function(fit,
                                      gridSize = 50,
                                      predictFun = NULL,
                                      normalized = FALSE,
+                                     vars = NULL,
                                      ...) {
   message("Calculating interactions...")
 
@@ -523,8 +538,8 @@ vividInteraction.default <- function(fit,
 
   # calculate interactions
   res <- light_interaction(fl,
-    pairwise = TRUE, type = "H", grid_size = gridSize,
-    normalize = normalized, n_max = nmax
+                           pairwise = TRUE, type = "H", grid_size = gridSize,
+                           normalize = normalized, n_max = nmax, v = vars
   )$data
 
   # Column names and order in res:
