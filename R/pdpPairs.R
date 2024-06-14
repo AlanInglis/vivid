@@ -394,7 +394,11 @@ pdp_data <- function(d, var, gridsize = 30, convexHull = FALSE) {
     if (is.factor(pdpvar1)) dnew[[var[1]]] <- factor(dnew[[var[1]]], levels = levels(pdpvar1), ordered = is.ordered(pdpvar1))
     if (is.factor(pdpvar2)) dnew[[var[2]]] <- factor(dnew[[var[2]]], levels = levels(pdpvar2), ordered = is.ordered(pdpvar2))
   }
-  dnew$.id <- 1:nrow(d)
+  # making sure the repeats is consistent
+  n_repeats <- nrow(dnew) / nrow(d)
+  dnew$.id <- rep(1:nrow(d), times = ceiling(n_repeats))
+
+  # dnew$.id <- 1:nrow(d)
   rownames(dnew) <- NULL
   dnew
 }
