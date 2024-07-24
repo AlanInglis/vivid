@@ -1,0 +1,18 @@
+pandoc: 3.1.11
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  bartMachineVivid: bartMachineVivid.html
+  caretVivid: caretVivid.html
+  gbmVivid: gbmVivid.html
+  kerasVivid: kerasVivid.html
+  mlrVivid: mlrVivid.html
+  randomForestVivid: randomForestVivid.html
+  rangerVivid: rangerVivid.html
+  svmVivid: svmVivid.html
+  vividVignette: vividVignette.html
+  xgbVivid: xgbVivid.html
+last_built: 2024-07-24T15:36Z
+urls:
+  reference: https://alaninglis.github.io/vivid/reference
+  article: https://alaninglis.github.io/vivid/articles
