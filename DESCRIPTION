@@ -45,7 +45,11 @@ Suggests:
     labeling,
     zenplots,
     covr,
-    xgboost
+    xgboost,
+    bartMachine,
+    caret,
+    gbm,
+    keras
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
