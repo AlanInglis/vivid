@@ -15,4 +15,5 @@
 ^vividVigplots$
 ^\.github$
 ^docs
+^vignettes/vig/
 
