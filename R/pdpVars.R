@@ -49,19 +49,19 @@
 #' @export
 
 pdpVars <- function(data,
-                    fit,
-                    response,
-                    vars = NULL,
-                    pal = rev(RColorBrewer::brewer.pal(11, "RdYlBu")),
-                    gridSize = 10,
-                    nmax = 500,
-                    class = 1,
-                    nIce = 30,
-                    predictFun = NULL,
-                    limits = NULL,
-                    colorVar = NULL,
-                    draw = TRUE,
-                    probability = FALSE) {
+                     fit,
+                     response,
+                     vars = NULL,
+                     pal = rev(RColorBrewer::brewer.pal(11, "RdYlBu")),
+                     gridSize = 10,
+                     nmax = 500,
+                     class = 1,
+                     nIce = 30,
+                     predictFun = NULL,
+                     limits = NULL,
+                     colorVar = NULL,
+                     draw = TRUE,
+                     probability = FALSE) {
   data <- na.omit(data)
   if (is.null(nmax)) nmax <- nrow(data)
   nmax <- max(5, nmax)
@@ -126,7 +126,7 @@ pdpVars <- function(data,
       pdplist1Keras <- pdplist1[,-c(numberCol-2, numberCol-1, numberCol)]
       pdplist1$fit <- predictFun(fit, pdplist1Keras) # had to explicitly remove the extra colmns here
     } else {
-      pdplist1$fit <- predictFun(fit, pdplist1)
+      pdplist1$fit <- predictFun(fit, pdplist1[, 1:(ncol(pdplist1) - 3)])
     }
     #pdplist1$fit <- predictFun(fit, pdplist1)
   }
@@ -162,7 +162,8 @@ pdpVars <- function(data,
     }
 
     p <- p +
-      geom_line(data = aggr, size = 1, color = "black", lineend = "round", group = 1) +
+      geom_line(data = aggr, #size = 1,
+                linewidth = 1, color = "black", lineend = "round", group = 1) +
       theme_bw() + guides(fill = "none", color = "none") + ylab("   ") + ylim(limits)
     if (var == vars[[1]]) p <- p + ylab("pdp/ice")
     p
