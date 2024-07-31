@@ -162,7 +162,7 @@ pdpZen <- function(data,
       pdplistKeras <- pdplist[,-c(numberCol-1, numberCol)]
       pdplist$fit <- predictFun(fit, pdplistKeras) # had to explicitly remove the extra colmns here
     } else {
-      pdplist$fit <- predictFun(fit, pdplist)
+      pdplist$fit <- predictFun(fit, pdplist[, 1:(ncol(pdplist) - 2)])
     }
     #pdplist$fit <- predictFun(fit, pdplist)
   }
