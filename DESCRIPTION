@@ -1,6 +1,6 @@
 Package: vivid
 Title: Variable Importance and Variable Interaction Displays
-Version: 0.2.9
+Version: 0.3.0
 Authors@R: c(
     person(given = "Alan", family = "Inglis", email = "alan.n.inglis@gmail.com", role = c("aut", "cre")),
     person(given = "Andrew", family = "Parnell", email = "andrew.parnell@mu.ie", role = "aut"),
@@ -17,16 +17,16 @@ Imports:
     colorspace,
     stats,
     DendSer,
-    ggalt,
     dplyr,
     igraph,
     flashlight,
     ggnewscale,
     sp,
-    intergraph (>= 2.0-2),
+    gtable
+Suggests:
+   intergraph (>= 2.0-2),
     network (>= 1.12.0),
     sna (>= 2.3-2),
-Suggests:
     mlr,
     MASS,
     tidymodels,
