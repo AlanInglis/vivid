@@ -1,3 +1,18 @@
+# helper (put in R/utils-deps.R)
+.need_pkgs <- function(pkgs, fun = "viviNetwork") {
+  miss <- pkgs[!vapply(pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+  if (length(miss)) {
+    stop(
+      sprintf("%s() requires: %s. Install with install.packages(c(%s)).",
+              fun,
+              paste(miss, collapse = ", "),
+              paste(sprintf('"%s"', miss), collapse = ", ")),
+      call. = FALSE
+    )
+  }
+}
+
+
 #' viviNetwork
 #'
 #' @description Create a Network plot displaying variable importance
