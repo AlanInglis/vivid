@@ -22,7 +22,6 @@
 #' @import ggplot2
 #' @importFrom GGally ggnet2
 #' @importFrom ggnewscale new_scale_fill
-#' @importFrom ggalt geom_encircle
 #' @importFrom grDevices rainbow
 #' @importFrom colorspace sequential_hcl
 #' @examples
@@ -189,7 +188,7 @@ viviNetwork <- function(mat,
     colPal <- rainbow(length(unique(cluster)))
     colCluster <- colPal[cluster]
 
-    p <- p + geom_encircle(aes(group = cluster),
+    p <- p + geom_encircle_vivi(aes(group = cluster),
       spread = 0.01,
       alpha = 0.2,
       expand = 0.03,
