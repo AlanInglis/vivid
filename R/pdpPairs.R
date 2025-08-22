@@ -305,7 +305,7 @@ pdpPairs <- function(data,
   ) +
     theme_bw() +
     theme(
-      panel.border = element_rect(colour = "black", fill = NA, size = 1),
+      panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
       axis.line = element_line(),
       # axis.ticks = element_blank(),
       axis.text.x = element_text(angle = 0, hjust = 1, size = 6),

@@ -114,7 +114,7 @@ viviNetwork <- function(mat,
   # Delete vertex that have no edges (if thresholding)
   if (removeNode) {
     rnode <- igraph::degree(g) == 0
-    g <- igraph::delete.vertices(g, rnode)
+    g <- igraph::delete_vertices(g, rnode)
     dfImp <- dfImp[!rnode, ]
     if (is.numeric(cluster)) cluster <- cluster[!rnode]
     if (is.numeric(layout)) layout <- layout[!rnode, , drop = F]

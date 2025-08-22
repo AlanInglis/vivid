@@ -243,7 +243,7 @@ pdpZen <- function(data,
           axis.text.y = element_blank(),
           axis.title.x = element_blank(),
           axis.title.y = element_blank(),
-          panel.border = element_rect(colour = "gray", fill = NA, size = 1.5)
+          panel.border = element_rect(colour = "gray", fill = NA, linewidth = 1.5)
         )
     } else {
       p <- ggplot() +
