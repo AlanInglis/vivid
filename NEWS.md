@@ -1,5 +1,7 @@
-# vivid 0.2.8
+# vivid 0.3.0
 
-* Updated package to work with new version of `flashlight`
-* Updated vignette to include more examples of using `vivid` with different model types
+* Fixed `ggalt` package dependency deprecation issue
+* Updated package to work with new version of `ggplot2`
+* Added standalone Vimp and Vint functions. Now users can compute Vimp and Vint without calling the full `vivi` function.
+
 
