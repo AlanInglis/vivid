@@ -169,12 +169,19 @@ pdpVars <- function(data,
     p
   }
 
+  # function to get legend from ggplot
+  get_legend2 <- function(p) {
+    if (!gtable::is.gtable(p)) p <- ggplot2::ggplotGrob(p)
+    idx <- which(vapply(p$grobs, function(x) x$name, character(1)) == "guide-box")
+    if (length(idx) == 0) return(NULL)
+    p$grobs[[idx[1]]]
+  }
 
   plots <- lapply(vars, ice)
   if (!is.null(colorVar)) {
-    legend_y <- lemon::g_legend(plots[[1]] + guides(color = "legend"))
+    legend_y <- get_legend2(plots[[1]] + guides(color = "legend"))
   } else {
-    legend_y <- lemon::g_legend(plots[[1]] + guides(color = "colorbar"))
+    legend_y <- get_legend2(plots[[1]] + guides(color = "colorbar"))
   }
   plots <- c(plots, list(legend_y))
   if (draw) {
