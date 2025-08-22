@@ -15,6 +15,7 @@
 <url><loc>https://alaninglis.github.io/vivid/index.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/news/index.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/as.data.frame.vivid.html</loc></url>
+<url><loc>https://alaninglis.github.io/vivid/reference/geom_encircle_vivi.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/index.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/pdpPairs.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/pdpVars.html</loc></url>
@@ -24,6 +25,8 @@
 <url><loc>https://alaninglis.github.io/vivid/reference/viviHeatmap.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/viviNetwork.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/viviUpdate.html</loc></url>
+<url><loc>https://alaninglis.github.io/vivid/reference/vivi_importance.html</loc></url>
+<url><loc>https://alaninglis.github.io/vivid/reference/vivi_interaction.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/vividReorder.html</loc></url>
 <url><loc>https://alaninglis.github.io/vivid/reference/zPath.html</loc></url>
 </urlset>
