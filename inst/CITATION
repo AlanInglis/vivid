@@ -16,3 +16,20 @@ bibentry(
 )
 
 
+bibentry(
+   bibtype = "Article",
+  title    = "vivid: An R package for Variable Importance and Variable Interactions Displays for Machine Learning Models.",
+  author   = c(person(c("Alan"), "Inglis"),
+              person(c("Andrew"), "Parnell"),
+              person(c("Catherine", "B."), "Hurley")),
+  journal  = "R Journal",
+  year     = "2023",
+  volume   = "15",
+  number   = "2",
+  textVersion = paste(
+  "Inglis, A., Parnell, A., and Hurley, C. B. (2023). vivid: An R package for Variable Importance and Variable Interactions Displays for Machine Learning Models. R Journal, 15-2."
+    )
+)
+
+
+
