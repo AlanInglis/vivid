@@ -39,17 +39,7 @@ adds a circle around the specified points
 Automatically enclose points in a polygon
 }
 \details{
-\if{html}{
-A sample of the output from \code{geom_encircle()}:
-
-\figure{geomencircle01.png}{options: width="100\%" alt="Figure: geomencircle01.png"}
-}
-
-\if{latex}{
-A sample of the output from \code{geom_encircle()}:
-
-\figure{geomencircle01.png}{options: width=10cm}
-}
+This function adds a polygon around a set of points, to highlight them.
 }
 \examples{
 library(ggplot2)
