@@ -16,4 +16,7 @@
 ^\.github$
 ^docs
 ^vignettes/vig/
-
+^inst/doc($|/)
+^vignettes($|/)
+^docs($|/)
+^pkgdown($|/)

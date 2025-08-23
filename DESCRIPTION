@@ -37,8 +37,6 @@ Suggests:
     scales,
     ranger,
     vip,
-    knitr,
-    rmarkdown,
     randomForest,
     testthat (>= 3.0.0),
     labeling,
@@ -49,7 +47,6 @@ Suggests:
     caret,
     gbm,
     keras
-VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
